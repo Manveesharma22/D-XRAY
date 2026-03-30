@@ -271,21 +271,21 @@ function MedicineCard({ rx, index, expanded, onToggle }) {
               {rx.icon}
             </div>
             <div>
-              <div className="text-lg font-bold text-white" style={{ fontFamily: "'Caveat', cursive" }}>{rx.name}</div>
-              <div className="text-[10px] font-mono text-cyan-800/40">{rx.dose}</div>
+              <div className="text-2xl font-bold text-white mb-0.5" style={{ fontFamily: "'Caveat', cursive" }}>{rx.name}</div>
+              <div className="text-xs font-mono text-cyan-800/50">{rx.dose}</div>
             </div>
           </div>
           <span className={`text-[9px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md border ${c.badge}`}>
             {rx.urgency}
           </span>
         </div>
-        <div className="mb-3">
-          <div className="text-[9px] text-cyan-800/40 font-mono uppercase tracking-wider mb-1">Diagnosis</div>
-          <div className="text-sm text-cyan-200/80 leading-relaxed">{rx.condition}</div>
+        <div className="mb-4">
+          <div className="text-xs text-cyan-800/40 font-mono uppercase tracking-wider mb-2">Diagnosis</div>
+          <div className="text-base text-cyan-200/90 leading-relaxed font-bold">{rx.condition}</div>
         </div>
-        <div className="p-3 rounded-lg bg-black/20 border border-white/[0.03]">
-          <div className="text-[9px] text-cyan-800/40 font-mono uppercase tracking-wider mb-1">Directions</div>
-          <div className="text-cyan-300/70 leading-relaxed" style={{ fontFamily: "'Caveat', cursive", fontSize: 16 }}>
+        <div className="p-4 rounded-xl bg-black/40 border border-white/[0.05]">
+          <div className="text-xs text-cyan-800/40 font-mono uppercase tracking-wider mb-2">Directions</div>
+          <div className="text-cyan-300 text-balance leading-tight" style={{ fontFamily: "'Caveat', cursive", fontSize: 21 }}>
             {rx.instruction}
           </div>
         </div>

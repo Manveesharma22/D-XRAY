@@ -861,19 +861,19 @@ export default function ScanExperience() {
               {activeTrackTab && scanData.tracks[activeTrackTab] && (
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
                   <div className="glass-panel rounded-2xl p-8">
-                    <div className="flex items-center justify-between mb-5">
+                    <div className="flex items-center justify-between mb-6">
                       <div className="flex items-center gap-4">
-                        <span className="text-sm font-mono text-cyan-500">{TRACK_NAMES[activeTrackTab]?.anatomical}</span>
-                        <span className="text-xl font-bold text-white">{TRACK_NAMES[activeTrackTab]?.name}</span>
+                        <span className="text-sm font-mono text-cyan-500 uppercase tracking-widest">{TRACK_NAMES[activeTrackTab]?.anatomical}</span>
+                        <span className="text-2xl font-black text-white tracking-tight">{TRACK_NAMES[activeTrackTab]?.name}</span>
                       </div>
-                      <span className={`text-3xl font-black ${scanData.tracks[activeTrackTab].score >= 70 ? 'text-emerald-400' : scanData.tracks[activeTrackTab].score >= 40 ? 'text-amber-400' : 'text-red-400'}`}>{scanData.tracks[activeTrackTab].score}</span>
+                      <span className={`text-5xl font-black ${scanData.tracks[activeTrackTab].score >= 70 ? 'text-emerald-400' : scanData.tracks[activeTrackTab].score >= 40 ? 'text-amber-400' : 'text-red-400'}`}>{scanData.tracks[activeTrackTab].score}</span>
                     </div>
                     {activeTrackTab === 'F' && scanData.tracks['F']?.rageCommits?.length > 0 && <div className="mb-4"><RageCommits rageCommits={scanData.tracks['F'].rageCommits} /></div>}
                     <div className="space-y-3">
                       {scanData.tracks[activeTrackTab].issues?.map((issue, i) => (
-                        <div key={i} className={`p-4 rounded-xl border ${issue.severity === 'critical' ? 'bg-red-500/5 border-red-500/10' : issue.severity === 'warning' ? 'bg-amber-500/5 border-amber-500/10' : issue.severity === 'good' ? 'bg-emerald-500/5 border-emerald-500/10' : 'bg-cyan-500/5 border-cyan-500/10'}`}>
-                          <div className={`text-sm font-bold ${issue.severity === 'critical' ? 'text-red-400' : issue.severity === 'warning' ? 'text-amber-400' : issue.severity === 'good' ? 'text-emerald-400' : 'text-cyan-400'}`}>{issue.message}</div>
-                          {issue.detail && <div className="text-xs text-cyan-800/60 mt-1.5 leading-relaxed">{issue.detail}</div>}
+                        <div key={i} className={`p-5 rounded-2xl border ${issue.severity === 'critical' ? 'bg-red-500/5 border-red-500/10' : issue.severity === 'warning' ? 'bg-amber-500/5 border-amber-500/10' : issue.severity === 'good' ? 'bg-emerald-500/5 border-emerald-500/10' : 'bg-cyan-500/5 border-cyan-500/10'}`}>
+                          <div className={`text-base font-black uppercase tracking-tight ${issue.severity === 'critical' ? 'text-red-300' : issue.severity === 'warning' ? 'text-amber-300' : issue.severity === 'good' ? 'text-emerald-300' : 'text-cyan-300'}`}>{issue.message}</div>
+                          {issue.detail && <div className="text-sm text-cyan-100/40 mt-2 leading-relaxed font-medium">{issue.detail}</div>}
                         </div>
                       ))}
                       {(!scanData.tracks[activeTrackTab].issues || scanData.tracks[activeTrackTab].issues.length === 0) && <div className="text-base text-cyan-800/40 text-center py-6">No issues detected</div>}
@@ -885,10 +885,10 @@ export default function ScanExperience() {
 
             {/* DX Score */}
             {scanData.corpusScore && (
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="glass-panel rounded-3xl p-10 text-center xray-glow">
-                <div className="text-xs font-mono text-cyan-600/50 tracking-[0.3em] uppercase mb-3">DX Score</div>
-                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200, damping: 15 }} className={`text-9xl font-black ${scanData.corpusScore.dxScore >= 70 ? 'text-emerald-400' : scanData.corpusScore.dxScore >= 40 ? 'text-amber-400' : 'text-red-400'}`}>{scanData.corpusScore.dxScore}</motion.div>
-                <div className="text-base text-cyan-600/60 mt-2 font-medium">{scanData.corpusScore.severity}</div>
+              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="glass-panel rounded-3xl p-12 text-center xray-glow">
+                <div className="text-xs font-mono text-cyan-600/50 tracking-[0.3em] uppercase mb-4">Total DX Score</div>
+                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200, damping: 15 }} className={`text-[120px] font-black leading-none ${scanData.corpusScore.dxScore >= 70 ? 'text-emerald-400' : scanData.corpusScore.dxScore >= 40 ? 'text-amber-400' : 'text-red-400'}`}>{scanData.corpusScore.dxScore}</motion.div>
+                <div className="text-xl text-cyan-600/60 mt-4 font-bold uppercase tracking-widest">{scanData.corpusScore.severity}</div>
                 <div className="flex justify-center gap-8 mt-5 text-xs font-mono">
                   <span className="text-red-400">{scanData.corpusScore.criticalIssues} critical</span>
                   <span className="text-amber-400">{scanData.corpusScore.warningIssues} warnings</span>

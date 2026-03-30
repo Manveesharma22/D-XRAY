@@ -220,22 +220,22 @@ export default function EKGMonitor({ bpm = 60, pattern = 'normal', reason = '' }
         <div className="flex items-center gap-6">
           {/* O2 SAT */}
           <div className="text-center">
-            <div className="text-[8px] font-mono text-cyan-900/40 tracking-wider">SpO₂</div>
-            <div className={`text-sm font-black font-mono ${o2Color} ${o2Sat < 80 ? 'vital-critical' : ''}`}>
-              {o2Sat}<span className="text-[8px] font-normal opacity-50">%</span>
+            <div className="text-[9px] font-mono text-cyan-900/40 tracking-wider">SpO₂</div>
+            <div className={`text-base font-black font-mono ${o2Color} ${o2Sat < 80 ? 'vital-critical' : ''}`}>
+              {o2Sat}<span className="text-[10px] font-normal opacity-50">%</span>
             </div>
           </div>
           {/* RESP */}
           <div className="text-center">
-            <div className="text-[8px] font-mono text-cyan-900/40 tracking-wider">RESP</div>
-            <div className={`text-sm font-black font-mono ${respColor}`}>
-              {resp}<span className="text-[8px] font-normal opacity-50">/min</span>
+            <div className="text-[9px] font-mono text-cyan-900/40 tracking-wider">RESP</div>
+            <div className={`text-base font-black font-mono ${respColor}`}>
+              {resp}<span className="text-[10px] font-normal opacity-50">/min</span>
             </div>
           </div>
           {/* BPM + Status */}
           {reason && <span className="text-[10px] text-cyan-800/40 font-mono truncate max-w-[200px]">{reason}</span>}
-          <span className={`text-sm font-mono font-bold ${statusColor}`}>{statusLabel}</span>
-          <span className={`text-xl font-black font-mono ${statusColor} ${pattern === 'normal' ? 'animate-heartbeat' : ''}`}>
+          <span className={`text-base font-mono font-black uppercase tracking-tighter ${statusColor}`}>{statusLabel}</span>
+          <span className={`text-4xl font-black font-mono ${statusColor} ${pattern === 'normal' ? 'animate-heartbeat' : ''}`}>
             {displayBpm}<span className="text-xs font-normal opacity-50 ml-1">BPM</span>
           </span>
         </div>

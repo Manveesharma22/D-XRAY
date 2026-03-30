@@ -370,8 +370,8 @@ export default function Confessional({ onConfess, healing, corpusScore, repoName
             </motion.div>
           </div>
 
-          <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2">The X-ray is healing.</h3>
-          <p className="text-emerald-400/50 text-sm font-mono mb-6">Fractures sealing. Context rewriting the record.</p>
+          <h3 className="text-4xl sm:text-5xl font-black text-white mb-4 tracking-tighter">The X-ray is healing.</h3>
+          <p className="text-emerald-400/60 text-lg font-mono mb-8">Fractures sealing. Human context rewriting the record.</p>
 
           {/* HERO DX score climb */}
           <motion.div
@@ -558,10 +558,10 @@ export default function Confessional({ onConfess, healing, corpusScore, repoName
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 }}
-              className="max-w-2xl mx-auto mb-8"
+              className="max-w-3xl mx-auto mb-10"
             >
-              <p className="text-xl sm:text-2xl font-medium leading-relaxed"
-                style={{ color: 'rgba(255,236,180,0.88)', fontStyle: 'italic' }}>
+              <p className="text-3xl sm:text-4xl font-bold leading-tight tracking-tight"
+                style={{ color: 'rgba(255,236,180,0.95)', fontStyle: 'italic' }}>
                 {certificate ? (
                   <TypedText text={certificate} speed={22} onDone={() => setCertificateDone(true)} />
                 ) : null}
@@ -695,13 +695,13 @@ export default function Confessional({ onConfess, healing, corpusScore, repoName
           </svg>
         </motion.div>
 
-        <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3 tracking-tight">
+        <h3 className="text-4xl sm:text-6xl font-black text-white mb-4 tracking-tighter">
           Would you like to confess?
         </h3>
-        <p className="text-amber-200/30 text-sm mb-8 max-w-md mx-auto leading-relaxed">
+        <p className="text-amber-200/40 text-lg mb-10 max-w-2xl mx-auto leading-relaxed">
           Provide context. The X-ray will physically heal on screen. Fractures will seal.
           The score will climb. A certificate will generate. <br />
-          <span className="text-amber-400/40 font-medium">This is the only tool that forgives a codebase.</span>
+          <span className="text-amber-400/60 font-bold">This is the only tool that forgives a codebase.</span>
         </p>
 
         <div className="max-w-lg mx-auto space-y-4">
@@ -739,17 +739,17 @@ export default function Confessional({ onConfess, healing, corpusScore, repoName
               whileTap={{ scale: 0.97 }}
               onClick={handleSubmit}
               disabled={!confession.trim()}
-              className="px-8 py-4 rounded-2xl text-base font-bold transition-all disabled:opacity-30 disabled:cursor-not-allowed text-white shadow-xl active:scale-[0.97]"
+              className="px-10 py-5 rounded-2xl text-xl font-black transition-all disabled:opacity-30 disabled:cursor-not-allowed text-white shadow-2xl active:scale-[0.97] uppercase tracking-wider"
               style={{
                 background: 'linear-gradient(135deg, #d97706, #f59e0b)',
-                boxShadow: confession.trim() ? '0 0 30px rgba(245,158,11,0.25), 0 8px 24px rgba(0,0,0,0.4)' : 'none',
+                boxShadow: confession.trim() ? '0 0 40px rgba(245,158,11,0.3), 0 12px 32px rgba(0,0,0,0.5)' : 'none',
               }}
             >
               Confess &amp; Heal
             </motion.button>
             <button
               onClick={() => setPhase('idle')}
-              className="px-8 py-4 bg-transparent border border-cyan-900/15 text-cyan-800/40 rounded-2xl text-base font-bold hover:border-cyan-800/25 hover:text-cyan-700/50 transition-all"
+              className="px-10 py-5 bg-transparent border border-cyan-500/20 text-cyan-500/60 rounded-2xl text-xl font-black hover:border-cyan-500/40 hover:text-cyan-400 transition-all uppercase tracking-wider"
             >
               Skip
             </button>

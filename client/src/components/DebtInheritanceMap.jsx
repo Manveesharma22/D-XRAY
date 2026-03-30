@@ -103,18 +103,18 @@ export default function DebtInheritanceMap({ data }) {
         </div>
 
         {/* Summary stats */}
-        <div className="flex gap-6 mt-4">
+        <div className="flex gap-8 mt-5">
           <div className="flex items-center gap-2">
-            <div className="w-2.5 h-2.5 rounded-full bg-red-400/60" />
-            <span className="text-[10px] text-cyan-800/40 font-mono">{data.totalDebtInSystem || 0} total debt units in system</span>
+            <div className="w-3 h-3 rounded-full bg-red-400/60" />
+            <span className="text-xs text-cyan-800/60 font-mono font-bold tracking-tight">{data.totalDebtInSystem || 0} total debt units in system</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-2.5 h-2.5 rounded-full bg-amber-400/60" />
-            <span className="text-[10px] text-cyan-800/40 font-mono">{chainOfCustody.length} inheritance chains</span>
+            <div className="w-3 h-3 rounded-full bg-amber-400/60" />
+            <span className="text-xs text-cyan-800/60 font-mono font-bold tracking-tight">{chainOfCustody.length} inheritance chains</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-2.5 h-2.5 rounded-full bg-emerald-400/60" />
-            <span className="text-[10px] text-cyan-800/40 font-mono">{blameEvents.length} blame events detected</span>
+            <div className="w-3 h-3 rounded-full bg-emerald-400/60" />
+            <span className="text-xs text-cyan-800/60 font-mono font-bold tracking-tight">{blameEvents.length} blame events detected</span>
           </div>
         </div>
       </div>
@@ -257,17 +257,17 @@ export default function DebtInheritanceMap({ data }) {
                           initial={{ opacity: 0, y: 6 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.5 }}
-                          className="p-6 rounded-2xl border-l-4"
+                          className="p-8 rounded-3xl border-l-[6px]"
                           style={{
-                            background: 'linear-gradient(135deg, rgba(0,229,255,0.04) 0%, rgba(0,0,0,0) 100%)',
-                            borderColor: 'rgba(0,229,255,0.4)',
-                            boxShadow: 'inset 0 0 30px rgba(0,229,255,0.02)'
+                            background: 'linear-gradient(135deg, rgba(0,229,255,0.06) 0%, rgba(0,0,0,0) 100%)',
+                            borderColor: 'rgba(0,229,255,0.5)',
+                            boxShadow: 'inset 0 0 40px rgba(0,229,255,0.03)'
                           }}
                         >
-                          <p className="text-xl sm:text-2xl text-white leading-snug font-semibold tracking-tight">
+                          <p className="text-3xl sm:text-4xl text-white leading-tight font-black tracking-tighter">
                             {shockSentence}
                           </p>
-                          <div className="mt-3 text-[9px] text-cyan-700/40 font-mono uppercase tracking-widest">
+                          <div className="mt-4 text-xs text-cyan-700/40 font-mono uppercase tracking-[0.3em]">
                             Debt inheritance analysis · {contrib.tenure} days tenure
                           </div>
                         </motion.div>

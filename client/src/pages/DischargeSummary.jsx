@@ -406,10 +406,10 @@ export default function DischargeSummary() {
               {corpusScore.trackScores.map(t => {
                 const tn = TRACK_NAMES[t.track];
                 return (
-                  <div key={t.track} className="p-4 rounded-xl bg-black/20 border border-cyan-900/10 text-center">
-                    <div className="text-[8px] text-cyan-800/40 font-mono uppercase">{tn?.anatomical}</div>
-                    <div className="text-xs font-bold text-cyan-200 mt-0.5">{tn?.name || t.name}</div>
-                    <div className={`text-3xl font-black mt-2 ${t.score >= 70 ? 'text-emerald-400' : t.score >= 40 ? 'text-amber-400' : 'text-red-400'}`}>{t.score}</div>
+                  <div key={t.track} className="p-5 rounded-2xl bg-black/40 border border-cyan-500/10 text-center shadow-lg">
+                    <div className="text-[10px] text-cyan-800/60 font-mono uppercase tracking-[0.2em] mb-1">{tn?.anatomical}</div>
+                    <div className="text-sm font-black text-cyan-100 uppercase tracking-tighter">{tn?.name || t.name}</div>
+                    <div className={`text-5xl font-black mt-3 ${t.score >= 70 ? 'text-emerald-400' : t.score >= 40 ? 'text-amber-400' : 'text-red-400'}`}>{t.score}</div>
                   </div>
                 );
               })}
@@ -427,17 +427,18 @@ export default function DischargeSummary() {
                 if (!findings.issues || findings.issues.length === 0) return null;
                 return (
                   <div key={key} className="p-4 rounded-xl bg-black/20 border border-cyan-900/10">
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className={`text-2xl font-black ${findings.score >= 70 ? 'text-emerald-400' : findings.score >= 40 ? 'text-amber-400' : 'text-red-400'}`}>{findings.score}</span>
+                    <div className="flex items-center gap-4 mb-5">
+                      <span className={`text-4xl font-black ${findings.score >= 70 ? 'text-emerald-400' : findings.score >= 40 ? 'text-amber-400' : 'text-red-400'}`}>{findings.score}</span>
                       <div>
-                        <div className="text-sm font-bold text-white">{tn?.name}</div>
-                        <div className="text-[9px] text-cyan-800/40 font-mono">{tn?.anatomical}</div>
+                        <div className="text-xl font-black text-white tracking-tight leading-none mb-1">{tn?.name}</div>
+                        <div className="text-xs text-cyan-800/50 font-mono uppercase tracking-widest">{tn?.anatomical}</div>
                       </div>
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       {findings.issues.slice(0, 3).map((issue, i) => (
-                        <div key={i} className={`text-xs p-2 rounded-lg ${issue.severity === 'critical' ? 'bg-red-500/5 text-red-300/80' : issue.severity === 'warning' ? 'bg-amber-500/5 text-amber-300/80' : 'bg-cyan-500/5 text-cyan-300/80'}`}>
+                        <div key={i} className={`text-base font-semibold p-4 rounded-xl border ${issue.severity === 'critical' ? 'bg-red-500/5 border-red-500/10 text-red-200' : issue.severity === 'warning' ? 'bg-amber-500/5 border-amber-500/10 text-amber-200' : 'bg-cyan-500/5 border-cyan-500/10 text-cyan-100'}`}>
                           {issue.message}
+                          {issue.detail && <div className="text-sm opacity-40 font-normal mt-2 leading-relaxed">{issue.detail}</div>}
                         </div>
                       ))}
                     </div>
