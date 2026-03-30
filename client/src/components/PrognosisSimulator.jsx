@@ -1,9 +1,16 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const PrognosisSimulator = ({ data, currentScore }) => {
     const [days, setDays] = useState(0);
     const [isActing, setIsActing] = useState(false);
+    const logRef = useRef(null);
+
+    useEffect(() => {
+        if (logRef.current) {
+            logRef.current.scrollTo({ top: logRef.current.scrollHeight, behavior: 'smooth' });
+        }
+    }, [days, isActing]);
 
     if (!data || !data.timeline) return null;
 
@@ -21,10 +28,17 @@ const PrognosisSimulator = ({ data, currentScore }) => {
     const phase = days < 30 ? 'The Drift' : days < 60 ? 'The Threshold' : 'The Crisis';
     const phaseColor = days < 30 ? 'text-cyan-500' : days < 60 ? 'text-amber-500' : 'text-red-500';
 
+    // Collect story beats encountered so far
+    const visibleBeats = useMemo(() => {
+        return data.timeline
+            .filter(f => f.day <= days && (isActing ? f.healingBeat : f.storyBeat))
+            .map(f => ({ day: f.day, text: isActing ? f.healingBeat : f.storyBeat }));
+    }, [days, data.timeline, isActing]);
+
     return (
         <div className="glass-panel rounded-3xl p-8 border-cyan-500/10 overflow-hidden relative">
             {/* Background Narrative Watermark */}
-            <div className="absolute inset-0 pointer-events-none opacity-[0.03] font-black text-[200px] flex items-center justify-center select-none uppercase tracking-tighter overflow-hidden whitespace-nowrap">
+            <div className="absolute inset-x-0 top-0 pointer-events-none opacity-[0.02] font-black text-[120px] flex items-center justify-center select-none uppercase tracking-tighter overflow-hidden whitespace-nowrap leading-none pt-12">
                 {isActing ? 'RESOLUTION' : phase}
             </div>
 
@@ -33,9 +47,9 @@ const PrognosisSimulator = ({ data, currentScore }) => {
                     <div className="text-[10px] font-mono text-cyan-600/40 tracking-[0.3em] uppercase mb-2">Prognosis Engine v2.0 // Temporal Simulation</div>
                     <h2 className="text-4xl font-black text-white mb-4 tracking-tight">The Price of Inaction</h2>
                     <p className="text-slate-400 text-sm max-w-lg leading-relaxed">
-                        Visualizing the next 90 days. This is not a prediction—it is a **forward-simulation**
+                        Visualizing the next 90 days. This is a **forward-simulation**
                         pattern-matched against thousands of repo death spirals. <br className="hidden md:block" />
-                        <span className="text-white/60">Scrub the timeline to witness the deterioration.</span>
+                        <span className="text-white/60 font-mono text-[10px] uppercase tracking-widest">Scrub to witness the narrative &rarr;</span>
                     </p>
                 </div>
 
@@ -57,7 +71,7 @@ const PrognosisSimulator = ({ data, currentScore }) => {
             </div>
 
             {/* Side-by-Side View */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 relative z-10">
                 {/* Panel 1: Today */}
                 <div className="relative">
                     <div className="flex justify-between items-end mb-4 px-2">
@@ -120,36 +134,27 @@ const PrognosisSimulator = ({ data, currentScore }) => {
                                 </div>
                             </motion.div>
                         )}
-
-                        {/* Healing Wave Effect */}
-                        {isActing && (
-                            <motion.div
-                                initial={{ top: '100%' }}
-                                animate={{ top: '-10%' }}
-                                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                                className="absolute left-0 right-0 h-20 bg-gradient-to-b from-transparent via-emerald-500/20 to-transparent pointer-events-none"
-                            />
-                        )}
                     </div>
                 </div>
             </div>
 
             {/* Slider Interface */}
-            <div className="max-w-3xl mx-auto space-y-10 relative z-10">
+            <div className="max-w-3xl mx-auto space-y-8 relative z-10">
                 <div className="relative group">
                     <input
                         type="range"
                         min="0"
                         max="90"
+                        step="2"
                         value={days}
                         onChange={(e) => setDays(parseInt(e.target.value))}
-                        className={`w-full h-2 bg-white/5 rounded-full appearance-none cursor-pointer focus:outline-none transition-all ${days > 60 ? 'accent-red-500' : 'accent-cyan-500'}`}
+                        className={`w-full h-2 bg-white/5 rounded-full appearance-none cursor-pointer focus:outline-none transition-all ${days > 60 ? 'accent-red-500 shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'accent-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.3)]'}`}
                     />
                     <div className="flex justify-between mt-4 text-[9px] font-mono text-slate-500 tracking-widest uppercase">
                         <span className={days === 0 ? 'text-white' : ''}>Baseline</span>
-                        <span className={days === 30 ? 'text-white' : ''}>The Drift</span>
-                        <span className={days === 60 ? 'text-white' : ''}>Threshold</span>
-                        <span className={days === 90 ? 'text-white' : ''}>The Crisis</span>
+                        <span className={days === 30 ? 'text-white' : ''}>Day 30</span>
+                        <span className={days === 60 ? 'text-white' : ''}>Day 60</span>
+                        <span className={days === 90 ? 'text-white' : ''}>Day 90</span>
                     </div>
 
                     {/* Scrubbing tip */}
@@ -158,6 +163,37 @@ const PrognosisSimulator = ({ data, currentScore }) => {
                             Scrub timeline &rarr;
                         </motion.div>
                     )}
+                </div>
+
+                {/* THE TEMPORAL LOG — Suspense Story */}
+                <div ref={logRef} className="glass-panel border-white/5 bg-black/60 p-5 rounded-2xl h-[130px] overflow-y-auto font-mono scroll-smooth shadow-inner">
+                    <div className="text-[10px] text-cyan-600/40 uppercase tracking-widest mb-3 flex justify-between items-center sticky top-0 bg-black/40 backdrop-blur-sm py-1">
+                        <div className="flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
+                            <span>Temporal Log // Transcript</span>
+                        </div>
+                        <span className="text-[8px] opacity-40">System-Time: {new Date().toLocaleTimeString()}</span>
+                    </div>
+                    <div className="space-y-4">
+                        {visibleBeats.length > 0 ? (
+                            visibleBeats.map((beat, idx) => (
+                                <motion.div
+                                    key={`${beat.day}-${idx}`}
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    className="flex gap-4 border-l border-white/5 pl-3 group"
+                                >
+                                    <span className="text-white/20 whitespace-nowrap text-[9px] pt-1 font-mono">D{beat.day.toString().padStart(2, '0')}</span>
+                                    <span className={`text-[11px] leading-relaxed transition-colors ${isActing ? 'text-emerald-400' : (beat.day >= 67 ? 'text-red-400' : 'text-slate-300')} group-hover:text-white`}>
+                                        {beat.text}
+                                    </span>
+                                </motion.div>
+                            ))
+                        ) : (
+                            <div className="text-white/10 text-[10px] text-center pt-8 italic">Awaiting simulation data... Move the slider to witness the narrative timeline.</div>
+                        )}
+                        <div id="narrative-bottom" />
+                    </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-8 pt-4">
