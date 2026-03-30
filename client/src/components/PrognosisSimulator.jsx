@@ -45,25 +45,42 @@ const PrognosisSimulator = ({ data, currentScore }) => {
             <div className="flex flex-col md:flex-row justify-between items-start mb-10 gap-8 relative z-10">
                 <div className="flex-1">
                     <div className="text-[10px] font-mono text-cyan-600/40 tracking-[0.3em] uppercase mb-2">Prognosis Engine v2.0 // Temporal Simulation</div>
-                    <h2 className="text-4xl font-black text-white mb-4 tracking-tight">The Price of Inaction</h2>
+                    <h2 className="text-4xl font-black text-white mb-4 tracking-tight">The Price of Inactive Maintenance</h2>
                     <p className="text-slate-400 text-sm max-w-lg leading-relaxed">
-                        Visualizing the next 90 days. This is a **forward-simulation**
-                        pattern-matched against thousands of repo death spirals. <br className="hidden md:block" />
-                        <span className="text-white/60 font-mono text-[10px] uppercase tracking-widest">Scrub to witness the narrative &rarr;</span>
+                        Compounding debt is not a spreadsheet error—it is a **systemic atrophy**. <br className="hidden md:block" />
+                        <span className="text-white/60 font-mono text-[10px] uppercase tracking-widest">Witness the accumulation &rarr;</span>
                     </p>
                 </div>
 
                 <div className="flex items-center gap-6">
-                    <div className="bg-black/80 border border-white/5 p-6 rounded-2xl min-w-[200px] text-center shadow-2xl relative overflow-hidden group">
+                    <div className="bg-black/80 border border-amber-500/20 p-6 rounded-2xl min-w-[240px] text-center shadow-[0_0_50px_rgba(245,158,11,0.1)] relative overflow-hidden group">
                         {isActing && <motion.div initial={{ x: '-100%' }} animate={{ x: '200%' }} transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }} className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent skew-x-12" />}
-                        <div className="text-[10px] font-mono text-slate-500 uppercase mb-2 tracking-widest">Remediation Cost</div>
-                        <div className="text-6xl font-black text-white mb-1 group-hover:scale-110 transition-transform">
-                            {currentFrame.costToFix}
-                            <span className="text-xs text-slate-600 ml-1 font-mono uppercase">Days</span>
+                        <div className="text-[10px] font-mono text-amber-500/60 uppercase mb-2 tracking-[0.3em]">Estimated Remediation Cost</div>
+
+                        <div className="flex items-center justify-center gap-1">
+                            <motion.div
+                                key={currentFrame.costToFix}
+                                initial={{ y: 20, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                className="text-6xl font-black text-white tracking-tighter"
+                            >
+                                {currentFrame.costToFix}
+                            </motion.div>
+                            <div className="text-xs text-slate-600 font-mono uppercase self-end mb-2">Eng Days</div>
                         </div>
+
                         {days > 0 && (
-                            <div className={`text-[10px] font-mono uppercase tracking-tighter ${isActing ? 'text-emerald-500' : 'text-red-500'} animate-pulse`}>
-                                {isActing ? 'Reducing Momentum' : `+${Math.round((currentFrame.costToFix / data.timeline[0].costToFix - 1) * 100)}% compounding`}
+                            <div className={`mt-3 py-1 px-3 rounded-full text-[9px] font-mono border inline-block ${isActing ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500' : 'bg-amber-500/10 border-amber-500/20 text-amber-500'} animate-pulse`}>
+                                {isActing ? 'NEGATIVE MOMENTUM' : `+${Math.round((currentFrame.costToFix / data.timeline[0].costToFix - 1) * 100)}% COMPOUNDING DEBT`}
+                            </div>
+                        )}
+
+                        {/* Active Loss Factors */}
+                        {!isActing && days > 0 && (
+                            <div className="mt-4 pt-4 border-t border-white/5 space-y-2">
+                                <LossFactor label="Context Loss" value={Math.min(100, days * 1.1)} active={days > 30} />
+                                <LossFactor label="CI Fragility" value={Math.min(100, days * 0.8)} active={days > 14} />
+                                <LossFactor label="Refactor Difficulty" value={Math.min(100, days * 1.5)} active={days > 45} />
                             </div>
                         )}
                     </div>
@@ -339,6 +356,20 @@ const Fracture = ({ x, y, scale, rotation = 0 }) => (
         fill="none"
         transform={`translate(${x}, ${y}) rotate(${rotation}) scale(${scale})`}
     />
+);
+
+const LossFactor = ({ label, value, active }) => (
+    <div className={`flex items-center justify-between gap-3 transition-opacity duration-500 ${active ? 'opacity-100' : 'opacity-20'}`}>
+        <div className="text-[9px] font-mono text-slate-500 uppercase flex-1 text-left">{label}</div>
+        <div className="w-24 h-1 bg-white/5 rounded-full overflow-hidden">
+            <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: active ? `${value}%` : 0 }}
+                className="h-full bg-amber-500/40"
+            />
+        </div>
+        <div className="text-[9px] font-mono text-amber-500/60 w-8 text-right">{active ? `+${Math.round(value)}%` : '--'}</div>
+    </div>
 );
 
 export default PrognosisSimulator;
