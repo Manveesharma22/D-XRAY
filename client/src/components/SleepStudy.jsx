@@ -165,12 +165,12 @@ export default function SleepStudy({ data }) {
                     <div className="w-2.5 h-2.5 rounded-full bg-indigo-400 animate-pulse" />
                     <span className="text-xs font-mono text-cyan-800/50 tracking-[0.2em] uppercase">Sleep Study — 24h Activity</span>
                 </div>
-                <div className="flex items-center gap-4 text-[10px] font-mono">
+                <div className="flex items-center gap-4 text-xs font-mono">
                     {data.bestHour !== undefined && (
-                        <span className="text-emerald-400/60">peak: {formatHour(data.bestHour)}</span>
+                        <span className="text-emerald-400/60 font-bold">peak: {formatHour(data.bestHour)}</span>
                     )}
                     {data.incidentCorrelation > 0 && (
-                        <span className="text-red-400/60">{data.incidentCorrelation}% incidents post-{formatHour(data.worstHour || 18)}</span>
+                        <span className="text-red-400/60 font-bold">{data.incidentCorrelation}% incidents post-{formatHour(data.worstHour || 18)}</span>
                     )}
                 </div>
             </div>
@@ -223,7 +223,7 @@ export default function SleepStudy({ data }) {
             {/* Hour labels */}
             <div className="grid mb-3" style={{ gridTemplateColumns: 'repeat(24, 1fr)' }}>
                 {HOUR_LABELS.map((label, i) => (
-                    <div key={i} className="text-center text-[7px] font-mono text-cyan-900/20">{label}</div>
+                    <div key={i} className="text-center text-[10px] font-mono text-cyan-900/30">{label}</div>
                 ))}
             </div>
 
@@ -234,23 +234,23 @@ export default function SleepStudy({ data }) {
                     border: '1px solid rgba(99,102,241,0.12)',
                     borderLeft: '3px solid rgba(99,102,241,0.3)',
                 }}>
-                    <p className="text-xs leading-relaxed italic" style={{ color: 'rgba(165,180,252,0.65)' }}>
+                    <p className="text-sm leading-relaxed italic" style={{ color: 'rgba(165,180,252,0.65)' }}>
                         {bedtimeInsight}
                     </p>
                 </div>
             )}
 
             {/* Legend */}
-            <div className="flex flex-wrap gap-3 text-[9px] font-mono">
-                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm" style={{ background: 'rgba(52,211,153,0.7)' }} />Deep work</span>
-                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm" style={{ background: 'rgba(99,102,241,0.6)' }} />Normal</span>
-                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm" style={{ background: 'rgba(245,158,11,0.6)' }} />Crisis</span>
-                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm" style={{ background: 'rgba(239,68,68,0.7)' }} />High incident</span>
-                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm" style={{ background: 'rgba(245,200,80,0.3)' }} />Golden hours</span>
+            <div className="flex flex-wrap gap-4 text-xs font-mono">
+                <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-sm" style={{ background: 'rgba(52,211,153,0.7)' }} />Deep work</span>
+                <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-sm" style={{ background: 'rgba(99,102,241,0.6)' }} />Normal</span>
+                <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-sm" style={{ background: 'rgba(245,158,11,0.6)' }} />Crisis</span>
+                <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-sm" style={{ background: 'rgba(239,68,68,0.7)' }} />High incident</span>
+                <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-sm" style={{ background: 'rgba(245,200,80,0.3)' }} />Golden hours</span>
             </div>
 
             {data.finding && (
-                <p className="text-xs text-cyan-800/40 leading-relaxed italic border-t border-cyan-900/10 pt-3 mt-3">{data.finding}</p>
+                <p className="text-sm text-cyan-800/40 leading-relaxed italic border-t border-cyan-900/10 pt-3 mt-4">{data.finding}</p>
             )}
         </motion.div>
     );

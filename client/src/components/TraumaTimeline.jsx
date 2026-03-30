@@ -106,7 +106,7 @@ export default function TraumaTimeline({ data }) {
                     <div className="w-2.5 h-2.5 rounded-full bg-red-400 animate-pulse" />
                     <span className="text-xs font-mono text-cyan-800/50 tracking-[0.2em] uppercase">Trauma Timeline</span>
                 </div>
-                <div className="flex items-center gap-3 text-[10px] font-mono text-cyan-800/30">
+                <div className="flex items-center gap-3 text-xs font-mono text-cyan-800/30">
                     <span className="text-red-400/70">{events.filter(e => e.severity === 'critical').length} critical</span>
                     <span className="text-amber-400/50">{events.filter(e => e.severity !== 'critical').length} acute</span>
                 </div>
@@ -133,10 +133,10 @@ export default function TraumaTimeline({ data }) {
                     {/* Date labels */}
                     {events.length > 0 && (
                         <>
-                            <text x={30} y={50} fontSize={7} fill="rgba(0,229,255,0.2)" textAnchor="middle">
+                            <text x={30} y={50} fontSize={10} fill="rgba(0,229,255,0.2)" textAnchor="middle">
                                 {new Date(events[events.length - 1]?.date).toLocaleDateString('en-US', { month: 'short', year: '2-digit' })}
                             </text>
-                            <text x={totalWidth - 30} y={50} fontSize={7} fill="rgba(0,229,255,0.2)" textAnchor="middle">
+                            <text x={totalWidth - 30} y={50} fontSize={10} fill="rgba(0,229,255,0.2)" textAnchor="middle">
                                 {new Date(events[0]?.date).toLocaleDateString('en-US', { month: 'short', year: '2-digit' })}
                             </text>
                         </>
@@ -167,7 +167,7 @@ export default function TraumaTimeline({ data }) {
                         <div className={`p-5 rounded-xl border ${style.bg} ${style.border}`}>
                             <div className="flex items-start justify-between mb-3">
                                 <div>
-                                    <div className="text-[10px] font-mono tracking-widest uppercase mb-1" style={{ color: style.color }}>
+                                    <div className="text-xs font-mono tracking-widest uppercase mb-1" style={{ color: style.color }}>
                                         {style.label} TRAUMA EVENT
                                     </div>
                                     <div className="text-sm font-bold text-white">{active.displayDate}</div>
@@ -202,11 +202,11 @@ export default function TraumaTimeline({ data }) {
             </AnimatePresence>
 
             {!activeEvent && (
-                <p className="text-[9px] text-cyan-800/25 font-mono mt-2">Click a fracture mark to expand the trauma report</p>
+                <p className="text-xs text-cyan-800/25 font-mono mt-2">Click a fracture mark to expand the trauma report</p>
             )}
 
             {data.finding && (
-                <p className="text-xs text-cyan-800/40 mt-3 leading-relaxed italic border-t border-cyan-900/10 pt-3">{data.finding}</p>
+                <p className="text-sm text-cyan-800/40 mt-4 leading-relaxed italic border-t border-cyan-900/10 pt-3">{data.finding}</p>
             )}
         </motion.div>
     );

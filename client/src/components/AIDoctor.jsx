@@ -92,7 +92,7 @@ export default function AIDoctor({ diagnosis, corpusScore }) {
               <div key={i} style={{ width: 11, height: 11, borderRadius: '50%', background: c, opacity: 0.7 }} />
             ))}
           </div>
-          <span style={{ fontSize: 10, color: 'rgba(52,211,153,0.4)', letterSpacing: '0.2em' }}>
+          <span style={{ fontSize: 12, color: 'rgba(52,211,153,0.4)', letterSpacing: '0.2em' }}>
             AI DOCTOR — DX-RAY DIAGNOSTIC TERMINAL
           </span>
         </div>
@@ -111,7 +111,7 @@ export default function AIDoctor({ diagnosis, corpusScore }) {
         </div>
       </div>
 
-      <div style={{ padding: '20px 24px', fontSize: 12, lineHeight: 1.7 }}>
+      <div style={{ padding: '20px 24px', fontSize: 14, lineHeight: 1.7 }}>
         {/* Scan line overlay */}
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1,
@@ -156,7 +156,7 @@ export default function AIDoctor({ diagnosis, corpusScore }) {
             <div style={{ color: 'rgba(52,211,153,0.5)', marginBottom: 16, position: 'relative', zIndex: 2 }}>
               <span style={{ color: '#4ade80', opacity: 0.7 }}>&gt;</span>{' '}
               DX Score:{' '}
-              <span style={{ color: scoreColor, fontWeight: 700, fontSize: 14 }}>
+              <span style={{ color: scoreColor, fontWeight: 700, fontSize: 16 }}>
                 {corpusScore?.dxScore}
               </span>
               {' '}/ 100 — Classification:{' '}
@@ -227,7 +227,7 @@ export default function AIDoctor({ diagnosis, corpusScore }) {
                   transition={{ duration: 0.8, repeat: Infinity }}
                   style={{ width: 7, height: 13, background: '#4ade80' }}
                 />
-                <span style={{ fontSize: 10, letterSpacing: '0.1em' }}>READING SCAN DATA...</span>
+                <span style={{ fontSize: 12, letterSpacing: '0.1em' }}>READING SCAN DATA...</span>
               </div>
             )}
 
@@ -245,7 +245,7 @@ export default function AIDoctor({ diagnosis, corpusScore }) {
                   alignItems: 'center',
                   gap: 8,
                   color: 'rgba(52,211,153,0.35)',
-                  fontSize: 11,
+                  fontSize: 13,
                   position: 'relative',
                   zIndex: 2,
                 }}

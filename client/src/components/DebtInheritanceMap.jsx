@@ -106,15 +106,15 @@ export default function DebtInheritanceMap({ data }) {
         <div className="flex gap-8 mt-5">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-red-400/60" />
-            <span className="text-xs text-cyan-800/60 font-mono font-bold tracking-tight">{data.totalDebtInSystem || 0} total debt units in system</span>
+            <span className="text-sm text-cyan-800/60 font-mono font-bold tracking-tight">{data.totalDebtInSystem || 0} total debt units in system</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-amber-400/60" />
-            <span className="text-xs text-cyan-800/60 font-mono font-bold tracking-tight">{chainOfCustody.length} inheritance chains</span>
+            <span className="text-sm text-cyan-800/60 font-mono font-bold tracking-tight">{chainOfCustody.length} inheritance chains</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-emerald-400/60" />
-            <span className="text-xs text-cyan-800/60 font-mono font-bold tracking-tight">{blameEvents.length} blame events detected</span>
+            <span className="text-sm text-cyan-800/60 font-mono font-bold tracking-tight">{blameEvents.length} blame events detected</span>
           </div>
         </div>
       </div>
@@ -150,8 +150,8 @@ export default function DebtInheritanceMap({ data }) {
                         </div>
                       )}
                       <div>
-                        <div className="text-[10px] font-bold text-white truncate max-w-[80px]">{contrib.login}</div>
-                        <div className="text-[7px] text-cyan-800/30 font-mono">
+                        <div className="text-xs font-bold text-white truncate max-w-[80px]">{contrib.login}</div>
+                        <div className="text-[10px] text-cyan-800/30 font-mono">
                           {isNewest ? 'NEWEST' : isOldest ? 'FOUNDER' : `${contrib.tenure}d`}
                         </div>
                       </div>
@@ -164,7 +164,7 @@ export default function DebtInheritanceMap({ data }) {
                   {i < sortedByDate.length - 1 && (
                     <div className="shrink-0 text-cyan-800/20 flex flex-col items-center">
                       <svg width="16" height="8" viewBox="0 0 16 8"><path d="M0 4 L12 4 M9 1 L12 4 L9 7" stroke="currentColor" strokeWidth="1" fill="none" /></svg>
-                      <span className="text-[6px] text-cyan-900/20 mt-0.5">inherits</span>
+                      <span className="text-[9px] text-cyan-900/20 mt-0.5">inherits</span>
                     </div>
                   )}
                 </React.Fragment>
@@ -212,23 +212,23 @@ export default function DebtInheritanceMap({ data }) {
                             <span className="text-[7px] font-mono bg-amber-500/15 text-amber-400/80 border border-amber-500/20 px-1.5 py-0.5 rounded-md tracking-wider uppercase">NEW MEMBER</span>
                           )}
                         </div>
-                        <div className="text-[9px] text-cyan-800/50 font-mono">
+                        <div className="text-xs text-cyan-800/50 font-mono">
                           {contrib.totalCommits} commits &middot; {contrib.tenure} days &middot; {contrib.seniorityFactor}% seniority
                         </div>
                       </div>
                     </div>
                     <div className="flex gap-5 text-center">
                       <div>
-                        <div className="text-[8px] text-red-400/50 font-mono uppercase tracking-wider">Created</div>
-                        <div className="text-base font-black text-red-400">{contrib.debtCreated}%</div>
+                        <div className="text-[10px] text-red-400/50 font-mono uppercase tracking-wider">Created</div>
+                        <div className="text-lg font-black text-red-400">{contrib.debtCreated}%</div>
                       </div>
                       <div>
-                        <div className="text-[8px] text-amber-400/50 font-mono uppercase tracking-wider">Inherited</div>
-                        <div className="text-base font-black text-amber-400">{contrib.debtInherited}%</div>
+                        <div className="text-[10px] text-amber-400/50 font-mono uppercase tracking-wider">Inherited</div>
+                        <div className="text-lg font-black text-amber-400">{contrib.debtInherited}%</div>
                       </div>
                       <div>
-                        <div className="text-[8px] text-emerald-400/50 font-mono uppercase tracking-wider">Fixed</div>
-                        <div className="text-base font-black text-emerald-400">{contrib.debtFixed}%</div>
+                        <div className="text-[10px] text-emerald-400/50 font-mono uppercase tracking-wider">Fixed</div>
+                        <div className="text-lg font-black text-emerald-400">{contrib.debtFixed}%</div>
                       </div>
                     </div>
                   </div>
@@ -277,7 +277,7 @@ export default function DebtInheritanceMap({ data }) {
                       {contrib.unsungFixes?.length > 0 && (
                         <div className="px-4 pb-3">
                           <div className="p-4 rounded-xl bg-emerald-500/[0.04] border border-emerald-500/10">
-                            <div className="text-[9px] text-emerald-400/60 font-mono uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                            <div className="text-xs text-emerald-400/60 font-mono uppercase tracking-wider mb-2 flex items-center gap-1.5">
                               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2">
                                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                               </svg>
@@ -305,7 +305,7 @@ export default function DebtInheritanceMap({ data }) {
                       {contrib.debtCreated > 40 && contrib.totalCommits > 20 && (
                         <div className="px-4 pb-3">
                           <div className="p-3 rounded-xl bg-red-500/[0.04] border border-red-500/10">
-                            <div className="text-[9px] text-red-400/50 font-mono uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                            <div className="text-xs text-red-400/50 font-mono uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
                               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2">
                                 <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
                                 <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
@@ -323,19 +323,19 @@ export default function DebtInheritanceMap({ data }) {
                       <div className="px-4 pb-4">
                         <div className="grid grid-cols-4 gap-2 text-center">
                           <div className="p-2.5 rounded-lg bg-black/20 border border-white/[0.02]">
-                            <div className="text-[8px] text-cyan-800/50 font-mono uppercase">Features</div>
+                            <div className="text-[10px] text-cyan-800/50 font-mono uppercase">Features</div>
                             <div className="text-sm font-bold text-cyan-200">{contrib.featureCommits}</div>
                           </div>
                           <div className="p-2.5 rounded-lg bg-black/20 border border-white/[0.02]">
-                            <div className="text-[8px] text-cyan-800/50 font-mono uppercase">Fixes</div>
+                            <div className="text-[10px] text-cyan-800/50 font-mono uppercase">Fixes</div>
                             <div className="text-sm font-bold text-cyan-200">{contrib.fixCommits}</div>
                           </div>
                           <div className="p-2.5 rounded-lg bg-black/20 border border-white/[0.02]">
-                            <div className="text-[8px] text-cyan-800/50 font-mono uppercase">Tests</div>
+                            <div className="text-[10px] text-cyan-800/50 font-mono uppercase">Tests</div>
                             <div className="text-sm font-bold text-cyan-200">{contrib.testCommits}</div>
                           </div>
                           <div className="p-2.5 rounded-lg bg-black/20 border border-white/[0.02]">
-                            <div className="text-[8px] text-cyan-800/50 font-mono uppercase">Late Night</div>
+                            <div className="text-[10px] text-cyan-800/50 font-mono uppercase">Late Night</div>
                             <div className="text-sm font-bold text-amber-300/70">{contrib.lateNightCommits}</div>
                           </div>
                         </div>
@@ -359,15 +359,15 @@ export default function DebtInheritanceMap({ data }) {
                 </svg>
               </div>
               <div>
-                <div className="text-[10px] font-mono text-emerald-400/60 uppercase tracking-[0.2em]">Unsung Fixes — Quiet Work That Never Got Credit</div>
+                <div className="text-sm font-mono text-emerald-400/60 uppercase tracking-[0.2em]">Unsung Fixes — Quiet Work That Never Got Credit</div>
               </div>
             </div>
             <div className="space-y-2">
               {unsungHeroes.map((hero, i) => (
                 <div key={i} className="p-3 rounded-xl bg-emerald-500/[0.03] border border-emerald-500/10">
                   <div className="flex items-center gap-2 mb-1.5">
-                    <span className="text-[10px] font-bold text-emerald-300/80">@{hero.login}</span>
-                    <span className="text-[8px] font-mono text-emerald-400/40">{hero.debtFixed}% of codebase debt silently repaired</span>
+                    <span className="text-sm font-bold text-emerald-300/80">@{hero.login}</span>
+                    <span className="text-xs font-mono text-emerald-400/40">{hero.debtFixed}% of codebase debt silently repaired</span>
                   </div>
                   {hero.unsungFixes?.slice(0, 2).map((fix, j) => (
                     <div key={j} className="text-xs text-emerald-300/60 flex items-center gap-2">
@@ -424,16 +424,16 @@ export default function DebtInheritanceMap({ data }) {
         {/* Chain of Custody */}
         {chainOfCustody.length > 0 && (
           <div className="mt-2 pt-4 border-t border-cyan-900/10">
-            <div className="text-[9px] font-mono text-cyan-800/40 uppercase tracking-[0.2em] mb-3">Inheritance Chains — Full Chain of Custody</div>
+            <div className="text-sm font-mono text-cyan-800/40 uppercase tracking-[0.2em] mb-3">Inheritance Chains — Full Chain of Custody</div>
             <div className="space-y-2">
               {chainOfCustody.slice(0, 4).map((chain, i) => (
                 <div key={i} className="p-3 rounded-lg bg-black/20 border border-white/[0.03]">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-[10px] font-bold text-amber-400">@{chain.carrier}</span>
-                    <span className="text-[9px] text-cyan-800/30">inherited from</span>
+                    <span className="text-sm font-bold text-amber-400">@{chain.carrier}</span>
+                    <span className="text-xs text-cyan-800/30">inherited from</span>
                     {chain.inheritedFrom.map((name, j) => (
                       <React.Fragment key={j}>
-                        <span className="text-[10px] text-cyan-300/50">@{name}</span>
+                        <span className="text-sm text-cyan-300/50">@{name}</span>
                         {j < chain.inheritedFrom.length - 1 && <span className="text-cyan-800/20">,</span>}
                       </React.Fragment>
                     ))}

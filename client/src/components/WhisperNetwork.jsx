@@ -47,7 +47,7 @@ export default function WhisperNetwork({ data }) {
                     <div className="w-2.5 h-2.5 rounded-full bg-cyan-400/30 animate-pulse" />
                     <span className="text-xs font-mono text-cyan-800/50 tracking-[0.2em] uppercase">Whisper Network</span>
                 </div>
-                <span className="text-[10px] font-mono text-cyan-800/30">
+                <span className="text-xs font-mono text-cyan-800/30">
                     {data.whispers.length} unanswered question{data.whispers.length > 1 ? 's' : ''}
                 </span>
             </div>
@@ -97,13 +97,13 @@ export default function WhisperNetwork({ data }) {
                             {/* Author + timestamp */}
                             <div className="flex items-center gap-2 mb-3">
                                 <div className="w-5 h-5 rounded-full border border-cyan-800/15 flex items-center justify-center bg-cyan-900/10">
-                                    <span className="text-[8px] font-mono text-cyan-600/40">@</span>
+                                    <span className="text-[10px] font-mono text-cyan-600/40">@</span>
                                 </div>
-                                <span className="text-[10px] font-mono text-cyan-700/35">{whisper.author || 'unknown'}</span>
-                                <span className="text-[9px] font-mono text-cyan-900/20">·</span>
-                                <span className="text-[9px] font-mono text-cyan-900/25">{whisper.daysAgo} days ago</span>
+                                <span className="text-xs font-mono text-cyan-700/35">{whisper.author || 'unknown'}</span>
+                                <span className="text-[10px] font-mono text-cyan-900/20">·</span>
+                                <span className="text-[10px] font-mono text-cyan-900/25">{whisper.daysAgo} days ago</span>
                                 {isOld && (
-                                    <span className="text-[8px] font-mono px-1.5 py-0.5 rounded" style={{
+                                    <span className="text-xs font-mono px-1.5 py-0.5 rounded" style={{
                                         background: 'rgba(239,68,68,0.08)',
                                         border: '1px solid rgba(239,68,68,0.15)',
                                         color: 'rgba(239,68,68,0.5)'
@@ -132,7 +132,7 @@ export default function WhisperNetwork({ data }) {
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     transition={{ delay: 1.5, duration: 1 }}
-                                    className="text-[9px] font-mono mt-4 leading-relaxed"
+                                    className="text-xs font-mono mt-4 leading-relaxed"
                                     style={{ color: 'rgba(0,229,255,0.08)', letterSpacing: '0.05em' }}
                                 >
                                     echo: "{whisper.question}"
@@ -163,7 +163,7 @@ export default function WhisperNetwork({ data }) {
             </div>
 
             {data.finding && (
-                <p className="text-xs text-cyan-800/40 mt-3 leading-relaxed italic border-t border-cyan-900/10 pt-3">{data.finding}</p>
+                <p className="text-sm text-cyan-800/40 mt-3 leading-relaxed italic border-t border-cyan-900/10 pt-3">{data.finding}</p>
             )}
         </motion.div>
     );

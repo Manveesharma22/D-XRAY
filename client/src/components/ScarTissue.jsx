@@ -73,8 +73,8 @@ export default function ScarTissue({ data }) {
                     border: '1px solid rgba(239,68,68,0.12)',
                     borderLeft: '3px solid rgba(239,68,68,0.35)',
                 }}>
-                    <div className="text-[8px] font-mono text-red-400/40 uppercase tracking-widest mb-1.5">Surgery Required</div>
-                    <p className="text-xs leading-relaxed italic" style={{ color: 'rgba(252,165,165,0.6)' }}>
+                    <div className="text-xs font-mono text-red-400/40 uppercase tracking-widest mb-1.5">Surgery Required</div>
+                    <p className="text-sm leading-relaxed italic" style={{ color: 'rgba(252,165,165,0.6)' }}>
                         "{buildSurgeryNotice(data.mostScared)}"
                     </p>
                 </div>
@@ -102,16 +102,16 @@ export default function ScarTissue({ data }) {
                         >
                             <div className="flex items-center justify-between mb-1.5">
                                 <div className="flex items-center gap-2">
-                                    <code className="text-[10px] font-mono text-rose-300/60">{shortPath}</code>
-                                    <span className="text-[8px] font-mono text-rose-900/40">{scar.commitCount} commits · {scar.authorCount} authors</span>
+                                    <code className="text-xs font-mono text-rose-300/60 font-bold">{shortPath}</code>
+                                    <span className="text-xs font-mono text-rose-900/50">{scar.commitCount} commits · {scar.authorCount} authors</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     {scar.rewriteCount >= 5 && (
-                                        <span className="text-[8px] font-mono text-red-400/50 px-1.5 py-0.5 rounded bg-red-500/5 border border-red-500/10">
+                                        <span className="text-xs font-mono text-red-400/50 px-1.5 py-0.5 rounded bg-red-500/5 border border-red-500/10">
                                             {scar.rewriteCount}× rewritten
                                         </span>
                                     )}
-                                    <span className="text-[10px] font-mono font-bold text-rose-400/60">{scar.scarScore}</span>
+                                    <span className="text-sm font-black font-mono text-rose-400/60">{scar.scarScore}</span>
                                 </div>
                             </div>
 
@@ -150,11 +150,11 @@ export default function ScarTissue({ data }) {
                                         exit={{ opacity: 0, height: 0 }}
                                         className="overflow-hidden mt-2"
                                     >
-                                        <div className="px-3 py-2 rounded-lg" style={{ background: 'rgba(239,68,68,0.04)', border: '1px solid rgba(239,68,68,0.1)' }}>
-                                            <p className="text-[9px] font-mono text-rose-400/40 leading-relaxed italic">
+                                        <div className="px-3 py-3 rounded-lg" style={{ background: 'rgba(239,68,68,0.04)', border: '1px solid rgba(239,68,68,0.1)' }}>
+                                            <p className="text-sm font-mono text-rose-400/40 leading-relaxed italic">
                                                 {buildSurgeryNotice(scar)}
                                             </p>
-                                            <div className="flex gap-4 mt-2 text-[8px] font-mono text-rose-900/40">
+                                            <div className="flex gap-4 mt-3 text-xs font-mono text-rose-900/40">
                                                 {scar.ageYears && <span>Age: {scar.ageYears}y</span>}
                                                 {scar.rewriteCount && <span>Rewrites: {scar.rewriteCount}</span>}
                                                 {scar.topContributor && <span>Most responsible: {scar.topContributor}</span>}
@@ -168,10 +168,10 @@ export default function ScarTissue({ data }) {
                 })}
             </div>
 
-            <p className="text-[9px] font-mono text-cyan-900/20 mb-2">Click a scar to see the full surgical report</p>
+            <p className="text-xs text-cyan-900/20 mb-2">Click a scar to see the full surgical report</p>
 
             {data.finding && (
-                <p className="text-xs text-cyan-800/40 leading-relaxed italic border-t border-cyan-900/10 pt-3">{data.finding}</p>
+                <p className="text-sm text-cyan-800/40 leading-relaxed italic border-t border-cyan-900/10 pt-3">{data.finding}</p>
             )}
         </motion.div>
     );

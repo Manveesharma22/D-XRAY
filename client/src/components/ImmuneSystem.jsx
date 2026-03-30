@@ -33,7 +33,7 @@ function MetricRing({ label, value, status }) {
                     {displayVal}
                 </div>
             </div>
-            <div className="text-[8px] font-mono text-center leading-tight" style={{ color: `${color}60`, maxWidth: 52 }}>{label}</div>
+            <div className="text-[10px] font-mono text-center leading-tight" style={{ color: `${color}60`, maxWidth: 64 }}>{label}</div>
         </div>
     );
 }
@@ -229,14 +229,14 @@ export default function ImmuneSystem({ data }) {
                     <span className="text-xs font-mono text-cyan-800/50 tracking-[0.2em] uppercase">Immune System</span>
                 </div>
                 <div className="flex items-center gap-3">
-                    <span className={`text-xs font-mono font-bold ${immuneColor}`}>{immuneLabel}</span>
-                    <span className={`text-2xl font-black font-mono ${immuneColor}`}>{immuneScore}</span>
+                    <span className={`text-sm font-mono font-bold ${immuneColor}`}>{immuneLabel}</span>
+                    <span className={`text-3xl font-black font-mono ${immuneColor}`}>{immuneScore}</span>
                 </div>
             </div>
 
             {/* One-sentence verdict — the clinical summary */}
-            <div className="mb-4 px-4 py-3 rounded-xl" style={{ background: 'rgba(0,0,0,0.3)', borderLeft: `3px solid ${immuneScore >= 70 ? 'rgba(52,211,153,0.3)' : immuneScore >= 40 ? 'rgba(245,158,11,0.3)' : 'rgba(239,68,68,0.3)'}` }}>
-                <p className="text-xs leading-relaxed italic" style={{ color: immuneScore < 50 ? 'rgba(239,68,68,0.7)' : 'rgba(255,255,255,0.5)' }}>
+            <div className="mb-4 px-4 py-4 rounded-xl" style={{ background: 'rgba(0,0,0,0.3)', borderLeft: `3px solid ${immuneScore >= 70 ? 'rgba(52,211,153,0.3)' : immuneScore >= 40 ? 'rgba(245,158,11,0.3)' : 'rgba(239,68,68,0.3)'}` }}>
+                <p className="text-sm leading-relaxed italic" style={{ color: immuneScore < 50 ? 'rgba(239,68,68,0.7)' : 'rgba(255,255,255,0.5)' }}>
                     {buildVerdict()}
                 </p>
             </div>
@@ -257,7 +257,7 @@ export default function ImmuneSystem({ data }) {
             )}
 
             {data.finding && (
-                <p className="text-xs text-cyan-800/40 leading-relaxed italic border-t border-cyan-900/10 pt-3 mt-3">{data.finding}</p>
+                <p className="text-sm text-cyan-800/40 leading-relaxed italic border-t border-cyan-900/10 pt-3 mt-3">{data.finding}</p>
             )}
         </motion.div>
     );

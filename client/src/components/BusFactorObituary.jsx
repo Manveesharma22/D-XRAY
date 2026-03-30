@@ -53,14 +53,14 @@ export default function BusFactorObituary({ data }) {
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
                             <h3 style={{ fontSize: 18, fontWeight: 800, color: '#fff', margin: 0 }}>Bus Factor Analysis</h3>
                             <span style={{
-                                fontSize: 8, fontFamily: 'monospace', letterSpacing: '0.15em',
+                                fontSize: 10, fontFamily: 'monospace', letterSpacing: '0.15em',
                                 background: 'rgba(249,115,22,0.15)', color: 'rgba(249,115,22,0.9)',
-                                border: '1px solid rgba(249,115,22,0.3)', borderRadius: 6, padding: '2px 7px',
+                                border: '1px solid rgba(249,115,22,0.3)', borderRadius: 6, padding: '3px 9px',
                             }}>
                                 BUS NUMBER: {busNumber ?? '?'}
                             </span>
                         </div>
-                        <p style={{ fontSize: 11, color: 'rgba(249,115,22,0.45)', fontFamily: 'monospace', margin: '4px 0 0', lineHeight: 1.5 }}>
+                        <p style={{ fontSize: 13, color: 'rgba(249,115,22,0.45)', fontFamily: 'monospace', margin: '6px 0 0', lineHeight: 1.5 }}>
                             {summary || `${risks.length} single point${risks.length !== 1 ? 's' : ''} of failure detected. If a bus hit these people tomorrow, the codebase would not survive.`}
                         </p>
                     </div>
@@ -69,11 +69,11 @@ export default function BusFactorObituary({ data }) {
                 {teamSurvivalRate !== undefined && (
                     <div style={{ marginTop: 16 }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                            <span style={{ fontSize: 9, color: 'rgba(249,115,22,0.5)', fontFamily: 'monospace', letterSpacing: '0.15em' }}>
+                            <span style={{ fontSize: 11, color: 'rgba(249,115,22,0.5)', fontFamily: 'monospace', letterSpacing: '0.15em' }}>
                                 TEAM SURVIVAL RATE
                             </span>
                             <span style={{
-                                fontSize: 9, fontFamily: 'monospace',
+                                fontSize: 11, fontFamily: 'monospace',
                                 color: teamSurvivalRate >= 70 ? '#4ade80' : teamSurvivalRate >= 40 ? '#fbbf24' : '#f87171',
                             }}>
                                 {teamSurvivalRate}%
@@ -121,14 +121,14 @@ export default function BusFactorObituary({ data }) {
                                         )}
                                         <div>
                                             <div style={{ fontWeight: 700, color: '#fff', fontSize: 14 }}>@{risk.login}</div>
-                                            <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', fontFamily: 'monospace', marginTop: 1 }}>
+                                            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', fontFamily: 'monospace', marginTop: 1 }}>
                                                 {risk.tenure} days · {risk.commits} commits · {risk.knowledgeAreas?.length || 0} critical areas
                                             </div>
                                         </div>
                                     </div>
                                     <div style={{ textAlign: 'right' }}>
                                         <div style={{ fontSize: 22, fontWeight: 900, color: riskColor }}>{risk.riskScore}</div>
-                                        <div style={{ fontSize: 8, color: `${riskColor}60`, fontFamily: 'monospace' }}>RISK</div>
+                                        <div style={{ fontSize: 10, color: `${riskColor}60`, fontFamily: 'monospace', letterSpacing: '0.1em' }}>RISK</div>
                                     </div>
                                 </div>
                                 <div style={{ marginTop: 10 }}>
@@ -151,10 +151,10 @@ export default function BusFactorObituary({ data }) {
                                                 padding: '14px 16px', borderRadius: 12, marginBottom: 12,
                                                 background: 'rgba(0,0,0,0.4)', border: `1px dashed ${riskColor}20`,
                                             }}>
-                                                <div style={{ fontSize: 8, fontFamily: 'monospace', color: `${riskColor}50`, letterSpacing: '0.2em', marginBottom: 8 }}>
+                                                <div style={{ fontSize: 10, fontFamily: 'monospace', color: `${riskColor}50`, letterSpacing: '0.2em', marginBottom: 8 }}>
                                                     IN MEMORIAM — PRE-WRITTEN
                                                 </div>
-                                                <p style={{ fontSize: 13, color: 'rgba(255,235,210,0.75)', fontStyle: 'italic', lineHeight: 1.7, margin: 0 }}>
+                                                <p style={{ fontSize: 14, color: 'rgba(255,235,210,0.75)', fontStyle: 'italic', lineHeight: 1.7, margin: 0 }}>
                                                     {risk.obituary || `If @${risk.login} left tomorrow, ${risk.knowledgePercentage || '?'}% of this codebase's institutional knowledge would leave with them. The ${risk.criticalModule || 'core system'} they built has no living documentation. The team would spend the next quarter reverse-engineering their decisions.`}
                                                 </p>
                                             </div>
@@ -162,13 +162,13 @@ export default function BusFactorObituary({ data }) {
                                             {/* Knowledge areas */}
                                             {risk.knowledgeAreas?.length > 0 && (
                                                 <div style={{ marginBottom: 12 }}>
-                                                    <div style={{ fontSize: 8, color: 'rgba(255,255,255,0.2)', fontFamily: 'monospace', letterSpacing: '0.15em', marginBottom: 8 }}>
+                                                    <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)', fontFamily: 'monospace', letterSpacing: '0.15em', marginBottom: 8 }}>
                                                         KNOWLEDGE HELD HOSTAGE
                                                     </div>
                                                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                                                         {risk.knowledgeAreas.map((area, j) => (
                                                             <span key={j} style={{
-                                                                fontSize: 10, padding: '3px 8px', borderRadius: 6,
+                                                                fontSize: 11, padding: '4px 9px', borderRadius: 6,
                                                                 background: `${riskColor}12`, color: `${riskColor}80`,
                                                                 border: `1px solid ${riskColor}20`, fontFamily: 'monospace',
                                                             }}>
@@ -185,10 +185,10 @@ export default function BusFactorObituary({ data }) {
                                                     padding: '8px 12px', borderRadius: 8,
                                                     background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.12)',
                                                 }}>
-                                                    <div style={{ fontSize: 8, color: 'rgba(52,211,153,0.5)', fontFamily: 'monospace', letterSpacing: '0.15em', marginBottom: 4 }}>
+                                                    <div style={{ fontSize: 10, color: 'rgba(52,211,153,0.5)', fontFamily: 'monospace', letterSpacing: '0.15em', marginBottom: 4 }}>
                                                         SURVIVAL PLAN
                                                     </div>
-                                                    <div style={{ fontSize: 11, color: 'rgba(52,211,153,0.75)', lineHeight: 1.5 }}>{risk.mitigation}</div>
+                                                    <div style={{ fontSize: 12, color: 'rgba(52,211,153,0.75)', lineHeight: 1.5 }}>{risk.mitigation}</div>
                                                 </div>
                                             )}
                                         </div>
@@ -201,7 +201,7 @@ export default function BusFactorObituary({ data }) {
             </div>
 
             <div style={{ padding: '12px 32px', borderTop: '1px solid rgba(249,115,22,0.06)' }}>
-                <p style={{ fontSize: 10, color: 'rgba(249,115,22,0.3)', fontFamily: 'monospace', margin: 0 }}>
+                <p style={{ fontSize: 12, color: 'rgba(249,115,22,0.3)', fontFamily: 'monospace', margin: 0 }}>
                     Bus Factor: the number of team members who could be hit by a bus before this project collapses. Yours is {busNumber ?? '?'}. Plan accordingly.
                 </p>
             </div>

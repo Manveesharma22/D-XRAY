@@ -42,7 +42,7 @@ export default function ArchaeologyLayer({ data }) {
                 </div>
                 <div className="text-right">
                     <div className="text-2xl font-black text-amber-400">{sharedPct}%</div>
-                    <div className="text-[9px] font-mono text-cyan-800/30 uppercase">original architecture</div>
+                    <div className="text-xs font-mono text-cyan-800/30 uppercase">original architecture</div>
                 </div>
             </div>
 
@@ -114,32 +114,32 @@ export default function ArchaeologyLayer({ data }) {
                         <g opacity={Math.max(0.15, origOpacity)}>
                             <line x1="220" y1="80" x2="170" y2="60" stroke="#f59e0b" strokeWidth="0.8" strokeDasharray="2 2" />
                             <rect x="140" y="52" width="60" height="16" rx="3" fill="rgba(245,158,11,0.08)" />
-                            <text x="170" y="63" fontSize="7" fill="rgba(245,158,11,0.5)" textAnchor="middle">Spine rebuilt</text>
+                            <text x="170" y="63" fontSize="9" fill="rgba(245,158,11,0.5)" textAnchor="middle">Spine rebuilt</text>
                         </g>
                     )}
                     {hasTestingShift && (
                         <g opacity={Math.max(0.15, origOpacity)}>
                             <line x1="220" y1="90" x2="175" y2="100" stroke="#f59e0b" strokeWidth="0.8" strokeDasharray="2 2" />
                             <rect x="140" y="92" width="70" height="16" rx="3" fill="rgba(245,158,11,0.08)" />
-                            <text x="175" y="103" fontSize="7" fill="rgba(245,158,11,0.45)" textAnchor="middle">Test philosophy</text>
+                            <text x="175" y="103" fontSize="9" fill="rgba(245,158,11,0.45)" textAnchor="middle">Test philosophy</text>
                         </g>
                     )}
 
                     {/* Legend */}
                     <g>
                         <line x1="10" y1="12" x2="40" y2="12" stroke="#f59e0b" strokeWidth="1.5" strokeDasharray="5 3" opacity={origOpacity + 0.1} />
-                        <text x="44" y="16" fontSize="7" fill="rgba(245,158,11,0.4)">v1.0 original</text>
+                        <text x="44" y="16" fontSize="9" fill="rgba(245,158,11,0.4)">v1.0 original</text>
                         <line x1="10" y1="24" x2="40" y2="24" stroke="#00e5ff" strokeWidth="1.5" opacity={currOpacity + 0.1} />
-                        <text x="44" y="28" fontSize="7" fill="rgba(0,229,255,0.4)">Current</text>
+                        <text x="44" y="28" fontSize="9" fill="rgba(0,229,255,0.4)">Current</text>
                     </g>
                 </svg>
             </div>
 
             {/* Film-strip slider */}
             <div className="space-y-2 mb-4">
-                <div className="flex justify-between text-[9px] font-mono">
+                <div className="flex justify-between text-xs font-mono">
                     <span className="text-amber-400/40">↑ v1.0 — Original</span>
-                    {atMidpoint && <span className="text-white/30 text-[8px]">Double exposure</span>}
+                    {atMidpoint && <span className="text-white/30 text-[10px]">Double exposure</span>}
                     <span className="text-cyan-400/40">Today ↑</span>
                 </div>
                 <div className="relative">
@@ -169,13 +169,13 @@ export default function ArchaeologyLayer({ data }) {
                         }}
                     />
                 </div>
-                <p className="text-[8px] font-mono text-cyan-800/25 text-center">Drag to morph between original and current skeleton</p>
+                <p className="text-xs font-mono text-cyan-800/25 text-center">Drag to morph between original and current skeleton</p>
             </div>
 
             {/* Rewrite timeline */}
             {rewriteDots.length > 0 && (
                 <div className="mb-4">
-                    <div className="text-[8px] font-mono text-amber-400/30 uppercase mb-2">Estimated rewrites</div>
+                    <div className="text-xs font-mono text-amber-400/30 uppercase mb-2">Estimated rewrites</div>
                     <div className="relative h-3">
                         <div className="absolute inset-y-0 left-0 right-0 flex items-center">
                             <div className="w-full h-0.5 bg-amber-400/10" />
@@ -199,25 +199,25 @@ export default function ArchaeologyLayer({ data }) {
             {/* Stats row */}
             <div className="grid grid-cols-3 gap-3 mb-3">
                 <div className="text-center p-2 rounded-lg bg-black/20 border border-cyan-900/10">
-                    <div className="text-[8px] font-mono text-cyan-800/30 uppercase">Drift</div>
+                    <div className="text-xs font-mono text-cyan-800/30 uppercase">Drift</div>
                     <div className="text-lg font-black text-amber-400">{driftPercent}%</div>
                 </div>
                 <div className="text-center p-2 rounded-lg bg-black/20 border border-cyan-900/10">
-                    <div className="text-[8px] font-mono text-cyan-800/30 uppercase">Extinct paths</div>
+                    <div className="text-xs font-mono text-cyan-800/30 uppercase">Extinct paths</div>
                     <div className="text-lg font-black text-red-400">{data.extinctPaths?.length || 0}</div>
                 </div>
                 <div className="text-center p-2 rounded-lg bg-black/20 border border-cyan-900/10">
-                    <div className="text-[8px] font-mono text-cyan-800/30 uppercase">Rewrites est.</div>
+                    <div className="text-xs font-mono text-cyan-800/30 uppercase">Rewrites est.</div>
                     <div className="text-lg font-black text-cyan-400">{rewriteCount}</div>
                 </div>
             </div>
 
             {data.extinctPaths?.length > 0 && (
                 <div className="mb-3">
-                    <div className="text-[8px] font-mono text-amber-400/35 uppercase mb-1.5">Extinct architecture</div>
+                    <div className="text-xs font-mono text-amber-400/35 uppercase mb-1.5">Extinct architecture</div>
                     <div className="flex flex-wrap gap-1.5">
                         {data.extinctPaths.slice(0, 6).map((p, i) => (
-                            <span key={i} className="text-[9px] font-mono text-amber-400/35 bg-amber-500/5 border border-amber-500/08 px-2 py-0.5 rounded">
+                            <span key={i} className="text-xs font-mono text-amber-400/35 bg-amber-500/5 border border-amber-500/08 px-2 py-0.5 rounded">
                                 /{p}
                             </span>
                         ))}
@@ -226,7 +226,7 @@ export default function ArchaeologyLayer({ data }) {
             )}
 
             {data.finding && (
-                <p className="text-xs text-cyan-800/40 leading-relaxed italic border-t border-cyan-900/10 pt-3">{data.finding}</p>
+                <p className="text-sm text-cyan-800/40 leading-relaxed italic border-t border-cyan-900/10 pt-3">{data.finding}</p>
             )}
         </motion.div>
     );

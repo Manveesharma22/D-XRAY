@@ -192,19 +192,19 @@ function ContribNode({ contrib, x, y, isNewest, isOldest, isSelected, onClick, i
                 x={x} y={y + nodeR + 14}
                 textAnchor="middle"
                 fill={labelColor}
-                fontSize={9}
+                fontSize={11}
                 fontFamily="monospace"
                 style={{ pointerEvents: 'none', userSelect: 'none' }}
             >
-                @{contrib.login.slice(0, 8)}
+                @{contrib.login.slice(0, 10)}
             </text>
 
             {/* Role badge */}
             <text
-                x={x} y={y + nodeR + 24}
+                x={x} y={y + nodeR + 26}
                 textAnchor="middle"
                 fill={isNewest ? 'rgba(245,158,11,0.5)' : isOldest ? 'rgba(239,68,68,0.5)' : 'rgba(0,229,255,0.3)'}
-                fontSize={7}
+                fontSize={9}
                 fontFamily="monospace"
                 style={{ pointerEvents: 'none', userSelect: 'none' }}
             >
@@ -304,7 +304,7 @@ export default function BlameMap({ data }) {
                     </div>
                     <div>
                         <h3 className="text-xl font-bold text-white tracking-tight">The Blame Map</h3>
-                        <p className="text-[10px] font-mono tracking-[0.25em] uppercase"
+                        <p className="text-xs font-mono tracking-[0.25em] uppercase"
                             style={{ color: 'rgba(0,229,255,0.3)' }}>
                             Temporal Guilt Diffusion Engine · guilt flows upstream
                         </p>
@@ -330,7 +330,7 @@ export default function BlameMap({ data }) {
                     ].map((l, i) => (
                         <div key={i} className="flex items-center gap-1.5">
                             <div className={`w-2 h-2 rounded-full ${l.color}`} />
-                            <span className="text-[9px] text-cyan-800/50 font-mono">{l.label}</span>
+                            <span className="text-xs text-cyan-800/50 font-mono">{l.label}</span>
                         </div>
                     ))}
                 </div>
@@ -346,7 +346,7 @@ export default function BlameMap({ data }) {
                         style={{ overflow: 'visible' }}
                     >
                         {/* Flow direction label */}
-                        <text x={svgWidth / 2} y={12} textAnchor="middle" fill="rgba(0,229,255,0.15)" fontSize={8} fontFamily="monospace">
+                        <text x={svgWidth / 2} y={12} textAnchor="middle" fill="rgba(0,229,255,0.15)" fontSize={10} fontFamily="monospace">
                             ← GUILT FLOWS UPSTREAM — oldest cause left · newest symptom right →
                         </text>
 
@@ -388,7 +388,7 @@ export default function BlameMap({ data }) {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 1.5 }}
-                        className="text-[9px] font-mono text-center py-2"
+                        className="text-xs font-mono text-center py-2"
                         style={{ color: 'rgba(0,229,255,0.2)' }}
                     >
                         Click any node to trace the causal chain upstream
@@ -429,8 +429,8 @@ export default function BlameMap({ data }) {
                                             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg"
                                                 style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)' }}>
                                                 <div className="w-2 h-2 rounded-full bg-amber-400" />
-                                                <span className="text-[10px] font-mono text-amber-300">@{selected}</span>
-                                                <span className="text-[8px] text-amber-600/60 font-mono ml-1">SYMPTOM</span>
+                                                <span className="text-xs font-mono text-amber-300">@{selected}</span>
+                                                <span className="text-[10px] text-amber-600/60 font-mono ml-1 uppercase">SYMPTOM</span>
                                             </div>
 
                                             {/* Upstream arrow */}
@@ -444,7 +444,7 @@ export default function BlameMap({ data }) {
                                                             <path d="M30 6 L2 6 M8 2 L2 6 L8 10" stroke="rgba(0,229,255,0.4)" strokeWidth="1.5" strokeLinecap="round" />
                                                         </svg>
                                                     </motion.div>
-                                                    <span className="text-[8px] font-mono text-cyan-800/40">{narrative.monthsUpstream}mo upstream</span>
+                                                    <span className="text-xs font-mono text-cyan-800/40">{narrative.monthsUpstream}mo upstream</span>
                                                     <motion.div
                                                         animate={{ x: [-4, 0, -4] }}
                                                         transition={{ duration: 1.5, repeat: Infinity, delay: 0.3 }}
@@ -461,8 +461,8 @@ export default function BlameMap({ data }) {
                                                 <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg"
                                                     style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)' }}>
                                                     <div className="w-2 h-2 rounded-full bg-red-400" />
-                                                    <span className="text-[10px] font-mono text-red-300">@{narrative.rootCause}</span>
-                                                    <span className="text-[8px] text-red-600/60 font-mono ml-1">ORIGIN</span>
+                                                    <span className="text-xs font-mono text-red-300">@{narrative.rootCause}</span>
+                                                    <span className="text-xs text-red-600/60 font-mono ml-1 uppercase">ORIGIN</span>
                                                 </div>
                                             )}
                                         </div>
@@ -519,11 +519,11 @@ export default function BlameMap({ data }) {
             </AnimatePresence>
 
             {/* Bottom bar — global absolution statement */}
-            <div className="px-8 py-4 border-t border-cyan-900/10 flex items-center justify-between">
-                <p className="text-[10px] font-mono" style={{ color: 'rgba(0,229,255,0.2)' }}>
+            <div className="px-8 py-5 border-t border-cyan-900/10 flex items-center justify-between">
+                <p className="text-xs font-mono" style={{ color: 'rgba(0,229,255,0.2)' }}>
                     {data.contributors.length} contributors · {data.blameEvents?.length || 0} inherited blame events · {data.chainOfCustody?.length || 0} custody chains
                 </p>
-                <p className="text-[9px] font-mono italic" style={{ color: 'rgba(0,229,255,0.18)' }}>
+                <p className="text-xs font-mono italic" style={{ color: 'rgba(0,229,255,0.18)' }}>
                     The newest developer touched the symptom. The real author is upstream.
                 </p>
             </div>

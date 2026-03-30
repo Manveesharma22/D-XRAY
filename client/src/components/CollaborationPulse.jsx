@@ -141,9 +141,9 @@ export default function CollaborationPulse({ data }) {
                 ctx.shadowBlur = 0;
                 ctx.globalAlpha = isHovered ? 0.5 : 0.15;
                 ctx.fillStyle = color;
-                ctx.font = `${dpr > 1 ? 8 : 8}px monospace`;
+                ctx.font = `${dpr > 1 ? 10 : 10}px monospace`;
                 ctx.textAlign = 'right';
-                ctx.fillText(contributor.name?.split(' ')[0] || `dev${ci}`, 42, baseY + 3);
+                ctx.fillText(contributor.name?.split(' ')[0] || `dev${ci}`, 48, baseY + 3);
 
                 ctx.shadowBlur = 0;
                 ctx.globalAlpha = 1;
@@ -188,11 +188,11 @@ export default function CollaborationPulse({ data }) {
                 </div>
                 <div className="flex items-center gap-3">
                     {syncPct > 0 && (
-                        <span className="text-[10px] font-mono text-amber-400/60">
+                        <span className="text-xs font-mono text-amber-400/60">
                             {syncPct}% in sync
                         </span>
                     )}
-                    <span className="text-[10px] font-mono text-cyan-800/30">{data.contributors.length} contributors</span>
+                    <span className="text-xs font-mono text-cyan-800/30">{data.contributors.length} contributors</span>
                 </div>
             </div>
 
@@ -209,7 +209,7 @@ export default function CollaborationPulse({ data }) {
                             style={{ opacity: hoveredContributor === null || hoveredContributor === i ? 1 : 0.3 }}
                         >
                             <div className="w-4 h-[2px] rounded" style={{ backgroundColor: color }} />
-                            <span className="text-[10px] font-mono" style={{ color: `${color}80` }}>{c.name}</span>
+                            <span className="text-xs font-mono" style={{ color: `${color}80` }}>{c.name}</span>
                         </button>
                     );
                 })}
@@ -222,27 +222,27 @@ export default function CollaborationPulse({ data }) {
             />
 
             {/* Zone legend */}
-            <div className="flex gap-4 mt-2 text-[9px] font-mono">
-                <span className="flex items-center gap-1">
-                    <span className="w-2 h-2 rounded-sm inline-block" style={{ background: 'rgba(245,200,80,0.3)' }} />
-                    <span className="text-amber-400/40">Synchronized work</span>
+            <div className="flex gap-4 mt-3 text-xs font-mono">
+                <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ background: 'rgba(245,200,80,0.3)' }} />
+                    <span className="text-amber-400/50">Synchronized work</span>
                 </span>
-                <span className="flex items-center gap-1">
-                    <span className="w-2 h-2 rounded-sm inline-block" style={{ background: 'rgba(251,113,133,0.25)' }} />
-                    <span className="text-rose-400/40">Conflict zone</span>
+                <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ background: 'rgba(251,113,133,0.25)' }} />
+                    <span className="text-rose-400/50">Conflict zone</span>
                 </span>
             </div>
 
             {data.conflicts?.length > 0 && (
-                <div className="mt-3 flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-rose-400 mt-1 shrink-0" />
-                    <p className="text-[10px] font-mono text-rose-400/50">
+                <div className="mt-4 flex items-start gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-rose-400 mt-1.5 shrink-0" />
+                    <p className="text-sm font-mono text-rose-400/50">
                         {data.conflicts.length} conflict zone{data.conflicts.length > 1 ? 's' : ''} detected — lines spike against each other when contributors touch the same files
                     </p>
                 </div>
             )}
             {data.finding && (
-                <p className="text-xs text-cyan-800/40 mt-2 leading-relaxed italic">{data.finding}</p>
+                <p className="text-sm text-cyan-800/40 mt-3 leading-relaxed italic">{data.finding}</p>
             )}
         </motion.div>
     );
