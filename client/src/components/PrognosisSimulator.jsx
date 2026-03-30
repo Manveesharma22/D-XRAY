@@ -255,13 +255,10 @@ const XRayVisual = ({ score, severity, isFuture }) => {
 
             <svg width="240" height="340" viewBox="0 0 200 300" fill="none" className="z-10 transition-all duration-700">
                 <defs>
-                    <filter id="glow">
-                        <feGaussianBlur stdDeviation="2" result="coloredBlur" />
-                        <feMerge>
-                            <feMergeNode in="coloredBlur" />
-                            <feMergeNode in="SourceGraphic" />
-                        </feMerge>
-                    </filter>
+                    <radialGradient id="xrayGlow" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stopColor="rgba(0,229,255,0.08)" />
+                        <stop offset="100%" stopColor="transparent" />
+                    </radialGradient>
                 </defs>
 
                 {/* THE SPINE (Vertebrae) */}
@@ -290,11 +287,12 @@ const XRayVisual = ({ score, severity, isFuture }) => {
                             stroke={ribColors}
                             strokeWidth={5 - (i * 0.3)}
                             strokeLinecap="round"
-                            filter="url(#glow)"
+                            style={{ filter: isFuture && score < 50 ? 'drop-shadow(0 0 2px rgba(255,0,0,0.3))' : 'drop-shadow(0 0 1.5px rgba(0,255,255,0.2))' }}
                             animate={{
-                                pathLength: [0.9, 1, 0.9],
-                                rotate: isFuture && score < 40 ? [0, 2, 0] : 0
+                                opacity: isFuture && score < 40 ? [0.6, 0.3, 0.6] : 0.6,
+                                rotate: isFuture && score < 40 ? [0, 1.5, 0] : 0
                             }}
+                            transition={{ duration: 3, repeat: Infinity }}
                         />
                         {/* Right Rib */}
                         <motion.path
@@ -302,11 +300,12 @@ const XRayVisual = ({ score, severity, isFuture }) => {
                             stroke={ribColors}
                             strokeWidth={5 - (i * 0.3)}
                             strokeLinecap="round"
-                            filter="url(#glow)"
+                            style={{ filter: isFuture && score < 50 ? 'drop-shadow(0 0 2px rgba(255,0,0,0.3))' : 'drop-shadow(0 0 1.5px rgba(0,255,255,0.2))' }}
                             animate={{
-                                pathLength: [0.9, 1, 0.9],
-                                rotate: isFuture && score < 40 ? [0, -2, 0] : 0
+                                opacity: isFuture && score < 40 ? [0.6, 0.3, 0.6] : 0.6,
+                                rotate: isFuture && score < 40 ? [0, -1.5, 0] : 0
                             }}
+                            transition={{ duration: 3, repeat: Infinity }}
                         />
                     </g>
                 ))}

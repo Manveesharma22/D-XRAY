@@ -127,7 +127,7 @@ export default function ScarTissue({ data }) {
                                     marginLeft: boneH * 0.5,
                                     marginRight: boneH * 0.5,
                                     background: `rgba(${r},${g},30,${boneOpacity})`,
-                                    boxShadow: density > 0.7 ? `0 0 ${Math.round(density * 14)}px rgba(180,30,30,${density * 0.4})` : 'none',
+                                    filter: density > 0.7 ? `drop-shadow(0 0 5px rgba(180,30,30,${density * 0.3}))` : 'none',
                                 }} />
                                 {/* Bone end cap right */}
                                 <div className="absolute right-0 top-0 bottom-0 rounded-r-full" style={{

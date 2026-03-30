@@ -53,6 +53,12 @@ export default function ImmuneSystem({ data }) {
         canvas.height = h * dpr;
         ctx.scale(dpr, dpr);
 
+        let isVisible = true;
+        const observer = new IntersectionObserver(([entry]) => {
+            isVisible = entry.isIntersecting;
+        }, { threshold: 0.1 });
+        observer.observe(canvas);
+
         const speed = data.whiteCellSpeed;
         const cellCount = speed === 'fast' ? 22 : speed === 'moderate' ? 12 : speed === 'slow' ? 6 : 2;
         const baseSpeed = speed === 'fast' ? 1.6 : speed === 'moderate' ? 0.85 : speed === 'slow' ? 0.38 : 0.12;
@@ -162,23 +168,34 @@ export default function ImmuneSystem({ data }) {
                 ctx.arc(pt.x, pt.y, cell.size, 0, Math.PI * 2);
                 if (cell.stopped) {
                     ctx.fillStyle = 'rgba(180,180,180,0.35)';
-                    ctx.shadowColor = 'rgba(150,150,150,0.3)';
-                    ctx.shadowBlur = 3;
+                    ctx.fill();
                 } else {
-                    ctx.fillStyle = 'rgba(255,255,255,0.9)';
-                    ctx.shadowColor = `rgba(${immuneColor.join(',')}, 0.7)`;
-                    ctx.shadowBlur = cell.glow;
+                    // Multi-pass glow
+                    ctx.save();
+                    ctx.globalAlpha = 0.3;
+                    ctx.beginPath();
+                    ctx.arc(pt.x, pt.y, cell.size + 2, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(${immuneColor.join(',')}, 0.4)`;
+                    ctx.fill();
+                    ctx.restore();
+
+                    ctx.beginPath();
+                    ctx.arc(pt.x, pt.y, cell.size, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(255,255,255,0.95)';
+                    ctx.fill();
                 }
-                ctx.fill();
-                ctx.shadowBlur = 0;
             });
 
             frame++;
-            animRef.current = requestAnimationFrame(draw);
+            if (isVisible) animRef.current = requestAnimationFrame(draw);
+            else animRef.current = setTimeout(() => { if (isVisible) draw(); }, 1000);
         }
 
         draw();
-        return () => cancelAnimationFrame(animRef.current);
+        return () => {
+            cancelAnimationFrame(animRef.current);
+            observer.disconnect();
+        };
     }, [data]);
 
     if (!data) return null;

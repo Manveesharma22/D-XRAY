@@ -12,6 +12,12 @@ export default function CollaborationPulse({ data }) {
         const canvas = canvasRef.current;
         if (!canvas || !data?.contributors?.length) return;
 
+        let isVisible = true;
+        const observer = new IntersectionObserver(([entry]) => {
+            isVisible = entry.isIntersecting;
+        }, { threshold: 0.1 });
+        observer.observe(canvas);
+
         const ctx = canvas.getContext('2d');
         const dpr = window.devicePixelRatio || 1;
         const w = canvas.offsetWidth;
@@ -81,46 +87,54 @@ export default function CollaborationPulse({ data }) {
                 const isHovered = hoveredContributor === null || hoveredContributor === ci;
                 const alpha = isHovered ? 0.92 : 0.25;
 
+                const drawPath = () => {
+                    for (let b = 0; b < buckets; b++) {
+                        const x = b * segW;
+                        const val = pulseData[b] || 0;
+                        const isConflict = conflictBuckets.has(b) && val > 0.3 && !syncBuckets.has(b);
+                        const isSync = syncBuckets.has(b) && val > 0.4;
+
+                        let y;
+                        if (isSync) {
+                            const centerY = h / 2;
+                            const pull = 0.6;
+                            const t = (b * 2 + offset) % (Math.PI * 2);
+                            y = baseY * (1 - pull) + centerY * pull + Math.sin(t * 0.5) * 10 * val;
+                        } else if (isConflict) {
+                            const direction = ci % 2 === 0 ? -1 : 1;
+                            const spike = Math.sin((b * 1.6 + offset * 0.06)) * 24 * val;
+                            y = baseY + direction * spike;
+                        } else if (val > 0.5) {
+                            const t = (b * 2.5 + offset) % 18;
+                            if (t < 1) y = baseY - t * 12 * val;
+                            else if (t < 2.5) y = baseY - 12 * val + (t - 1) * 9 * val;
+                            else if (t < 4) y = baseY + 3 * val - (t - 2.5) * 2 * val;
+                            else y = baseY + Math.sin(t * 0.35) * 2 * val;
+                        } else {
+                            y = baseY + Math.sin((b * 0.7 + offset * 0.018 + ci * 1.2)) * 4 * (val + 0.15);
+                        }
+
+                        if (b === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
+                };
+
                 ctx.strokeStyle = color;
                 ctx.lineWidth = 1.8;
-                ctx.shadowColor = color;
-                ctx.shadowBlur = isHovered ? 8 : 2;
                 ctx.globalAlpha = alpha;
-                ctx.beginPath();
 
-                for (let b = 0; b < buckets; b++) {
-                    const x = b * segW;
-                    const val = pulseData[b] || 0;
-                    const isConflict = conflictBuckets.has(b) && val > 0.3 && !syncBuckets.has(b);
-                    const isSync = syncBuckets.has(b) && val > 0.4;
-
-                    let y;
-                    if (isSync) {
-                        // Sync: converge all lines toward center, gentle shared wave
-                        const centerY = h / 2;
-                        const pull = 0.6;
-                        const t = (b * 2 + offset) % (Math.PI * 2);
-                        y = baseY * (1 - pull) + centerY * pull + Math.sin(t * 0.5) * 10 * val;
-                    } else if (isConflict) {
-                        // Conflict: lines diverge away from each other and spike
-                        const direction = ci % 2 === 0 ? -1 : 1;
-                        const spike = Math.sin((b * 1.6 + offset * 0.06)) * 24 * val;
-                        y = baseY + direction * spike;
-                    } else if (val > 0.5) {
-                        // High activity: EKG shape
-                        const t = (b * 2.5 + offset) % 18;
-                        if (t < 1) y = baseY - t * 12 * val;
-                        else if (t < 2.5) y = baseY - 12 * val + (t - 1) * 9 * val;
-                        else if (t < 4) y = baseY + 3 * val - (t - 2.5) * 2 * val;
-                        else y = baseY + Math.sin(t * 0.35) * 2 * val;
-                    } else {
-                        // Idle: gentle sine drift
-                        y = baseY + Math.sin((b * 0.7 + offset * 0.018 + ci * 1.2)) * 4 * (val + 0.15);
-                    }
-
-                    if (b === 0) ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
+                if (isHovered) {
+                    ctx.save();
+                    ctx.globalAlpha = alpha * 0.3;
+                    ctx.lineWidth = 3.5;
+                    ctx.beginPath();
+                    drawPath();
+                    ctx.stroke();
+                    ctx.restore();
                 }
+
+                ctx.beginPath();
+                drawPath();
                 ctx.stroke();
 
                 // Contributor label on left axis
@@ -146,11 +160,15 @@ export default function CollaborationPulse({ data }) {
             }
 
             offset += 0.7;
-            animRef.current = requestAnimationFrame(draw);
+            if (isVisible) animRef.current = requestAnimationFrame(draw);
+            else animRef.current = setTimeout(() => { if (isVisible) draw(); }, 500); // Poll when hidden
         }
 
         draw();
-        return () => cancelAnimationFrame(animRef.current);
+        return () => {
+            cancelAnimationFrame(animRef.current);
+            observer.disconnect();
+        };
     }, [data, hoveredContributor]);
 
     if (!data?.contributors?.length) return null;

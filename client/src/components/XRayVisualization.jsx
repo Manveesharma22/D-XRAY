@@ -209,14 +209,6 @@ export default function XRayVisualization({ phase, patient, tracks, deadCode }) 
                 <stop offset="0%" stopColor="rgba(0,229,255,0.08)" />
                 <stop offset="100%" stopColor="transparent" />
               </radialGradient>
-              <filter id="boneGlow">
-                <feGaussianBlur stdDeviation="2.5" result="blur" />
-                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-              </filter>
-              <filter id="fractureGlow">
-                <feGaussianBlur stdDeviation="3.5" result="blur" />
-                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-              </filter>
             </defs>
 
             <circle cx="140" cy="150" r="130" fill="url(#xrayGlow)" />
@@ -234,7 +226,7 @@ export default function XRayVisualization({ phase, patient, tracks, deadCode }) 
                       stroke={getBoneColor(part.trackKey, tracks)}
                       strokeWidth="3"
                       fill="none"
-                      filter="url(#boneGlow)"
+                      style={{ filter: 'drop-shadow(0 0 1.5px rgba(0,229,255,0.4))' }}
                       strokeLinecap="round"
                     />
                     {/* Invisible thick hover area */}
@@ -284,7 +276,7 @@ export default function XRayVisualization({ phase, patient, tracks, deadCode }) 
                     strokeWidth={crackW}
                     fill="none"
                     strokeDasharray={dashArr}
-                    filter="url(#fractureGlow)"
+                    style={{ filter: `drop-shadow(0 0 3px ${color})` }}
                   />
                   {/* Radiating micro-cracks for critical only */}
                   {f.severity === 'critical' && (

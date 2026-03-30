@@ -24,6 +24,12 @@ export default function EKGMonitor({ bpm = 60, pattern = 'normal', reason = '' }
     canvas.height = h * dpr;
     ctx.scale(dpr, dpr);
 
+    let isVisible = true;
+    const observer = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting;
+    }, { threshold: 0.1 });
+    observer.observe(canvas);
+
     let offset = 0;
     let flatlineTick = 0;
     const midY = h / 2;
@@ -104,15 +110,17 @@ export default function EKGMonitor({ bpm = 60, pattern = 'normal', reason = '' }
         ctx.fillRect(0, gy, w, 1);
       }
 
-      // Grid
-      ctx.strokeStyle = 'rgba(0, 229, 255, 0.03)';
+      // Grid - Draw only once to a background or optimize
+      ctx.strokeStyle = 'rgba(0, 229, 255, 0.02)';
       ctx.lineWidth = 0.5;
+      ctx.beginPath();
       for (let gy = 0; gy < h; gy += 16) {
-        ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(w, gy); ctx.stroke();
+        ctx.moveTo(0, gy); ctx.lineTo(w, gy);
       }
       for (let gx = 0; gx < w; gx += 40) {
-        ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, h); ctx.stroke();
+        ctx.moveTo(gx, 0); ctx.lineTo(gx, h);
       }
+      ctx.stroke();
 
       // Build current points
       const pts = buildPointArray(p, b);
@@ -145,27 +153,41 @@ export default function EKGMonitor({ bpm = 60, pattern = 'normal', reason = '' }
       ctx.closePath();
       ctx.fill();
 
-      // Main EKG line
+      // Main EKG line - Multi-pass glow
       ctx.strokeStyle = color;
-      ctx.lineWidth = 2;
-      ctx.shadowColor = color;
-      ctx.shadowBlur = 8;
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+
+      // Pass 1: Outer glow
+      ctx.globalAlpha = 0.25;
+      ctx.lineWidth = 4;
       ctx.beginPath();
       pts.forEach(({ x, y }, xi) => {
         if (xi === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
       });
       ctx.stroke();
-      ctx.shadowBlur = 0;
+
+      // Pass 2: Inner glow
+      ctx.globalAlpha = 0.5;
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      // Pass 3: Bright core
+      ctx.globalAlpha = 1;
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
 
       // Leading edge glow (bright moving dot)
       const lastPt = pts[pts.length - 1];
       ctx.beginPath();
-      ctx.arc(lastPt.x - 2, lastPt.y, 3, 0, Math.PI * 2);
+      ctx.arc(lastPt.x - 2, lastPt.y, 4, 0, Math.PI * 2);
       ctx.fillStyle = color;
-      ctx.shadowColor = color;
-      ctx.shadowBlur = 12;
+      ctx.globalAlpha = 0.3;
       ctx.fill();
-      ctx.shadowBlur = 0;
+      ctx.beginPath();
+      ctx.arc(lastPt.x - 2, lastPt.y, 2.2, 0, Math.PI * 2);
+      ctx.globalAlpha = 1;
+      ctx.fill();
 
       // Flatline flash
       if (p === 'flatline' && Math.sin(offset * 0.08) > 0.5) {
@@ -178,11 +200,15 @@ export default function EKGMonitor({ bpm = 60, pattern = 'normal', reason = '' }
       if (historyRef.current.length > TRAIL_LEN) historyRef.current.shift();
 
       offset += p === 'tachycardia' ? 2.8 : p === 'erratic' ? 2 : 1.6;
-      animRef.current = requestAnimationFrame(draw);
+      if (isVisible) animRef.current = requestAnimationFrame(draw);
+      else animRef.current = setTimeout(() => { if (isVisible) draw(); }, 1000); // Polling check
     }
 
     draw();
-    return () => cancelAnimationFrame(animRef.current);
+    return () => {
+      cancelAnimationFrame(animRef.current);
+      observer.disconnect();
+    };
   }, []);
 
   const isCritical = pattern === 'flatline' || pattern === 'tachycardia';
