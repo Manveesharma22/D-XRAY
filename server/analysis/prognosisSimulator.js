@@ -72,13 +72,21 @@ class PrognosisSimulator {
         if (day === 67) return hooks.crisis;
         if (day === 90) return hooks.terminal;
 
-        // Dynamic filler beats
+        // Granular suspense fillers
+        if (day === 10) return "The first silent fracture: A critical test was skipped to meet a phantom deadline.";
+        if (day === 20) return "Structural atrophy detected. Complexity is beginning to outpace comprehension.";
+        if (day === 40) return "The Silence: PR reviews are taking 3x longer. Trust is the first casualty.";
+        if (day === 50) return "The Shadow: A core module has become 'untouchable'. No one knows why it works.";
+        if (day === 75) return "Systemic fatigue. The repository is now a monument to its own context-loss.";
+        if (day === 85) return "Terminal velocity reached. Every line added is a debt-bomb waiting to detonate.";
+
+        // Basic catch-all for intermediate days
         if (day % 14 === 0) {
             const fillers = [
-                `Health at ${score}. The drift is accelerating.`,
-                `Burnout risk hit ${burnout}%. The team is losing belief.`,
-                `Compounding debt is now the primary architect.`,
-                `A silent night. No commits. The heartbeat slows.`
+                `Dx Score at ${score}. The drift deepens.`,
+                `Burnout at ${burnout}%. The team's resolve is fraying.`,
+                `Compounding debt has assumed the role of Lead Architect.`,
+                `A quiet week. The codebase enters a dormant, decaying state.`
             ];
             return fillers[Math.floor(day / 14) % fillers.length];
         }

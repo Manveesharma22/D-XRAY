@@ -283,17 +283,29 @@ export default function DischargeSummary() {
               setScanData(prev => ({
                 ...prev,
                 prognosis: {
-                  timeline: Array.from({ length: 46 }, (_, i) => ({
-                    day: i * 2,
-                    score: Math.max(10, 80 - (i * 2)),
-                    interventionScore: Math.min(95, 80 + (i * 0.5)),
-                    signals: i === 15 ? ["The Drift", "Build time +12%"] : i === 30 ? ["The Threshold", "Test flakiness"] : i === 45 ? ["The Crisis", "Death spiral"] : [],
-                    costToFix: Math.round(5 + (i * 1.5)),
-                    burnoutRisk: Math.min(100, i * 4)
-                  })),
-                  currentScore: 80,
-                  atRiskContributor: { login: 'priya-singh', impact: 'Sole owner of authentication system' },
-                  compoundingCostRatio: 10
+                  timeline: Array.from({ length: 46 }, (_, i) => {
+                    const day = i * 2;
+                    let storyBeat = null;
+                    if (day === 0) storyBeat = "Admission: The codebase arrives with chronic internal hemorrhaging.";
+                    if (day === 10) storyBeat = "The Silence: Communication channels are beginning to fray.";
+                    if (day === 30) storyBeat = "The Drift: Major tectonic shifts in dependency alignment.";
+                    if (day === 67) storyBeat = "The Crisis: Mass exodus of the 'Hero' architect context.";
+                    if (day === 90) storyBeat = "Terminal State: The repository is now an archaeological site.";
+
+                    return {
+                      day,
+                      score: Math.max(10, 85 - (i * 1.5)),
+                      interventionScore: Math.min(95, 85 + (i * 0.3)),
+                      signals: i === 15 ? ["The Drift", "Build time +8%"] : i === 30 ? ["The Threshold", "Test flakiness"] : [],
+                      costToFix: Math.round(5 + (i * 1.2)),
+                      burnoutRisk: Math.min(100, i * 3),
+                      storyBeat,
+                      healingBeat: day === 0 ? "Intervention: First aid applied." : (day === 90 ? "Recovery: Structural integrity restored." : null)
+                    };
+                  }),
+                  currentScore: 85,
+                  atRiskContributor: { login: 'nexus_subject', impact: 'Core architect' },
+                  compoundingCostRatio: 9
                 }
               }));
               setTimeout(() => document.getElementById('prognosis-simulation')?.scrollIntoView({ behavior: 'smooth' }), 100);

@@ -122,17 +122,18 @@ const PrognosisSimulator = ({ data, currentScore }) => {
                         {/* NARRATIVE OVERLAY — THE STORY TELLING PART */}
                         <AnimatePresence mode="wait">
                             <motion.div
-                                key={`${days}-${isActing}`}
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 1.05 }}
+                                key={visibleBeats.length > 0 ? visibleBeats[visibleBeats.length - 1].text : 'idle'}
+                                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 1.05, y: -10 }}
                                 className="absolute inset-x-6 top-1/2 -translate-y-1/2 pointer-events-none text-center"
                             >
-                                {visibleBeats.length > 0 && visibleBeats[visibleBeats.length - 1].day === days && (
-                                    <div className="bg-black/40 backdrop-blur-xl border border-white/10 p-5 rounded-2xl shadow-2xl">
-                                        <div className="text-[8px] font-mono text-cyan-500/60 mb-2 uppercase tracking-[0.2em]">Temporal Story // Log Day {days}</div>
-                                        <div className={`text-sm sm:text-base font-bold leading-tight ${isActing ? 'text-emerald-400' : (days >= 67 ? 'text-red-400' : 'text-white')}`}>
-                                            {visibleBeats[visibleBeats.length - 1].text}
+                                {visibleBeats.length > 0 && (
+                                    <div className="bg-black/60 backdrop-blur-2xl border border-white/10 p-6 rounded-3xl shadow-2xl relative overflow-hidden">
+                                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent" />
+                                        <div className="text-[9px] font-mono text-cyan-500/80 mb-3 uppercase tracking-[0.3em]">Temporal Log // T-Plus {days} Days</div>
+                                        <div className={`text-base sm:text-lg font-black leading-tight tracking-tight ${isActing ? 'text-emerald-400' : (days >= 67 ? 'text-red-400' : 'text-white')}`}>
+                                            "{visibleBeats[visibleBeats.length - 1].text}"
                                         </div>
                                     </div>
                                 )}
