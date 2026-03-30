@@ -381,7 +381,7 @@ export default function XRayVisualization({ phase, patient, tracks, deadCode }) 
 
       {/* Phase + sweep indicator + MRI toggle */}
       <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center">
-        <span className="text-[10px] font-mono text-cyan-800/40 tracking-wider">
+        <span className="text-[10px] font-mono text-cyan-400/60 tracking-wider">
           {phaseLabel}
         </span>
         <div className="flex items-center gap-3">
@@ -391,7 +391,7 @@ export default function XRayVisualization({ phase, patient, tracks, deadCode }) 
             title={mriMode ? 'Exit MRI mode' : 'Switch to MRI mode'}
             className={`text-[8px] font-mono px-2 py-0.5 rounded border transition-all tracking-wider ${mriMode
               ? 'border-white/30 text-white/70 bg-white/10'
-              : 'border-cyan-500/10 text-cyan-900/30 hover:border-cyan-500/20 hover:text-cyan-800/50'
+              : 'border-cyan-500/10 text-cyan-400/40 hover:border-cyan-500/20 hover:text-cyan-800/50'
               }`}
           >
             {mriMode ? 'MRI ON' : 'MRI'}

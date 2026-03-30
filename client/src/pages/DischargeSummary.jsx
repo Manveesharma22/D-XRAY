@@ -3,22 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import AIDoctor from '../components/AIDoctor';
 import PrescriptionPad from '../components/PrescriptionPad';
-import DebtInheritanceMap from '../components/DebtInheritanceMap';
-import BlameMap from '../components/BlameMap';
 
-import DeadCodeCoroner from '../components/DeadCodeCoroner';
-import FractureReplay from '../components/FractureReplay';
-import Confessional from '../components/Confessional';
+
 import DischargeSummaryExport from '../components/DischargeSummaryExport';
 // v2 components
-import CollaborationPulse from '../components/CollaborationPulse';
 import TraumaTimeline from '../components/TraumaTimeline';
-import ImmuneSystem from '../components/ImmuneSystem';
-import ArchaeologyLayer from '../components/ArchaeologyLayer';
 import WhisperNetwork from '../components/WhisperNetwork';
-import CloneDetectorDNA from '../components/CloneDetectorDNA';
-import SleepStudy from '../components/SleepStudy';
 import ScarTissue from '../components/ScarTissue';
+import Confessional from '../components/Confessional';
 import SecondOpinion from '../components/SecondOpinion';
 import LivingAutopsy from '../components/LivingAutopsy';
 import CodebaseObituary from '../components/CodebaseObituary';
@@ -34,7 +26,6 @@ import SoundLayer from '../components/SoundLayer';
 import LastCommit from '../components/LastCommit';
 import PrognosisSimulator from '../components/PrognosisSimulator';
 import { config } from '../api-config';
-
 
 const TRACK_NAMES = {
   A: { name: 'CI / Build', anatomical: 'The Spine', icon: 'S' },
@@ -57,7 +48,6 @@ export default function DischargeSummary() {
   const [isRotating, setIsRotating] = useState(false);
   const [showMourning, setShowMourning] = useState(false);
 
-
   const forceMirror = () => {
     setScanData(prev => ({
       ...prev,
@@ -73,13 +63,8 @@ export default function DischargeSummary() {
   };
 
   useEffect(() => {
-    if (scanData?.prognosis) {
-      sessionStorage.setItem('dxray_scan', JSON.stringify(scanData));
-    }
-  }, [scanData?.prognosis]);
-
-  useEffect(() => {
-    const stored = sessionStorage.getItem('dxray_scan');
+    // Use localStorage so data persists when opened in a new tab
+    const stored = localStorage.getItem('dxray_scan');
     if (stored) {
       try {
         setScanData(JSON.parse(stored));
@@ -92,7 +77,6 @@ export default function DischargeSummary() {
 
   useEffect(() => {
     if (scanData?.mirror && !mirrorSpoken) {
-      // Cinematic delay before announcing the Mirror
       const timer = setTimeout(() => {
         setIsRotating(true);
         if ('speechSynthesis' in window) {
@@ -105,13 +89,12 @@ export default function DischargeSummary() {
           window.speechSynthesis.speak(utterance);
         }
         setMirrorSpoken(true);
-      }, 2500); // More immediate reveal
+      }, 2500);
       return () => clearTimeout(timer);
     }
   }, [scanData?.mirror, mirrorSpoken]);
 
   const handleConfess = (confession) => {
-    // Process locally since we already have all data
     const c = confession.toLowerCase();
     const tokens = [];
     const fractures = [];
@@ -122,10 +105,10 @@ export default function DischargeSummary() {
       resource_constraints: { keywords: ['understaffed', 'overworked', 'no time'], heal: 'Coverage gaps due to resource constraints' },
       security_aware: { keywords: ['security', 'vulnerability', 'cve', 'mitigation'], heal: 'Team is aware of vulnerabilities' },
     };
-    for (const [token, config] of Object.entries(fractureMap)) {
-      if (config.keywords.some(kw => c.includes(kw))) {
+    for (const [token, cfg] of Object.entries(fractureMap)) {
+      if (cfg.keywords.some(kw => c.includes(kw))) {
         tokens.push(token);
-        fractures.push(config.heal);
+        fractures.push(cfg.heal);
       }
     }
     const narrative = tokens.length > 0
@@ -188,9 +171,6 @@ export default function DischargeSummary() {
   const rageCommits = tracks?.F?.rageCommits;
   const severityColor = corpusScore?.dxScore >= 70 ? 'text-emerald-400' : corpusScore?.dxScore >= 40 ? 'text-amber-400' : 'text-red-400';
 
-
-
-
   return (
     <div className="min-h-screen bg-[#0a0a0c] text-slate-300 font-mono relative overflow-x-hidden selection:bg-cyan-500/30">
       <AnimatePresence>
@@ -212,8 +192,7 @@ export default function DischargeSummary() {
 
       <SoundLayer isMirrorActive={isRotating} />
 
-
-      {/* Sticky Header with Secret Trigger */}
+      {/* Sticky Header */}
       <header className="p-4 border-b border-white/5 flex justify-between items-center bg-black/40 backdrop-blur-md sticky top-0 z-40">
         <div className="flex items-center gap-3">
           <div
@@ -232,17 +211,12 @@ export default function DischargeSummary() {
           <button
             onClick={() => {
               if (!scanData?.mourning) {
-                // Force data for demo if not present
                 setScanData(prev => ({
                   ...prev,
                   mourning: {
                     triggered: true,
                     deceasedName: "Eternal Dev",
-                    lastCommit: {
-                      message: "Initial commit of the heart.",
-                      date: new Date().toISOString(),
-                      sha: "abc1234"
-                    },
+                    lastCommit: { message: "Initial commit of the heart.", date: new Date().toISOString(), sha: "abc1234" },
                     quote: "The code lives on."
                   }
                 }));
@@ -266,62 +240,11 @@ export default function DischargeSummary() {
             SHADOW_SCAN
           </button>
 
-          <button
-            onClick={() => {
-              const el = document.getElementById('prognosis-simulation');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-              else alert('Simulation data not found. Try FORCE_SIM.');
-            }}
-            className="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-[9px] font-black text-cyan-400 tracking-[0.2em] hover:bg-cyan-500/20 transition-all flex items-center gap-2 group"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 group-hover:animate-ping" />
-            PROGNOSIS
-          </button>
-
-          <button
-            onClick={() => {
-              // Forced demo data for simulation verification
-              setScanData(prev => ({
-                ...prev,
-                prognosis: {
-                  timeline: Array.from({ length: 46 }, (_, i) => {
-                    const day = i * 2;
-                    let storyBeat = null;
-                    if (day === 0) storyBeat = "Admission: The codebase arrives with chronic internal hemorrhaging.";
-                    if (day === 10) storyBeat = "The Silence: Communication channels are beginning to fray.";
-                    if (day === 30) storyBeat = "The Drift: Major tectonic shifts in dependency alignment.";
-                    if (day === 67) storyBeat = "The Crisis: Mass exodus of the 'Hero' architect context.";
-                    if (day === 90) storyBeat = "Terminal State: The repository is now an archaeological site.";
-
-                    return {
-                      day,
-                      score: Math.max(10, 85 - (i * 1.5)),
-                      interventionScore: Math.min(95, 85 + (i * 0.3)),
-                      signals: i === 15 ? ["The Drift", "Build time +8%"] : i === 30 ? ["The Threshold", "Test flakiness"] : [],
-                      costToFix: Math.round(5 + (i * 1.2)),
-                      burnoutRisk: Math.min(100, i * 3),
-                      storyBeat,
-                      healingBeat: day === 0 ? "Intervention: First aid applied." : (day === 90 ? "Recovery: Structural integrity restored." : null)
-                    };
-                  }),
-                  currentScore: 85,
-                  atRiskContributor: { login: 'nexus_subject', impact: 'Core architect' },
-                  compoundingCostRatio: 9
-                }
-              }));
-              setTimeout(() => document.getElementById('prognosis-simulation')?.scrollIntoView({ behavior: 'smooth' }), 100);
-            }}
-            className="px-3 py-1 rounded-full bg-black/40 border border-white/10 text-[9px] font-black text-white/40 tracking-[0.2em] hover:text-white transition-all"
-          >
-            FORCE_SIM
-          </button>
-
           <div className="h-4 w-[1px] bg-white/10 mx-1" />
 
           <button onClick={() => navigate('/')} className="text-[10px] font-mono text-cyan-700 hover:text-cyan-400 transition-colors uppercase tracking-widest hidden sm:block">New Scan</button>
           <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
         </div>
-
       </header>
 
       <motion.div
@@ -339,7 +262,7 @@ export default function DischargeSummary() {
           <div className="text-[10px] font-mono text-cyan-600/40 tracking-[0.3em] uppercase mb-2">Discharge Summary</div>
           <h2 className="text-3xl sm:text-4xl font-black text-white">{patient?.name || 'Unknown Patient'}</h2>
           <p className="text-cyan-800/50 text-xs font-mono mt-1">
-            Admitted {patient?.admissionTime ? new Date(patient.admissionTime).toLocaleString() : 'Unknown'} &middot; Attending: DX-Ray Scanner v1.0
+            Admitted {patient?.admissionTime ? new Date(patient.admissionTime).toLocaleString() : 'Unknown'} &middot; Attending: DX-Ray Scanner v2.1
           </p>
         </motion.div>
 
@@ -357,44 +280,16 @@ export default function DischargeSummary() {
           </motion.div>
         )}
 
-        {/* ═══ THE SIMULATION (Hero Position) ═══ */}
-        <div id="prognosis-simulation" className="mb-12">
-          {prognosis ? (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-              <div className="flex items-center justify-center gap-3 mb-6">
-                <div className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
-                <div className="text-[10px] font-mono text-cyan-400 tracking-[0.5em] uppercase font-black">Live Prognosis Simulation</div>
-              </div>
-              <PrognosisSimulator data={prognosis} currentScore={corpusScore?.dxScore} />
-            </motion.div>
-          ) : (
-            <div className="glass-panel p-10 rounded-3xl border border-dashed border-cyan-500/20 text-center">
-              <div className="text-xs font-mono text-cyan-500/40 uppercase tracking-widest mb-2 underline decoration-red-500/50 underline-offset-4 decoration-2">Simulation Engine: Standby</div>
-              <div className="text-[10px] text-slate-500 max-w-sm mx-auto">Click <span className="text-white">FORCE_SIM</span> in the header to manually engage the temporal layer for this instance.</div>
-            </div>
-          )}
-        </div>
-
-        {/* ═══ CODEBASE OBITUARY — appears first if triggered ═══ */}
+        {/* Codebase Obituary */}
         {obituary?.isAbandoned && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 1 }}
-            className="mb-8"
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mb-8">
             <CodebaseObituary data={obituary} />
           </motion.div>
         )}
 
-        {/* ═══ LIVING AUTOPSY — appears first if triggered, above all clinical data ═══ */}
+        {/* Living Autopsy */}
         {livingAutopsy?.triggered && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 1 }}
-            className="mb-8"
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mb-8">
             <LivingAutopsy data={livingAutopsy} />
           </motion.div>
         )}
@@ -407,10 +302,10 @@ export default function DischargeSummary() {
               {corpusScore.trackScores.map(t => {
                 const tn = TRACK_NAMES[t.track];
                 return (
-                  <div key={t.track} className="p-5 rounded-2xl bg-black/40 border border-cyan-500/10 text-center shadow-lg">
-                    <div className="text-[10px] text-cyan-800/60 font-mono uppercase tracking-[0.2em] mb-1">{tn?.anatomical}</div>
-                    <div className="text-sm font-black text-cyan-100 uppercase tracking-tighter">{tn?.name || t.name}</div>
-                    <div className={`text-5xl font-black mt-3 ${t.score >= 70 ? 'text-emerald-400' : t.score >= 40 ? 'text-amber-400' : 'text-red-400'}`}>{t.score}</div>
+                  <div key={t.track} className="p-4 rounded-xl bg-black/20 border border-cyan-900/10 text-center">
+                    <div className="text-[8px] text-cyan-800/40 font-mono uppercase">{tn?.anatomical}</div>
+                    <div className="text-xs font-bold text-cyan-200 mt-0.5">{tn?.name || t.name}</div>
+                    <div className={`text-3xl font-black mt-2 ${t.score >= 70 ? 'text-emerald-400' : t.score >= 40 ? 'text-amber-400' : 'text-red-400'}`}>{t.score}</div>
                   </div>
                 );
               })}
@@ -428,18 +323,17 @@ export default function DischargeSummary() {
                 if (!findings.issues || findings.issues.length === 0) return null;
                 return (
                   <div key={key} className="p-4 rounded-xl bg-black/20 border border-cyan-900/10">
-                    <div className="flex items-center gap-4 mb-5">
-                      <span className={`text-4xl font-black ${findings.score >= 70 ? 'text-emerald-400' : findings.score >= 40 ? 'text-amber-400' : 'text-red-400'}`}>{findings.score}</span>
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className={`text-2xl font-black ${findings.score >= 70 ? 'text-emerald-400' : findings.score >= 40 ? 'text-amber-400' : 'text-red-400'}`}>{findings.score}</span>
                       <div>
-                        <div className="text-xl font-black text-white tracking-tight leading-none mb-1">{tn?.name}</div>
-                        <div className="text-xs text-cyan-800/50 font-mono uppercase tracking-widest">{tn?.anatomical}</div>
+                        <div className="text-sm font-bold text-white">{tn?.name}</div>
+                        <div className="text-[9px] text-cyan-800/40 font-mono">{tn?.anatomical}</div>
                       </div>
                     </div>
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                       {findings.issues.slice(0, 3).map((issue, i) => (
-                        <div key={i} className={`text-base font-semibold p-4 rounded-xl border ${issue.severity === 'critical' ? 'bg-red-500/5 border-red-500/10 text-red-200' : issue.severity === 'warning' ? 'bg-amber-500/5 border-amber-500/10 text-amber-200' : 'bg-cyan-500/5 border-cyan-500/10 text-cyan-100'}`}>
+                        <div key={i} className={`text-xs p-2 rounded-lg ${issue.severity === 'critical' ? 'bg-red-500/5 text-red-300/80' : issue.severity === 'warning' ? 'bg-amber-500/5 text-amber-300/80' : 'bg-cyan-500/5 text-cyan-300/80'}`}>
                           {issue.message}
-                          {issue.detail && <div className="text-sm opacity-40 font-normal mt-2 leading-relaxed">{issue.detail}</div>}
                         </div>
                       ))}
                     </div>
@@ -457,6 +351,13 @@ export default function DischargeSummary() {
           </motion.div>
         )}
 
+        {/* The Simulation — Forward Prognosis */}
+        {prognosis && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }} className="mt-8">
+            <PrognosisSimulator data={prognosis} currentScore={corpusScore?.dxScore} />
+          </motion.div>
+        )}
+
         {/* Prescription */}
         {tracks && Object.keys(tracks).length >= 3 && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="mt-6">
@@ -464,42 +365,11 @@ export default function DischargeSummary() {
           </motion.div>
         )}
 
-        {debtMap && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mt-6">
-            <DebtInheritanceMap data={debtMap} />
-          </motion.div>
-        )}
-
-        {/* The Blame Map — Temporal Guilt Diffusion Engine */}
-        {debtMap?.contributors?.length >= 2 && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="mt-6">
-            <BlameMap data={debtMap} />
-          </motion.div>
-        )}
-
-        {/* Dead Code Coroner */}
-        {deadCode && deadCode.deceased?.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="mt-6">
-            <DeadCodeCoroner data={deadCode} />
-          </motion.div>
-        )}
-
-        {/* Fracture Replay */}
-        {debtMap?.debtTimeline && debtMap.debtTimeline.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mt-6">
-            <FractureReplay timeline={debtMap.debtTimeline} tracks={tracks} />
-          </motion.div>
-        )}
-
-        {/* ===== V2 EXTENDED DIAGNOSTICS ===== */}
-        {collaboration && <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-6"><CollaborationPulse data={collaboration} /></motion.div>}
+        {/* V2 Extended Diagnostics */}
         {trauma && <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-6"><TraumaTimeline data={trauma} /></motion.div>}
-        {immune && <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-6"><ImmuneSystem data={immune} /></motion.div>}
-        {archaeology && <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-6"><ArchaeologyLayer data={archaeology} /></motion.div>}
         {whispers && <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-6"><WhisperNetwork data={whispers} /></motion.div>}
-        {clones && <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-6"><CloneDetectorDNA data={clones} /></motion.div>}
-        {sleepStudy && <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-6"><SleepStudy data={sleepStudy} /></motion.div>}
         {scarTissue && <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-6"><ScarTissue data={scarTissue} /></motion.div>}
+
         <div id="biological-shadow-section" className="mt-8">
           {biologicalShadow ? (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
@@ -513,15 +383,9 @@ export default function DischargeSummary() {
           )}
         </div>
 
-
-
-        {/* 🕯️ Memorial Entry Point */}
+        {/* Memorial Entry */}
         {scanData?.mourning && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-6 glass-panel p-8 border-orange-500/10 hover:border-orange-500/30 transition-all group overflow-hidden relative"
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-6 glass-panel p-8 border-orange-500/10 hover:border-orange-500/30 transition-all group overflow-hidden relative">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ff8c00" strokeWidth="1"><path d="M12 2v20M5 12h14" strokeDasharray="4 4" /></svg>
             </div>
@@ -530,9 +394,7 @@ export default function DischargeSummary() {
                 <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
                 Eternal Echo Detected
               </div>
-              <h3 className="text-xl text-white/90 font-light mb-4 text-glow-orange">
-                A memorial has been identified in this codebase.
-              </h3>
+              <h3 className="text-xl text-white/90 font-light mb-4">A memorial has been identified in this codebase.</h3>
               <p className="text-slate-400 text-sm mb-6 max-w-lg leading-relaxed">
                 We found traces of a departed contributor. Their final act of creation still exists within these lines.
               </p>
@@ -547,16 +409,9 @@ export default function DischargeSummary() {
           </motion.div>
         )}
 
-
-
-        {/* 🔥 Rage Commit Detector — Developer Flow human signal */}
+        {/* Rage Commits */}
         {rageCommits && rageCommits.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.6 }}
-            className="mt-6"
-          >
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mt-6">
             <RageCommits rageCommits={rageCommits} />
           </motion.div>
         )}
@@ -568,7 +423,7 @@ export default function DischargeSummary() {
           </motion.div>
         )}
 
-        {/* ===== NEW FEATURE PANELS ===== */}
+        {/* New Feature Panels */}
         {timeBomb?.triggered && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-6">
             <TimeBombAlert data={timeBomb} />
@@ -595,8 +450,6 @@ export default function DischargeSummary() {
           </motion.div>
         )}
 
-        {/* Living Autopsy rendered above — skip here */}
-
         {/* Confessional */}
         {!confessionProcessed && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="mt-6">
@@ -608,15 +461,8 @@ export default function DischargeSummary() {
           </motion.div>
         )}
 
-        {/* Confessional—only when not yet processed */}
         {confessionProcessed && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45 }}
-            className="mt-6"
-          >
-            {/* inline Confessional replacement showing what was healed */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="mt-6">
             <div className="glass-panel rounded-2xl p-5 border border-emerald-500/10">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-2 h-2 rounded-full bg-emerald-400/60 animate-pulse" />
@@ -634,7 +480,6 @@ export default function DischargeSummary() {
 
         {/* Share + Export + Print */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {/* Share */}
           <div className="glass-panel rounded-2xl p-6 text-center">
             <div className="text-[10px] font-mono text-cyan-500 tracking-[0.3em] uppercase mb-3">Share This Scan</div>
             {shareUrl ? (
@@ -656,7 +501,6 @@ export default function DischargeSummary() {
             )}
           </div>
 
-          {/* Print to PDF */}
           <div className="glass-panel rounded-2xl p-6 text-center">
             <div className="text-[10px] font-mono text-cyan-500 tracking-[0.3em] uppercase mb-3">Save as PDF</div>
             <button
@@ -668,7 +512,6 @@ export default function DischargeSummary() {
             <p className="text-[9px] text-cyan-900/30 font-mono mt-2">Use &ldquo;Save as PDF&rdquo; in the print dialog</p>
           </div>
 
-          {/* Download export */}
           <DischargeSummaryExport discharge={discharge} tracks={tracks} corpusScore={corpusScore} confession={confessionProcessed} />
         </motion.div>
 
@@ -679,11 +522,7 @@ export default function DischargeSummary() {
           </button>
         </div>
 
-        {/* ═══════════════════════════════════════════════════════════════════ */}
-        {/* CERTIFICATE OF CONTEXT — The closing statement. Always last.      */}
-        {/* Set apart. Larger text. The emotional resolution of the entire     */}
-        {/* experience. Treat it like the final line of a letter.             */}
-        {/* ═══════════════════════════════════════════════════════════════════ */}
+        {/* Certificate of Context */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -698,14 +537,8 @@ export default function DischargeSummary() {
               boxShadow: '0 0 80px rgba(245,158,11,0.04), inset 0 1px 0 rgba(255,255,255,0.03)'
             }}
           >
-            {/* Ambient glow */}
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{ background: 'radial-gradient(ellipse at 50% 100%, rgba(245,158,11,0.06) 0%, transparent 70%)' }}
-            />
-
+            <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 100%, rgba(245,158,11,0.06) 0%, transparent 70%)' }} />
             <div className="relative z-10">
-              {/* Seal */}
               <div className="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-6"
                 style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)' }}>
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="1.5">
@@ -714,13 +547,10 @@ export default function DischargeSummary() {
                 </svg>
               </div>
 
-              {/* Label */}
-              <div className="text-[9px] font-mono tracking-[0.4em] uppercase mb-6"
-                style={{ color: 'rgba(245,158,11,0.5)' }}>
+              <div className="text-[9px] font-mono tracking-[0.4em] uppercase mb-6" style={{ color: 'rgba(245,158,11,0.5)' }}>
                 Certificate of Context
               </div>
 
-              {/* The narrative — the emotional resolution */}
               <p className="text-2xl sm:text-3xl font-medium leading-relaxed max-w-2xl mx-auto"
                 style={{ color: 'rgba(255,236,180,0.9)', fontStyle: 'italic' }}>
                 {confessionProcessed?.certificate?.narrative
@@ -728,22 +558,16 @@ export default function DischargeSummary() {
                   || 'Every codebase has a story. This one was scanned, not judged.'}
               </p>
 
-              {/* Closing line — like the postscript of a letter */}
-              <div className="mt-10 pt-6 border-t max-w-xs mx-auto"
-                style={{ borderColor: 'rgba(245,158,11,0.1)' }}>
-                <p className="text-sm font-mono" style={{ color: 'rgba(245,158,11,0.4)' }}>
-                  Every scan deserves the full story.
-                </p>
-                <p className="text-xs font-mono mt-1" style={{ color: 'rgba(100,80,40,0.5)' }}>
-                  This one got it.
-                </p>
+              <div className="mt-10 pt-6 border-t max-w-xs mx-auto" style={{ borderColor: 'rgba(245,158,11,0.1)' }}>
+                <p className="text-sm font-mono" style={{ color: 'rgba(245,158,11,0.4)' }}>Every scan deserves the full story.</p>
+                <p className="text-xs font-mono mt-1" style={{ color: 'rgba(100,80,40,0.5)' }}>This one got it.</p>
               </div>
             </div>
           </div>
         </motion.div>
       </motion.div>
 
-      {/* THE MIRROR — Personal X-Ray Document */}
+      {/* THE MIRROR */}
       {mirror && <TheMirror data={mirror} />}
     </div>
   );

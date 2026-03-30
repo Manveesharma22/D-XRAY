@@ -246,20 +246,20 @@ export default function EKGMonitor({ bpm = 60, pattern = 'normal', reason = '' }
         <div className="flex items-center gap-6">
           {/* O2 SAT */}
           <div className="text-center">
-            <div className="text-[9px] font-mono text-cyan-900/40 tracking-wider">SpO₂</div>
+            <div className="text-[9px] font-mono text-cyan-400/50 tracking-wider">SpO₂</div>
             <div className={`text-base font-black font-mono ${o2Color} ${o2Sat < 80 ? 'vital-critical' : ''}`}>
               {o2Sat}<span className="text-[10px] font-normal opacity-50">%</span>
             </div>
           </div>
           {/* RESP */}
           <div className="text-center">
-            <div className="text-[9px] font-mono text-cyan-900/40 tracking-wider">RESP</div>
+            <div className="text-[9px] font-mono text-cyan-400/50 tracking-wider">RESP</div>
             <div className={`text-base font-black font-mono ${respColor}`}>
               {resp}<span className="text-[10px] font-normal opacity-50">/min</span>
             </div>
           </div>
           {/* BPM + Status */}
-          {reason && <span className="text-[10px] text-cyan-800/40 font-mono truncate max-w-[200px]">{reason}</span>}
+          {reason && <span className="text-[10px] text-cyan-400/60 font-mono truncate max-w-[200px]">{reason}</span>}
           <span className={`text-base font-mono font-black uppercase tracking-tighter ${statusColor}`}>{statusLabel}</span>
           <span className={`text-4xl font-black font-mono ${statusColor} ${pattern === 'normal' ? 'animate-heartbeat' : ''}`}>
             {displayBpm}<span className="text-xs font-normal opacity-50 ml-1">BPM</span>
@@ -282,7 +282,7 @@ export default function EKGMonitor({ bpm = 60, pattern = 'normal', reason = '' }
       <div className="px-5 py-2 flex items-center justify-between">
         <div className="flex gap-3">
           {['II', 'V1', 'aVF'].map(lead => (
-            <span key={lead} className={`text-[8px] font-mono px-1.5 py-0.5 rounded border ${lead === 'II' ? 'border-cyan-500/20 text-cyan-500/50' : 'border-cyan-900/10 text-cyan-900/20'}`}>
+            <span key={lead} className={`text-[8px] font-mono px-1.5 py-0.5 rounded border ${lead === 'II' ? 'border-cyan-500/20 text-cyan-500/50' : 'border-cyan-900/10 text-cyan-400/35'}`}>
               {lead}
             </span>
           ))}
@@ -297,7 +297,7 @@ export default function EKGMonitor({ bpm = 60, pattern = 'normal', reason = '' }
               ⚠ ALERT
             </motion.span>
           )}
-          <span className="text-[8px] font-mono text-cyan-900/20 tracking-wider">25mm/s  10mm/mV</span>
+          <span className="text-[8px] font-mono text-cyan-400/35 tracking-wider">25mm/s  10mm/mV</span>
         </div>
       </div>
     </motion.div>

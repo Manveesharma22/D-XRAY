@@ -246,16 +246,12 @@ export default function LivingAutopsy({ data }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.2 }}
-            className="relative w-full overflow-hidden"
+            className="relative w-full overflow-hidden glass-panel"
             style={{
                 minHeight: 620,
                 borderRadius: 24,
-                border: '1px solid rgba(245,158,11,0.06)',
-                background: phase >= 1
-                    ? 'radial-gradient(ellipse at 50% 15%, rgba(28,16,0,0.99) 0%, rgba(5,2,0,0.995) 55%, #000 100%)'
-                    : 'radial-gradient(ellipse at 50% 50%, rgba(12,7,0,0.7) 0%, rgba(0,0,0,0.9) 100%)',
                 boxShadow: phase >= 7
-                    ? '0 0 100px rgba(245,158,11,0.07), 0 0 280px rgba(245,158,11,0.03), inset 0 0 100px rgba(0,0,0,0.7)'
+                    ? '0 0 100px rgba(0,251,255,0.07), 0 0 280px rgba(0,251,255,0.03), inset 0 0 100px rgba(0,0,0,0.7)'
                     : '0 0 40px rgba(0,0,0,0.8)',
                 transition: 'background 2.5s ease, box-shadow 2.5s ease',
             }}
@@ -316,12 +312,8 @@ export default function LivingAutopsy({ data }) {
                             transition={{ duration: 1.2 }}
                             className="w-full mb-8"
                         >
-                            <div style={{
-                                fontSize: 9, fontFamily: 'monospace',
-                                letterSpacing: '0.6em', textTransform: 'uppercase',
-                                color: 'rgba(245,158,11,0.18)', marginBottom: 14,
-                            }}>
-                                ──────  Post-Mortem Report  ──────
+                            <div className="font-technical font-bold tracking-[0.6em] uppercase text-amber-500/10 mb-4">
+                                ──────  Post-Mortem_Diagnostic_Log  ──────
                             </div>
                             <GhostEKG />
                         </motion.div>
@@ -337,15 +329,10 @@ export default function LivingAutopsy({ data }) {
                             transition={{ duration: 1.6 }}
                             className="mb-2 w-full"
                         >
-                            <div style={{ fontSize: 9, fontFamily: 'monospace', letterSpacing: '0.4em', textTransform: 'uppercase', color: 'rgba(245,158,11,0.15)', marginBottom: 6 }}>
-                                Patient
+                            <div className="text-[10px] font-technical tracking-[0.4em] uppercase text-cyan-500/20 mb-1">
+                                Patient_Subject
                             </div>
-                            <div style={{
-                                fontSize: 22, fontWeight: 700, letterSpacing: '0.05em',
-                                color: 'rgba(255,230,160,0.5)',
-                                textShadow: '0 0 40px rgba(245,158,11,0.12)',
-                                fontFamily: 'monospace',
-                            }}>
+                            <div className="text-3xl font-bold font-technical tracking-tighter text-white group-hover:text-cyan-400 transition-colors holographic-bloom">
                                 {data.repoName}
                             </div>
                         </motion.div>
@@ -361,10 +348,10 @@ export default function LivingAutopsy({ data }) {
                             transition={{ duration: 1 }}
                             className="mb-10 w-full"
                         >
-                            <div style={{ fontSize: 9, fontFamily: 'monospace', letterSpacing: '0.18em', color: 'rgba(245,158,11,0.13)', marginBottom: 16, lineHeight: 1.9 }}>
-                                {lastCommitDate && <span>Last signal: {lastCommitDate}</span>}
-                                {data.totalCommits ? <span>  ·  {data.totalCommits} commits</span> : null}
-                                {data.peakContributors > 1 ? <span>  ·  {data.peakContributors} contributors</span> : null}
+                            <div className="text-[10px] font-technical tracking-[0.2em] text-cyan-600/30 mb-5 leading-relaxed uppercase">
+                                {lastCommitDate && <span>Last_Signal: {lastCommitDate}</span>}
+                                {data.totalCommits ? <span>  ·  {data.totalCommits}_Commits</span> : null}
+                                {data.peakContributors > 1 ? <span>  ·  {data.peakContributors}_Subjects</span> : null}
                                 {data.silentDays > 30 ? <span>  ·  {silentLabel}</span> : null}
                             </div>
                             <motion.div
@@ -398,13 +385,9 @@ export default function LivingAutopsy({ data }) {
                             </div>
 
                             {phase >= 6 && (
-                                <div style={{
-                                    fontSize: 15, fontWeight: 600, letterSpacing: '0.05em',
-                                    color: 'rgba(255,210,100,0.38)',
-                                    fontFamily: 'monospace',
-                                }}>
+                                <div className="text-xl font-bold font-technical tracking-tight text-amber-400 holographic-bloom">
                                     <Typewriter
-                                        text="External. Not the code's fault."
+                                        text="EXTERNAL_FORCES. NOT_SYSTEM_LOGIC."
                                         delay={0}
                                         speed={42}
                                     />

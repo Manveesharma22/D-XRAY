@@ -138,7 +138,7 @@ function ContribNode({ contrib, x, y, isNewest, isOldest, isSelected, onClick, i
             ? 'rgba(239,68,68,0.10)'
             : 'rgba(0,229,255,0.08)';
 
-    const nodeR = isNewest || isOldest ? 28 : 22;
+    const nodeR = isNewest || isOldest ? 32 : 26;
 
     return (
         <g
@@ -189,26 +189,28 @@ function ContribNode({ contrib, x, y, isNewest, isOldest, isSelected, onClick, i
 
             {/* Name label */}
             <text
-                x={x} y={y + nodeR + 14}
+                x={x} y={y + nodeR + 16}
                 textAnchor="middle"
                 fill={labelColor}
-                fontSize={11}
+                fontSize={13}
+                fontWeight="bold"
                 fontFamily="monospace"
                 style={{ pointerEvents: 'none', userSelect: 'none' }}
             >
-                @{contrib.login.slice(0, 10)}
+                @{contrib.login.slice(0, 12)}
             </text>
 
             {/* Role badge */}
             <text
-                x={x} y={y + nodeR + 26}
+                x={x} y={y + nodeR + 30}
                 textAnchor="middle"
-                fill={isNewest ? 'rgba(245,158,11,0.5)' : isOldest ? 'rgba(239,68,68,0.5)' : 'rgba(0,229,255,0.3)'}
-                fontSize={9}
+                fill={isNewest ? 'rgba(245,158,11,0.6)' : isOldest ? 'rgba(239,68,68,0.6)' : 'rgba(0,229,255,0.4)'}
+                fontSize={11}
                 fontFamily="monospace"
+                fontWeight="bold"
                 style={{ pointerEvents: 'none', userSelect: 'none' }}
             >
-                {isNewest ? 'SYMPTOM' : isOldest ? 'ORIGIN' : `${contrib.tenure}d`}
+                {isNewest ? 'SYMPTOM' : isOldest ? 'ORIGIN' : `${contrib.tenure}d_TENURE`}
             </text>
         </g>
     );
@@ -330,7 +332,7 @@ export default function BlameMap({ data }) {
                     ].map((l, i) => (
                         <div key={i} className="flex items-center gap-1.5">
                             <div className={`w-2 h-2 rounded-full ${l.color}`} />
-                            <span className="text-xs text-cyan-800/50 font-mono">{l.label}</span>
+                            <span className="text-[11px] text-cyan-400/70 font-technical font-bold uppercase tracking-wide">{l.label}</span>
                         </div>
                     ))}
                 </div>
@@ -421,7 +423,7 @@ export default function BlameMap({ data }) {
                                 {/* The upstream chain visualization */}
                                 {narrative.upstreamCount > 0 && (
                                     <div className="px-6 pt-5 pb-3 border-b border-cyan-900/10">
-                                        <div className="text-[9px] font-mono text-cyan-800/40 uppercase tracking-widest mb-3">
+                                        <div className="text-[9px] font-mono text-cyan-400/60 uppercase tracking-widest mb-3">
                                             Causal chain — upstream trace
                                         </div>
                                         <div className="flex items-center gap-2 flex-wrap">
@@ -444,7 +446,7 @@ export default function BlameMap({ data }) {
                                                             <path d="M30 6 L2 6 M8 2 L2 6 L8 10" stroke="rgba(0,229,255,0.4)" strokeWidth="1.5" strokeLinecap="round" />
                                                         </svg>
                                                     </motion.div>
-                                                    <span className="text-xs font-mono text-cyan-800/40">{narrative.monthsUpstream}mo upstream</span>
+                                                    <span className="text-xs font-mono text-cyan-400/60">{narrative.monthsUpstream}mo upstream</span>
                                                     <motion.div
                                                         animate={{ x: [-4, 0, -4] }}
                                                         transition={{ duration: 1.5, repeat: Infinity, delay: 0.3 }}
@@ -470,20 +472,22 @@ export default function BlameMap({ data }) {
                                 )}
 
                                 {/* The shock narrative */}
-                                <div className="p-6">
-                                    <p className="text-2xl sm:text-3xl font-semibold tracking-tight leading-snug text-white mb-3">
+                                <div className="p-8" style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)' }}>
+                                    <p className="text-2xl sm:text-4xl font-bold tracking-tight leading-tight text-white mb-4 holographic-bloom text-center">
                                         {narrative.headline}
                                     </p>
-                                    <p className="text-sm text-cyan-200/60 leading-relaxed mb-4">
+                                    <p className="text-base text-cyan-200/80 leading-relaxed mb-6 font-technical text-center">
                                         {narrative.detail}
                                     </p>
-                                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg"
-                                        style={{ background: 'rgba(0,229,255,0.06)', border: '1px solid rgba(0,229,255,0.12)' }}>
-                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" strokeWidth="2">
-                                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                                            <path d="M9 12l2 2 4-4" />
-                                        </svg>
-                                        <span className="text-[10px] font-mono text-cyan-400/70 italic">{narrative.verdict}</span>
+                                    <div className="flex justify-center">
+                                        <div className="inline-flex items-center gap-3 px-4 py-2 rounded-xl"
+                                            style={{ background: 'rgba(0,229,255,0.08)', border: '1px solid rgba(0,229,255,0.2)' }}>
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" strokeWidth="2">
+                                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                                <path d="M9 12l2 2 4-4" />
+                                            </svg>
+                                            <span className="text-[11px] font-technical font-bold text-cyan-400 uppercase tracking-widest italic">{narrative.verdict}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </motion.div>
@@ -519,12 +523,12 @@ export default function BlameMap({ data }) {
             </AnimatePresence>
 
             {/* Bottom bar — global absolution statement */}
-            <div className="px-8 py-5 border-t border-cyan-900/10 flex items-center justify-between">
-                <p className="text-xs font-mono" style={{ color: 'rgba(0,229,255,0.2)' }}>
-                    {data.contributors.length} contributors · {data.blameEvents?.length || 0} inherited blame events · {data.chainOfCustody?.length || 0} custody chains
+            <div className="px-8 py-6 border-t border-cyan-900/20 flex items-center justify-between bg-cyan-900/5">
+                <p className="text-[11px] font-technical font-bold tracking-widest text-cyan-400/40 uppercase">
+                    {data.contributors.length}_CONTRIBUTORS · {data.blameEvents?.length || 0}_INHERITED_BLAME · {data.chainOfCustody?.length || 0}_CUSTODY_CHAINS
                 </p>
-                <p className="text-xs font-mono italic" style={{ color: 'rgba(0,229,255,0.18)' }}>
-                    The newest developer touched the symptom. The real author is upstream.
+                <p className="text-[11px] font-technical font-bold text-cyan-400/60 italic tracking-tight">
+                    THE_NEWEST_DEVELOPER_TOUCHED_THE_SYMPTOM. THE_REAL_AUTHOR_IS_UPSTREAM.
                 </p>
             </div>
         </motion.div>

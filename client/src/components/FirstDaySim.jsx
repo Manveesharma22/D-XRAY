@@ -30,24 +30,36 @@ export default function FirstDaySim({ data }) {
     const scoreColor = (survivalScore ?? 50) >= 70 ? '#4ade80' : (survivalScore ?? 50) >= 40 ? '#fbbf24' : '#f87171';
 
     return (
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            className="rounded-3xl overflow-hidden"
-            style={{ background: 'linear-gradient(135deg, rgba(0,10,8,0.97) 0%, rgba(0,12,10,0.95) 100%)', border: '1px solid rgba(6,182,212,0.12)', boxShadow: '0 0 50px rgba(6,182,212,0.04)' }}
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="glass-panel rounded-3xl overflow-hidden"
+            style={{
+                background: 'linear-gradient(135deg, rgba(0,12,10,0.98) 0%, rgba(0,8,6,0.98) 100%)',
+                boxShadow: '0 0 60px rgba(6,182,212,0.03), inset 0 0 80px rgba(0,0,0,0.6)',
+            }}
         >
-            <div style={{ padding: '24px 32px 20px', borderBottom: '1px solid rgba(6,182,212,0.08)', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
-                <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
-                    <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+            <div className="px-8 pt-8 pb-6 border-b border-white/5">
+                <div className="flex items-start justify-between gap-6">
+                    <div className="flex items-center gap-5">
+                        <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 shadow-[0_0_20px_rgba(6,182,212,0.1)]">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" strokeWidth="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 className="text-xl font-bold text-white font-technical tracking-tighter uppercase leading-none">Onboarding_Live_Simulation</h3>
+                            <p className="text-[10px] text-cyan-500/30 font-technical tracking-[0.5em] uppercase font-bold mt-2">
+                                Subject_Acclimatization_Analytics // v9.0
+                            </p>
+                        </div>
                     </div>
-                    <div>
-                        <h3 style={{ fontSize: 18, fontWeight: 800, color: '#fff', margin: 0 }}>First Day Simulator</h3>
-                        <p style={{ fontSize: 11, color: 'rgba(6,182,212,0.45)', fontFamily: 'monospace', margin: '3px 0 0' }}>How long to survive as a new contributor?</p>
+                    <div className="text-right">
+                        <div className="text-[8px] font-technical text-cyan-500/40 font-bold uppercase tracking-[0.1em] mb-1">SURVIVAL_PROJECTION</div>
+                        <div className="text-4xl font-bold font-technical tracking-tighter holographic-bloom" style={{ color: scoreColor }}>{survivalScore ?? '??'}%</div>
+                        {timeToFirstCommit && <div className="text-[9px] font-technical text-white/20 uppercase tracking-widest mt-1">EST_TIME_TO_COMMIT // {timeToFirstCommit.toUpperCase()}</div>}
                     </div>
-                </div>
-                <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                    <div style={{ fontSize: 9, color: 'rgba(6,182,212,0.4)', fontFamily: 'monospace', letterSpacing: '0.15em' }}>SURVIVAL RATE</div>
-                    <div style={{ fontSize: 36, fontWeight: 900, color: scoreColor, lineHeight: 1 }}>{survivalScore ?? '?'}%</div>
-                    {timeToFirstCommit && <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.25)', fontFamily: 'monospace', marginTop: 2 }}>~{timeToFirstCommit} to first commit</div>}
                 </div>
             </div>
             {summary && <div style={{ padding: '12px 32px', background: 'rgba(6,182,212,0.03)', borderBottom: '1px solid rgba(6,182,212,0.06)' }}>
@@ -56,8 +68,8 @@ export default function FirstDaySim({ data }) {
 
             <div style={{ margin: '20px 24px', borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(6,182,212,0.08)', background: 'rgba(0,0,0,0.5)', fontFamily: "'Courier New', monospace" }}>
                 <div style={{ padding: '8px 14px', background: 'rgba(6,182,212,0.06)', borderBottom: '1px solid rgba(6,182,212,0.08)', display: 'flex', alignItems: 'center', gap: 8 }}>
-                    {['#ff5f57', '#ffbd2e', '#28c840'].map((c, i) => <div key={i} style={{ width: 10, height: 10, borderRadius: '50%', background: c, opacity: 0.7 }} />)}
-                    <span style={{ fontSize: 9, color: 'rgba(6,182,212,0.35)', letterSpacing: '0.15em', marginLeft: 4 }}>NEW DEVELOPER — DAY 1 SIMULATION</span>
+                    {['#ff5f57', '#ffbd2e', '#28c840'].map((c, i) => <div key={i} className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: c }} />)}
+                    <span className="text-[9px] font-technical text-cyan-500/40 tracking-[0.3em] uppercase font-bold ml-4">Terminal_Input // Onboarding_Core</span>
                     <div style={{ marginLeft: 'auto' }}>
                         {!done ? (
                             <button onClick={runSimulation} disabled={running} style={{ fontSize: 9, padding: '3px 10px', borderRadius: 6, cursor: running ? 'not-allowed' : 'pointer', background: running ? 'rgba(6,182,212,0.08)' : 'rgba(6,182,212,0.15)', color: running ? 'rgba(6,182,212,0.4)' : 'rgba(6,182,212,0.9)', border: '1px solid rgba(6,182,212,0.2)', fontFamily: 'monospace', letterSpacing: '0.1em' }}>

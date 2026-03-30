@@ -439,7 +439,7 @@ export default function Confessional({ onConfess, healing, corpusScore, repoName
               </AnimatePresence>
             ))}
             {detectedTokens.length === 0 && (
-              <p className="text-xs text-cyan-800/40 font-mono text-center py-2">
+              <p className="text-xs text-cyan-400/60 font-mono text-center py-2">
                 Confession noted — context changes the interpretation.
               </p>
             )}

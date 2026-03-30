@@ -78,12 +78,7 @@ export default function DebtInheritanceMap({ data }) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-3xl overflow-hidden"
-      style={{
-        background: 'linear-gradient(135deg, rgba(0,8,16,0.9) 0%, rgba(0,16,32,0.7) 100%)',
-        border: '1px solid rgba(0,229,255,0.1)',
-        boxShadow: '0 0 40px rgba(0,229,255,0.05)'
-      }}
+      className="glass-panel rounded-3xl"
     >
       {/* Header */}
       <div className="px-8 pt-7 pb-5 border-b border-cyan-900/10">
@@ -97,8 +92,8 @@ export default function DebtInheritanceMap({ data }) {
             </svg>
           </div>
           <div>
-            <h3 className="text-xl font-bold text-white">Debt Inheritance Map</h3>
-            <p className="text-xs text-cyan-800/50 font-mono tracking-wider">The feature that has never existed</p>
+            <h3 className="text-xl font-bold text-white font-technical tracking-tight uppercase">Debt Inheritance Map</h3>
+            <p className="text-[10px] text-cyan-500/40 font-technical tracking-[0.4em] uppercase">Temporal Guilt Diffusion Engine</p>
           </div>
         </div>
 
@@ -106,15 +101,15 @@ export default function DebtInheritanceMap({ data }) {
         <div className="flex gap-8 mt-5">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-red-400/60" />
-            <span className="text-sm text-cyan-800/60 font-mono font-bold tracking-tight">{data.totalDebtInSystem || 0} total debt units in system</span>
+            <span className="text-sm text-cyan-400/90 font-mono font-bold tracking-tight">{data.totalDebtInSystem || 0} total debt units in system</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-amber-400/60" />
-            <span className="text-sm text-cyan-800/60 font-mono font-bold tracking-tight">{chainOfCustody.length} inheritance chains</span>
+            <span className="text-sm text-cyan-400/90 font-mono font-bold tracking-tight">{chainOfCustody.length} inheritance chains</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-emerald-400/60" />
-            <span className="text-sm text-cyan-800/60 font-mono font-bold tracking-tight">{blameEvents.length} blame events detected</span>
+            <span className="text-sm text-cyan-400/90 font-mono font-bold tracking-tight">{blameEvents.length} blame events detected</span>
           </div>
         </div>
       </div>
@@ -122,7 +117,7 @@ export default function DebtInheritanceMap({ data }) {
       <div className="p-6 space-y-4">
         {/* Genealogy Tree — visual lineage */}
         <div className="mb-6">
-          <div className="text-[9px] font-mono text-cyan-800/40 uppercase tracking-[0.2em] mb-3">Debt Lineage — Chain of Custody</div>
+          <div className="text-[10px] font-technical font-bold text-cyan-400/60 uppercase tracking-[0.2em] mb-3">Debt Lineage — Chain of Custody</div>
           <div className="flex items-center gap-1 overflow-x-auto pb-2">
             {sortedByDate.map((contrib, i) => {
               const isOldest = i === 0;
@@ -150,21 +145,21 @@ export default function DebtInheritanceMap({ data }) {
                         </div>
                       )}
                       <div>
-                        <div className="text-xs font-bold text-white truncate max-w-[80px]">{contrib.login}</div>
-                        <div className="text-[10px] text-cyan-800/30 font-mono">
-                          {isNewest ? 'NEWEST' : isOldest ? 'FOUNDER' : `${contrib.tenure}d`}
+                        <div className="text-sm font-bold text-white truncate max-w-[100px]">{contrib.login}</div>
+                        <div className="text-[11px] text-cyan-400/40 font-technical uppercase tracking-wider">
+                          {isNewest ? 'NEWEST' : isOldest ? 'FOUNDER' : `${contrib.tenure}d_TENURE`}
                         </div>
                       </div>
                     </div>
-                    <div className="mt-1 h-1 rounded-full bg-black/30 overflow-hidden flex">
-                      <div className="h-full bg-red-400/50" style={{ width: `${contrib.debtCreated}%` }} />
-                      <div className="h-full bg-amber-400/50" style={{ width: `${contrib.debtInherited}%` }} />
+                    <div className="mt-1.5 h-1.5 rounded-full bg-black/40 overflow-hidden flex gap-0.5 p-[1px]">
+                      <div className="h-full bg-red-500/60 shadow-[0_0_8px_rgba(239,68,68,0.4)] animate-oscilloscope" style={{ width: `${contrib.debtCreated}%` }} />
+                      <div className="h-full bg-amber-400/60 shadow-[0_0_8px_rgba(255,196,0,0.4)] animate-oscilloscope" style={{ width: `${contrib.debtInherited}%` }} />
                     </div>
                   </motion.div>
                   {i < sortedByDate.length - 1 && (
-                    <div className="shrink-0 text-cyan-800/20 flex flex-col items-center">
+                    <div className="shrink-0 text-cyan-400/40 flex flex-col items-center">
                       <svg width="16" height="8" viewBox="0 0 16 8"><path d="M0 4 L12 4 M9 1 L12 4 L9 7" stroke="currentColor" strokeWidth="1" fill="none" /></svg>
-                      <span className="text-[9px] text-cyan-900/20 mt-0.5">inherits</span>
+                      <span className="text-[9px] text-cyan-400/60 mt-0.5 font-bold uppercase">inherits</span>
                     </div>
                   )}
                 </React.Fragment>
@@ -207,13 +202,13 @@ export default function DebtInheritanceMap({ data }) {
                       )}
                       <div>
                         <div className="flex items-center gap-2">
-                          <div className="text-sm font-bold text-white">{contrib.login}</div>
+                          <div className="text-base font-bold text-white">{contrib.login}</div>
                           {isNewest && (
-                            <span className="text-[7px] font-mono bg-amber-500/15 text-amber-400/80 border border-amber-500/20 px-1.5 py-0.5 rounded-md tracking-wider uppercase">NEW MEMBER</span>
+                            <span className="text-[9px] font-technical font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded uppercase tracking-[0.2em]">NEW_MEMBER</span>
                           )}
                         </div>
-                        <div className="text-xs text-cyan-800/50 font-mono">
-                          {contrib.totalCommits} commits &middot; {contrib.tenure} days &middot; {contrib.seniorityFactor}% seniority
+                        <div className="text-[11px] text-cyan-400/50 font-technical uppercase tracking-wider">
+                          {contrib.totalCommits}_commits &middot; {contrib.tenure}_days &middot; {contrib.seniorityFactor}%_seniority
                         </div>
                       </div>
                     </div>
@@ -233,11 +228,17 @@ export default function DebtInheritanceMap({ data }) {
                     </div>
                   </div>
 
-                  {/* Debt bar */}
-                  <div className="mt-3 h-2 rounded-full bg-black/30 overflow-hidden flex">
-                    <div className="h-full bg-red-400/60 transition-all duration-700" style={{ width: `${contrib.debtCreated}%` }} />
-                    <div className="h-full bg-amber-400/60 transition-all duration-700" style={{ width: `${contrib.debtInherited}%` }} />
-                    <div className="h-full bg-emerald-400/60 transition-all duration-700" style={{ width: `${contrib.debtFixed}%` }} />
+                  {/* Debt bar — Laser Cut Segmented */}
+                  <div className="mt-4 h-3 rounded-md bg-black/50 overflow-hidden flex gap-1 p-0.5 border border-white/5">
+                    <div className="h-full bg-red-500/70 shadow-[0_0_12px_rgba(239,68,68,0.4)] relative group transition-all duration-700 animate-oscilloscope" style={{ width: `${contrib.debtCreated}%` }}>
+                      <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.1)_50%,transparent_100%)] animate-scan-fast" />
+                    </div>
+                    <div className="h-full bg-amber-400/70 shadow-[0_0_12px_rgba(255,196,0,0.4)] relative group transition-all duration-700 animate-oscilloscope" style={{ width: `${contrib.debtInherited}%` }}>
+                      <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.1)_50%,transparent_100%)] animate-scan-fast" />
+                    </div>
+                    <div className="h-full bg-cyan-400/70 shadow-[0_0_12px_rgba(0,251,255,0.4)] relative group transition-all duration-700 animate-oscilloscope" style={{ width: `${contrib.debtFixed}%` }}>
+                      <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.1)_50%,transparent_100%)] animate-scan-fast" />
+                    </div>
                   </div>
                 </div>
 
@@ -257,18 +258,18 @@ export default function DebtInheritanceMap({ data }) {
                           initial={{ opacity: 0, y: 6 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.5 }}
-                          className="p-8 rounded-3xl border-l-[6px]"
+                          className="p-8 rounded-3xl border-l-[8px]"
                           style={{
-                            background: 'linear-gradient(135deg, rgba(0,229,255,0.06) 0%, rgba(0,0,0,0) 100%)',
+                            background: 'linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(0,229,255,0.06) 100%)',
                             borderColor: 'rgba(0,229,255,0.5)',
-                            boxShadow: 'inset 0 0 40px rgba(0,229,255,0.03)'
+                            boxShadow: '0 0 50px rgba(0,0,0,0.5), inset 0 0 40px rgba(0,229,255,0.03)'
                           }}
                         >
-                          <p className="text-xl sm:text-2xl text-white leading-tight font-black tracking-tight">
+                          <p className="text-base sm:text-lg text-white leading-snug font-semibold tracking-tight holographic-bloom">
                             {shockSentence}
                           </p>
-                          <div className="mt-4 text-xs text-cyan-700/40 font-mono uppercase tracking-[0.3em]">
-                            Debt inheritance analysis · {contrib.tenure} days tenure
+                          <div className="mt-5 text-[11px] text-cyan-400 font-technical font-bold uppercase tracking-[0.4em]">
+                            TEMPORAL_INHERITANCE_ANALYSIS // {contrib.tenure}_DAYS_TENURE
                           </div>
                         </motion.div>
                       </div>
@@ -348,32 +349,46 @@ export default function DebtInheritanceMap({ data }) {
           })}
         </div>
 
-        {/* Unsung Heroes Section */}
+        {/* Unsung Heroes Section — Clinical Log Refinement */}
         {unsungHeroes.length > 0 && (
-          <div className="mt-2 pt-4 border-t border-emerald-500/10">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-5 h-5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                  <path d="M9 12l2 2 4-4" />
-                </svg>
+          <div className="mt-6 pt-6 border-t border-cyan-500/10">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-6 h-6 rounded-md bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               </div>
-              <div>
-                <div className="text-sm font-mono text-emerald-400/60 uppercase tracking-[0.2em]">Unsung Fixes — Quiet Work That Never Got Credit</div>
+              <div className="flex flex-col">
+                <div className="text-[10px] font-technical text-emerald-400 font-bold tracking-[0.4em] uppercase">Unsung_Fixes_Log</div>
+                <div className="text-[9px] font-technical text-emerald-600/40 tracking-[0.2em] uppercase">Quiet work authorized for credit</div>
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="grid grid-cols-1 gap-3">
               {unsungHeroes.map((hero, i) => (
-                <div key={i} className="p-3 rounded-xl bg-emerald-500/[0.03] border border-emerald-500/10">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <span className="text-sm font-bold text-emerald-300/80">@{hero.login}</span>
-                    <span className="text-xs font-mono text-emerald-400/40">{hero.debtFixed}% of codebase debt silently repaired</span>
+                <div key={i} className="group relative glass-panel rounded-2xl p-4 overflow-hidden border-emerald-500/5 bg-emerald-500/[0.02] hover:bg-emerald-500/[0.05] transition-colors">
+                  <div className="absolute top-0 right-0 p-3 opacity-20">
+                    <span className="text-[8px] font-mono text-emerald-500">#{i + 1}</span>
                   </div>
-                  {hero.unsungFixes?.slice(0, 2).map((fix, j) => (
-                    <div key={j} className="text-xs text-emerald-300/60 flex items-center gap-2">
-                      <div className="w-1 h-1 rounded-full bg-emerald-400/30" />{fix}
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-8 h-8 rounded-full border border-emerald-500/20 flex items-center justify-center bg-emerald-500/5">
+                      <span className="text-xs font-bold text-emerald-400">@{hero.login?.[1]?.toUpperCase()}</span>
                     </div>
-                  ))}
+                    <div>
+                      <div className="text-sm font-bold text-white font-technical tracking-tight flex items-center gap-2">
+                        {hero.login}
+                        <span className="text-[10px] font-technical text-emerald-500/50 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/10 uppercase tracking-widest">DEBT_SURGEON</span>
+                      </div>
+                      <div className="text-[10px] font-technical text-emerald-600/40 uppercase tracking-widest">
+                        {hero.debtFixed}% Codebase Integrity Restored
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-1.5 border-l-2 border-emerald-500/10 pl-4 ml-4">
+                    {hero.unsungCommits?.map((msg, j) => (
+                      <div key={j} className="text-[11px] font-technical text-emerald-300/60 flex items-start gap-2 group-hover:text-emerald-300 transition-colors">
+                        <span className="text-emerald-500/20 italic select-none">0x{Math.floor(Math.random() * 0xFFFF).toString(16).toUpperCase()}</span>
+                        {msg}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
@@ -424,17 +439,17 @@ export default function DebtInheritanceMap({ data }) {
         {/* Chain of Custody */}
         {chainOfCustody.length > 0 && (
           <div className="mt-2 pt-4 border-t border-cyan-900/10">
-            <div className="text-sm font-mono text-cyan-800/40 uppercase tracking-[0.2em] mb-3">Inheritance Chains — Full Chain of Custody</div>
+            <div className="text-sm font-mono text-cyan-400/60 uppercase tracking-[0.2em] mb-3">Inheritance Chains — Full Chain of Custody</div>
             <div className="space-y-2">
               {chainOfCustody.slice(0, 4).map((chain, i) => (
                 <div key={i} className="p-3 rounded-lg bg-black/20 border border-white/[0.03]">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-sm font-bold text-amber-400">@{chain.carrier}</span>
-                    <span className="text-xs text-cyan-800/30">inherited from</span>
+                    <span className="text-xs text-cyan-400/50">inherited from</span>
                     {chain.inheritedFrom.map((name, j) => (
                       <React.Fragment key={j}>
                         <span className="text-sm text-cyan-300/50">@{name}</span>
-                        {j < chain.inheritedFrom.length - 1 && <span className="text-cyan-800/20">,</span>}
+                        {j < chain.inheritedFrom.length - 1 && <span className="text-cyan-400/40">,</span>}
                       </React.Fragment>
                     ))}
                   </div>

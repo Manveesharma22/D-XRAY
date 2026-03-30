@@ -69,7 +69,7 @@ export default function SecondOpinion({ diagnosis, corpusScore }) {
                     >
                         Get a Second Opinion
                     </button>
-                    <p className="text-[9px] font-mono text-cyan-900/20 mt-2">Diagnostic tools have uncertainty. A second reading may change the picture.</p>
+                    <p className="text-[9px] font-mono text-cyan-400/35 mt-2">Diagnostic tools have uncertainty. A second reading may change the picture.</p>
                 </motion.div>
             )}
 
@@ -103,7 +103,7 @@ export default function SecondOpinion({ diagnosis, corpusScore }) {
                         {/* Score comparison */}
                         <div className="flex items-center gap-3 p-3 rounded-xl bg-black/20 border border-amber-500/5 mb-4">
                             <div className="text-center">
-                                <div className="text-[9px] font-mono text-cyan-800/30">First Opinion</div>
+                                <div className="text-[9px] font-mono text-cyan-400/50">First Opinion</div>
                                 <div className="text-2xl font-black text-cyan-400">{opinion.originalScore}</div>
                             </div>
                             <div className="flex-1 flex items-center gap-2">

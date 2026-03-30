@@ -69,44 +69,35 @@ export default function AIDoctor({ diagnosis, corpusScore }) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-3xl overflow-hidden"
+      className="glass-panel rounded-3xl overflow-hidden"
       style={{
-        background: 'linear-gradient(135deg, #020c04 0%, #000a02 100%)',
-        border: '1px solid rgba(52,211,153,0.12)',
-        boxShadow: '0 0 40px rgba(52,211,153,0.05), inset 0 0 60px rgba(0,0,0,0.4)',
-        fontFamily: "'JetBrains Mono', 'Fira Code', 'Courier New', monospace",
+        background: 'linear-gradient(135deg, #020c04 0%, #000402 100%)',
+        boxShadow: '0 0 60px rgba(0,251,255,0.03), inset 0 0 80px rgba(0,0,0,0.6)',
       }}
     >
       {/* Terminal chrome */}
-      <div style={{
-        background: 'rgba(0,20,6,0.9)',
-        borderBottom: '1px solid rgba(52,211,153,0.1)',
-        padding: '10px 20px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ display: 'flex', gap: 6 }}>
+      <div className="bg-black/80 border-b border-emerald-500/10 px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="flex gap-1.5">
             {['#ff5f57', '#ffbd2e', '#28c840'].map((c, i) => (
-              <div key={i} style={{ width: 11, height: 11, borderRadius: '50%', background: c, opacity: 0.7 }} />
+              <div key={i} className="w-2.5 h-2.5 rounded-full" style={{ background: c, opacity: 0.8 }} />
             ))}
           </div>
-          <span style={{ fontSize: 12, color: 'rgba(52,211,153,0.4)', letterSpacing: '0.2em' }}>
-            AI DOCTOR — DX-RAY DIAGNOSTIC TERMINAL
+          <span className="text-[10px] font-technical text-emerald-500/40 tracking-[0.4em] uppercase font-bold">
+            Terminal_Access_v3.2 // AI_Diagnostic_Core
           </span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div className="flex items-center gap-4">
           <motion.div
-            animate={{ opacity: [1, 0.3, 1] }}
-            transition={{ duration: 1.2, repeat: Infinity }}
-            style={{ width: 8, height: 8, borderRadius: '50%', background: '#28c840' }}
+            animate={{ opacity: [1, 0.4, 1], scale: [1, 1.2, 1] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981]"
           />
           <button
             onClick={() => setExpanded(e => !e)}
-            style={{ fontSize: 9, color: 'rgba(52,211,153,0.4)', letterSpacing: '0.12em', background: 'none', border: 'none', cursor: 'pointer' }}
+            className="text-[9px] font-technical text-emerald-500/40 tracking-widest uppercase hover:text-emerald-400 transition-colors"
           >
-            {expanded ? '[ COLLAPSE ]' : '[ EXPAND ALL ]'}
+            {expanded ? '[_Collapse_]' : '[_Expand_All_]'}
           </button>
         </div>
       </div>
@@ -147,20 +138,20 @@ export default function AIDoctor({ diagnosis, corpusScore }) {
             <div style={{ borderTop: '1px solid rgba(52,211,153,0.08)', marginBottom: 16 }} />
 
             {/* Patient header */}
-            <div style={{ color: 'rgba(52,211,153,0.5)', marginBottom: 4, position: 'relative', zIndex: 2 }}>
-              <span style={{ color: '#4ade80', opacity: 0.7 }}>&gt;</span>{' '}
-              Patient: <span style={{ color: '#86efac' }}>{diagnosis.patientName}</span>
-              {' '}| Age: <span style={{ color: '#86efac' }}>{diagnosis.age}yr</span>
-              {' '}| Forks: <span style={{ color: '#86efac' }}>{diagnosis.familyMembers}</span>
+            <div className="font-technical text-[11px] text-emerald-500/40 mb-2 tracking-wide">
+              <span className="text-emerald-400 font-bold">&gt;</span>{' '}
+              SUBJECT:_<span className="text-white font-bold">{diagnosis.patientName}</span>
+              {' '}| AGE:_<span className="text-white">{diagnosis.age}yr</span>
+              {' '}| FORKS:_<span className="text-white">{diagnosis.familyMembers}</span>
             </div>
-            <div style={{ color: 'rgba(52,211,153,0.5)', marginBottom: 16, position: 'relative', zIndex: 2 }}>
-              <span style={{ color: '#4ade80', opacity: 0.7 }}>&gt;</span>{' '}
-              DX Score:{' '}
-              <span style={{ color: scoreColor, fontWeight: 700, fontSize: 16 }}>
+            <div className="font-technical text-[11px] text-emerald-500/40 mb-6 tracking-wide">
+              <span className="text-emerald-400 font-bold">&gt;</span>{' '}
+              VERDICT:_
+              <span className="text-lg font-bold holographic-bloom" style={{ color: scoreColor }}>
                 {corpusScore?.dxScore}
               </span>
-              {' '}/ 100 — Classification:{' '}
-              <span style={{ color: scoreColor, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+              {' '}/_100_GRADE:_
+              <span className="uppercase font-bold tracking-widest" style={{ color: scoreColor }}>
                 {corpusScore?.severity}
               </span>
             </div>

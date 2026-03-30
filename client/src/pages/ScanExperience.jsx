@@ -154,7 +154,7 @@ export default function ScanExperience() {
       case 'mirror_scan':
         setScanData(prev => {
           const updated = { ...prev, mirror: data };
-          sessionStorage.setItem('dxray_scan', JSON.stringify(updated));
+          localStorage.setItem('dxray_scan', JSON.stringify(updated));
           return updated;
         });
         break;
@@ -181,7 +181,8 @@ export default function ScanExperience() {
         const completeData = { scanId: data.scanId, discharge: data.discharge };
         setScanData(prev => {
           const updated = { ...prev, ...completeData };
-          sessionStorage.setItem('dxray_scan', JSON.stringify(updated));
+          // Save full snapshot to localStorage so DischargeSummary can read it
+          try { localStorage.setItem('dxray_scan', JSON.stringify(updated)); } catch (e) { }
           return updated;
         });
         setShowConfessional(true);
@@ -252,7 +253,7 @@ export default function ScanExperience() {
   const toggleSound = () => { soundEngine.init(); setSoundEnabled(soundEngine.toggle()); };
 
   return (
-    <div className={`min-h-screen relative transition-colors duration-3000 ${filmNegative ? 'film-negative' : ''}`}>
+    <div className={`min-h-screen bg-[#111417] text-[#e1e2e7] relative transition-colors duration-3000 ${filmNegative ? 'film-negative' : ''}`}>
       <SoundLayer currentAct={currentAct} ekgPattern={ekgState.pattern} isConfessionReady={showConfessional} trackResult={lastTrackResult} confessionProcessed={confessionProcessed} />
 
       {/* ════════════════════════════════════
@@ -621,16 +622,16 @@ export default function ScanExperience() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.7, duration: 0.7 }}
             >
-              <p className="text-xs font-mono tracking-[0.25em] uppercase mb-4" style={{ color: 'rgba(0,229,255,0.35)' }}>
-                The first tool that doesn&apos;t just scan your codebase
+              <p className="text-xs font-technical tracking-[0.4em] uppercase mb-5" style={{ color: 'rgba(0,229,255,0.4)' }}>
+                THE_VOID // DX-RAY_DIAGNOSTIC_SUITE
               </p>
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
-                <span className="text-white">It understands the</span>{' '}
-                <span className="text-xray">humans</span>{' '}
-                <span className="text-white">who built it.</span>
+              <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tighter leading-[0.95] font-technical uppercase">
+                <span className="text-white">Understand the</span><br />
+                <span className="text-cyan-400">HUMANS</span>{' '}
+                <span className="text-white">behind the code.</span>
               </h2>
-              <p className="text-cyan-700/60 text-base sm:text-lg mt-4 max-w-xl mx-auto leading-relaxed">
-                Paste a GitHub repo. Get a full X-ray — not just of your code, but your team, debt, history, and the humans who carried it.
+              <p className="text-cyan-800/40 text-base sm:text-lg mt-6 max-w-xl mx-auto leading-relaxed font-technical tracking-wide">
+                Paste a GitHub repository. Acquire a full X-ray &mdash; not just of syntax, but of architectural trauma, contributor heartbeats, and the ghosts within the machine.
               </p>
             </motion.div>
 
@@ -641,39 +642,37 @@ export default function ScanExperience() {
               transition={{ delay: 0.9 }}
               className="space-y-4"
             >
-              <div className="relative">
+              <div className="relative group max-w-xl mx-auto">
                 <input
                   type="url"
                   value={repoUrl}
                   onChange={(e) => { setRepoUrl(e.target.value); soundEngine.init(); }}
                   onKeyDown={(e) => e.key === 'Enter' && startScan()}
                   placeholder="https://github.com/facebook/react"
-                  className="w-full bg-black/70 border border-cyan-900/30 rounded-2xl py-5 px-6 text-center text-lg font-mono text-cyan-100 placeholder:text-cyan-900/25 focus:outline-none focus:border-cyan-500/40 focus:ring-1 focus:ring-cyan-500/20 transition-all"
-                  style={{ boxShadow: repoUrl.trim() ? '0 0 30px rgba(0,229,255,0.06)' : 'none' }}
+                  className="w-full bg-[#1d2023]/60 border border-white/5 rounded-full py-6 px-10 text-center text-xl font-technical text-white placeholder:text-white/10 focus:outline-none focus:border-cyan-500/20 transition-all backdrop-blur-3xl"
                 />
                 {repoUrl.trim() && (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="absolute right-4 top-1/2 -translate-y-1/2"
+                    className="absolute right-8 top-1/2 -translate-y-1/2"
                   >
-                    <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_15px_rgba(34,211,238,0.5)]" />
                   </motion.div>
                 )}
               </div>
-              {error && <p className="text-red-400 text-sm font-medium">{error}</p>}
+              {error && <p className="text-red-400 text-sm font-technical uppercase tracking-widest">{error}</p>}
               <motion.button
                 onClick={startScan}
                 disabled={!repoUrl.trim()}
-                whileHover={{ scale: 1.01 }}
+                whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full py-5 rounded-2xl font-bold text-base tracking-widest uppercase transition-all disabled:opacity-30 disabled:cursor-not-allowed text-white shadow-xl active:scale-[0.98]"
+                className="max-w-md mx-auto w-full py-6 rounded-full font-bold text-sm font-technical tracking-[0.4em] uppercase transition-all disabled:opacity-20 disabled:cursor-not-allowed text-white shadow-[0_20px_50px_rgba(0,0,0,0.5)] active:scale-[0.98] border border-cyan-500/20"
                 style={{
-                  background: 'linear-gradient(135deg, #0891b2, #06b6d4)',
-                  boxShadow: repoUrl.trim() ? '0 0 40px rgba(0,229,255,0.2), 0 8px 32px rgba(0,0,0,0.5)' : 'none',
+                  background: 'linear-gradient(135deg, #00e5ff 0%, #00acc1 100%)',
                 }}
               >
-                Power On · Begin Scan
+                INITIALIZE_AUTOPSY
               </motion.button>
               <p className="text-[10px] text-cyan-900/25 tracking-wider font-mono">
                 No account. No config. Public repos only. 16 diagnostic modules.
@@ -977,21 +976,24 @@ export default function ScanExperience() {
             )}
 
             {/* Show Results button */}
-            {scanComplete && scanData.discharge && (
+            {scanComplete && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="text-center py-8">
-                <button
-                  onClick={() => window.open(`/discharge/${scanData.scanId}`, '_blank')}
-                  className="group relative px-12 py-5 bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 text-white rounded-2xl text-lg font-bold tracking-wider uppercase transition-all shadow-xl shadow-cyan-500/20 active:scale-[0.97]"
+                <a
+                  href={scanData.scanId ? `/discharge/${scanData.scanId}` : '/results'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => {
+                    // Refresh localStorage with latest scanData right before opening
+                    try { localStorage.setItem('dxray_scan', JSON.stringify(scanData)); } catch (e) { }
+                  }}
+                  className="group relative inline-flex items-center gap-3 px-12 py-5 bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 text-white rounded-2xl text-lg font-bold tracking-wider uppercase transition-all shadow-xl shadow-cyan-500/20 active:scale-[0.97] no-underline"
                 >
-                  <span className="flex items-center gap-3">
-                    View Full Results
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="group-hover:translate-x-1 transition-transform">
-                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                      <polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" />
-                    </svg>
-                  </span>
-                </button>
-                <p className="text-[10px] text-cyan-800/30 font-mono mt-3 tracking-wider">Opens in a new tab — full discharge summary with all 16 diagnostics</p>
+                  View Full Results
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="group-hover:translate-x-1 transition-transform">
+                    <path d="M5 12h14" /><path d="M12 5l7 7-7 7" />
+                  </svg>
+                </a>
+                <p className="text-[11px] text-cyan-400/50 font-technical font-bold mt-3 tracking-wider uppercase">Full discharge summary with all 16 diagnostics</p>
               </motion.div>
             )}
           </div>

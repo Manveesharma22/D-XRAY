@@ -56,26 +56,28 @@ export default function ScarTissue({ data }) {
             animate={{ opacity: 1, y: 0 }}
             className="glass-panel rounded-2xl p-5 overflow-hidden"
         >
-            <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                    <div className="w-2.5 h-2.5 rounded-full bg-rose-800 animate-pulse" />
-                    <span className="text-xs font-mono text-cyan-800/50 tracking-[0.2em] uppercase">Scar Tissue Detector</span>
+            <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-4">
+                    <div className="w-2.5 h-2.5 rounded-full bg-rose-600 shadow-[0_0_15px_#e11d48] animate-pulse" />
+                    <span className="text-[10px] font-technical text-cyan-400/70 tracking-[0.5em] uppercase font-bold">Deep_Pathology_Detector</span>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                     <ScarRing score={Math.round(totalScarScore / topScars.length)} max={maxScarScore} />
                 </div>
             </div>
 
             {/* Surgery notice for most scarred file */}
             {data.mostScared && data.mostScared.rewriteCount >= 3 && (
-                <div className="mb-4 px-4 py-3 rounded-xl" style={{
-                    background: 'rgba(239,68,68,0.05)',
-                    border: '1px solid rgba(239,68,68,0.12)',
-                    borderLeft: '3px solid rgba(239,68,68,0.35)',
+                <div className="mb-6 px-6 py-5 rounded-2xl relative z-10" style={{
+                    background: 'rgba(239,68,68,0.08)',
+                    border: '1px solid rgba(239,68,68,0.2)',
+                    borderLeft: '6px solid #ef4444',
+                    boxShadow: 'inset 0 0 30px rgba(0,0,0,0.5)',
                 }}>
-                    <div className="text-xs font-mono text-red-400/40 uppercase tracking-widest mb-1.5">Surgery Required</div>
-                    <p className="text-sm leading-relaxed italic" style={{ color: 'rgba(252,165,165,0.6)' }}>
-                        "{buildSurgeryNotice(data.mostScared)}"
+                    <div className="text-[10px] font-technical text-red-500 font-bold uppercase tracking-[0.4em] mb-2">CRITICAL_SURGERY_REQUIRED</div>
+                    <p className="text-[14px] leading-relaxed font-technical tracking-tight" style={{ color: '#fecaca' }}>
+                        <span className="text-white/20 font-bold mr-2">LOG//</span>
+                        "{buildSurgeryNotice(data.mostScared).replace('.', '').toUpperCase()}"
                     </p>
                 </div>
             )}
@@ -100,18 +102,18 @@ export default function ScarTissue({ data }) {
                             className="cursor-pointer"
                             onClick={() => setExpandedScar(isExpanded ? null : i)}
                         >
-                            <div className="flex items-center justify-between mb-1.5">
-                                <div className="flex items-center gap-2">
-                                    <code className="text-xs font-mono text-rose-300/60 font-bold">{shortPath}</code>
-                                    <span className="text-xs font-mono text-rose-900/50">{scar.commitCount} commits · {scar.authorCount} authors</span>
+                            <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-3">
+                                    <code className="text-[11px] font-technical text-rose-400 font-bold tracking-tight uppercase">{shortPath}</code>
+                                    <span className="text-[9px] font-technical text-white/20 uppercase tracking-widest">{scar.commitCount}_PULSES // {scar.authorCount}_SUBJECTS</span>
                                 </div>
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-3">
                                     {scar.rewriteCount >= 5 && (
-                                        <span className="text-xs font-mono text-red-400/50 px-1.5 py-0.5 rounded bg-red-500/5 border border-red-500/10">
-                                            {scar.rewriteCount}× rewritten
+                                        <span className="text-[8px] font-technical text-red-500 font-bold px-2 py-0.5 rounded-full bg-red-500/10 border border-red-500/20 uppercase tracking-widest">
+                                            {scar.rewriteCount}x_RECONSTRUCTED
                                         </span>
                                     )}
-                                    <span className="text-sm font-black font-mono text-rose-400/60">{scar.scarScore}</span>
+                                    <span className="text-lg font-bold font-technical text-rose-500 holographic-bloom">{scar.scarScore}</span>
                                 </div>
                             </div>
 
@@ -168,10 +170,10 @@ export default function ScarTissue({ data }) {
                 })}
             </div>
 
-            <p className="text-xs text-cyan-900/20 mb-2">Click a scar to see the full surgical report</p>
+            <p className="text-xs text-cyan-400/35 mb-2">Click a scar to see the full surgical report</p>
 
             {data.finding && (
-                <p className="text-sm text-cyan-800/40 leading-relaxed italic border-t border-cyan-900/10 pt-3">{data.finding}</p>
+                <p className="text-sm text-cyan-400/60 leading-relaxed italic border-t border-cyan-900/10 pt-3">{data.finding}</p>
             )}
         </motion.div>
     );

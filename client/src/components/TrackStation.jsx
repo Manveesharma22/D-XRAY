@@ -107,8 +107,8 @@ export default function TrackStation({ trackKey, track, findings, isActive, onCl
       {/* Main card */}
       <div className="p-4">
         {/* Top: anatomical label + critical indicator */}
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-[8px] font-mono uppercase tracking-[0.2em]" style={{ color: `${base.color}60` }}>
+        <div className="flex items-center justify-between mb-4">
+          <span className="text-[11px] font-technical font-bold uppercase tracking-[0.25em] text-white/40">
             {track?.anatomical || '—'}
           </span>
           <div className="flex items-center gap-1.5">
@@ -118,13 +118,13 @@ export default function TrackStation({ trackKey, track, findings, isActive, onCl
         </div>
 
         {/* Track name */}
-        <div className="flex items-end justify-between gap-2 mb-3">
+        <div className="flex items-end justify-between gap-4 mb-4">
           <div>
-            <div className="text-[10px] font-mono text-cyan-800/40 uppercase mb-0.5">{track?.icon || trackKey}</div>
-            <div className="text-sm font-bold text-white leading-tight">{track?.name || 'Track'}</div>
+            <div className="text-[10px] font-technical font-bold text-cyan-400/70 uppercase tracking-[0.2em] mb-1">{track?.icon || trackKey}_PATHOLOGY</div>
+            <div className="text-lg font-bold text-white tracking-tight leading-none uppercase">{track?.name || 'Track'}</div>
           </div>
-          <div className="text-3xl font-black" style={{ color: healthColor, lineHeight: 1 }}>
-            {score !== undefined ? score : <span className="text-xl text-cyan-900/30">···</span>}
+          <div className="text-4xl font-bold font-technical tracking-tighter holographic-bloom" style={{ color: healthColor }}>
+            {score !== undefined ? score : <span className="text-2xl text-cyan-400/40">··</span>}
           </div>
         </div>
 
@@ -149,23 +149,25 @@ export default function TrackStation({ trackKey, track, findings, isActive, onCl
 
         {/* 2–3 plain-English findings */}
         {plainFindings.length > 0 && (
-          <div className="space-y-1.5">
+          <div className="space-y-2.5">
             {plainFindings.map((f, i) => (
-              <div key={i} className="flex items-start gap-2">
-                <div className={`w-1.5 h-1.5 rounded-full mt-1 shrink-0 ${SEVERITY_DOT[f.severity] || SEVERITY_DOT.info}`} />
-                <p className={`text-[10px] leading-relaxed ${SEVERITY_TEXT[f.severity] || SEVERITY_TEXT.info}`}>{f.text}</p>
+              <div key={i} className="flex items-start gap-2.5">
+                <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${SEVERITY_DOT[f.severity] || SEVERITY_DOT.info}`} style={{ boxShadow: `0 0 10px currentColor` }} />
+                <p className={`text-[13px] leading-snug font-technical ${f.severity === 'critical' ? 'text-rose-200' : f.severity === 'warning' ? 'text-amber-200' : 'text-white/60'}`}>
+                  {f.text}
+                </p>
               </div>
             ))}
           </div>
         )}
 
         {score === undefined && (
-          <p className="text-[9px] text-cyan-900/30 font-mono">Scanning...</p>
+          <p className="text-[9px] text-cyan-400/40 font-mono">Scanning...</p>
         )}
 
         {/* Expand hint */}
         {plainFindings.length > 0 && (
-          <div className="mt-2.5 flex items-center gap-1 text-[8px] font-mono text-cyan-900/25">
+          <div className="mt-2.5 flex items-center gap-1.5 text-[10px] font-technical font-bold text-cyan-400/60 uppercase tracking-widest">
             <svg width="8" height="8" viewBox="0 0 12 12" fill="none">
               <path d={expanded ? 'M2 8 L6 4 L10 8' : 'M2 4 L6 8 L10 4'} stroke="currentColor" strokeWidth="1.5" />
             </svg>
@@ -185,15 +187,15 @@ export default function TrackStation({ trackKey, track, findings, isActive, onCl
             className="overflow-hidden"
           >
             <div className="px-4 pb-4 pt-1 border-t border-white/[0.04] space-y-2">
-              <div className="text-[8px] font-mono text-cyan-800/30 uppercase tracking-wider mb-2">All Findings</div>
+              <div className="text-[8px] font-mono text-cyan-400/50 uppercase tracking-wider mb-2">All Findings</div>
               {findings.issues.map((issue, i) => (
                 <div
                   key={i}
                   className={`text-[10px] p-2.5 rounded-lg leading-relaxed ${issue.severity === 'critical'
-                      ? 'bg-red-500/5 border border-red-500/10 text-red-300/70'
-                      : issue.severity === 'warning'
-                        ? 'bg-amber-500/5 border border-amber-500/10 text-amber-300/70'
-                        : 'bg-cyan-900/10 border border-cyan-900/10 text-cyan-300/50'
+                    ? 'bg-red-500/5 border border-red-500/10 text-red-300/70'
+                    : issue.severity === 'warning'
+                      ? 'bg-amber-500/5 border border-amber-500/10 text-amber-300/70'
+                      : 'bg-cyan-900/10 border border-cyan-900/10 text-cyan-300/50'
                     }`}
                 >
                   <span className="text-[8px] font-mono uppercase mr-2 opacity-60">{issue.severity}</span>

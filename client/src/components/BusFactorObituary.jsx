@@ -27,41 +27,32 @@ export default function BusFactorObituary({ data }) {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-3xl overflow-hidden"
+            className="glass-panel rounded-3xl overflow-hidden"
             style={{
-                background: 'linear-gradient(135deg, rgba(10,5,0,0.97) 0%, rgba(16,8,0,0.95) 100%)',
-                border: '1px solid rgba(249,115,22,0.15)',
-                boxShadow: '0 0 50px rgba(249,115,22,0.05)',
+                background: 'linear-gradient(135deg, rgba(20,10,0,0.98) 0%, rgba(10,5,0,0.98) 100%)',
+                boxShadow: '0 0 60px rgba(249,115,22,0.03), inset 0 0 80px rgba(0,0,0,0.6)',
             }}
         >
             {/* Header */}
-            <div style={{ padding: '24px 32px 20px', borderBottom: '1px solid rgba(249,115,22,0.08)' }}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
-                    <div style={{
-                        width: 40, height: 40, borderRadius: 12, flexShrink: 0,
-                        background: 'rgba(249,115,22,0.1)', border: '1px solid rgba(249,115,22,0.25)',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    }}>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f97316" strokeWidth="1.8">
+            <div className="px-8 pt-8 pb-6 border-b border-white/5">
+                <div className="flex items-start gap-5">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-orange-500/10 border border-orange-500/20 shadow-[0_0_20px_rgba(249,115,22,0.1)]">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f97316" strokeWidth="2">
                             <rect x="1" y="3" width="15" height="13" rx="2" />
                             <path d="M16 8h4l3 4v5h-7V8z" />
                             <circle cx="5.5" cy="18.5" r="2.5" />
                             <circle cx="18.5" cy="18.5" r="2.5" />
                         </svg>
                     </div>
-                    <div style={{ flex: 1 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-                            <h3 style={{ fontSize: 18, fontWeight: 800, color: '#fff', margin: 0 }}>Bus Factor Analysis</h3>
-                            <span style={{
-                                fontSize: 10, fontFamily: 'monospace', letterSpacing: '0.15em',
-                                background: 'rgba(249,115,22,0.15)', color: 'rgba(249,115,22,0.9)',
-                                border: '1px solid rgba(249,115,22,0.3)', borderRadius: 6, padding: '3px 9px',
-                            }}>
-                                BUS NUMBER: {busNumber ?? '?'}
+                    <div className="flex-1">
+                        <div className="flex items-center gap-4 flex-wrap">
+                            <h3 className="text-xl font-bold text-white font-technical tracking-tighter uppercase leading-none">Personnel_Risk_Protocol</h3>
+                            <span className="text-[10px] font-technical font-bold uppercase tracking-[0.4em] px-3 py-0.5 rounded-full bg-orange-500/10 text-orange-500 border border-orange-500/20">
+                                BUS_FACTOR: {busNumber ?? '??'}
                             </span>
                         </div>
-                        <p style={{ fontSize: 13, color: 'rgba(249,115,22,0.45)', fontFamily: 'monospace', margin: '6px 0 0', lineHeight: 1.5 }}>
-                            {summary || `${risks.length} single point${risks.length !== 1 ? 's' : ''} of failure detected. If a bus hit these people tomorrow, the codebase would not survive.`}
+                        <p className="text-[10px] text-orange-500/30 font-technical tracking-[0.5em] uppercase font-bold mt-2">
+                            Institutional_Knowledge_Forensics // v2.0
                         </p>
                     </div>
                 </div>
@@ -127,8 +118,8 @@ export default function BusFactorObituary({ data }) {
                                         </div>
                                     </div>
                                     <div style={{ textAlign: 'right' }}>
-                                        <div style={{ fontSize: 22, fontWeight: 900, color: riskColor }}>{risk.riskScore}</div>
-                                        <div style={{ fontSize: 10, color: `${riskColor}60`, fontFamily: 'monospace', letterSpacing: '0.1em' }}>RISK</div>
+                                        <div className="text-3xl font-bold text-white tracking-tighter font-technical holographic-bloom" style={{ color: riskColor }}>{risk.riskScore}</div>
+                                        <div className="text-[8px] font-technical uppercase tracking-[0.2em] font-bold" style={{ color: `${riskColor}60` }}>RISK_INDEX</div>
                                     </div>
                                 </div>
                                 <div style={{ marginTop: 10 }}>

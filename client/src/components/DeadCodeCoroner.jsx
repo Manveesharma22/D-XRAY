@@ -17,22 +17,19 @@ export default function DeadCodeCoroner({ data }) {
 
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff4444" strokeWidth="2">
-              <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
-              <path d="M12 8v4M12 16h.01" />
-            </svg>
+          <div className="w-10 h-10 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center shadow-[0_0_15px_rgba(255,68,68,0.2)]">
+            <div className="w-2 h-2 rounded-full bg-red-500 animate-vital-flash" />
           </div>
           <div>
-            <h3 className="text-xl font-bold text-white">Dead Code Coroner</h3>
-            <p className="text-xs text-cyan-800/50 font-mono tracking-wider">
-              {data.totalDeadFiles} deceased element{data.totalDeadFiles !== 1 ? 's' : ''} found &middot; {data.details?.deathRate || 0}% death rate
+            <h3 className="text-xl font-bold text-white font-technical tracking-tighter uppercase leading-tight">Dead Code Coroner</h3>
+            <p className="text-[10px] text-cyan-500/30 font-technical tracking-[0.3em] uppercase">
+              Diagnostic_Autopsy_Active · {data.details?.deathRate || 0}% Terminal_Rate
             </p>
           </div>
         </div>
-        <div className="px-4 py-2 rounded-xl bg-red-500/10 border border-red-500/20">
-          <span className="text-lg font-black text-red-400">{data.totalDeadFiles}</span>
-          <span className="text-[10px] text-red-400/50 font-mono ml-1.5 uppercase">corpses</span>
+        <div className="px-4 py-3 rounded-2xl bg-red-950/20 border border-red-500/30 shadow-[inset_0_0_20px_rgba(255,68,68,0.05)]">
+          <span className="text-2xl font-black text-red-500 font-technical vital-critical">{data.totalDeadFiles}</span>
+          <span className="text-[10px] text-red-500/50 font-technical ml-2 uppercase tracking-[0.2em] font-bold">Corpses</span>
         </div>
       </div>
 
@@ -48,7 +45,7 @@ export default function DeadCodeCoroner({ data }) {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.15 }}
               onClick={() => setSelectedCorpse(isSelected ? null : i)}
-              className="cursor-pointer rounded-xl border border-red-500/10 bg-red-500/[0.02] hover:bg-red-500/[0.05] transition-all overflow-hidden"
+              className="cursor-pointer glass-panel rounded-2xl border-red-500/10 bg-red-500/[0.02] hover:bg-red-500/[0.05] group"
             >
               {/* Coroner report header */}
               <div className="p-4 flex items-center justify-between">
@@ -68,11 +65,10 @@ export default function DeadCodeCoroner({ data }) {
                       <span className="text-[9px] font-mono text-red-400/50 uppercase tracking-wider">
                         Case #{caseNum}
                       </span>
-                      <span className={`text-[8px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded ${
-                        corpse.confidence === 'high' ? 'bg-red-500/20 text-red-400' :
-                        corpse.confidence === 'medium' ? 'bg-amber-500/20 text-amber-400' :
-                        'bg-slate-500/20 text-slate-400'
-                      }`}>
+                      <span className={`text-[8px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded ${corpse.confidence === 'high' ? 'bg-red-500/20 text-red-400' :
+                          corpse.confidence === 'medium' ? 'bg-amber-500/20 text-amber-400' :
+                            'bg-slate-500/20 text-slate-400'
+                        }`}>
                         {corpse.confidence} confidence
                       </span>
                     </div>

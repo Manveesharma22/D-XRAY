@@ -197,7 +197,7 @@ export default function GhostNarrator({ diagnosis }) {
         </div>
 
         <div className="text-center mb-4">
-          <span className="text-[9px] font-mono text-cyan-600/40 tracking-[0.3em] uppercase">The Patient Speaks</span>
+          <span className="text-[9px] font-mono text-cyan-400/60 tracking-[0.3em] uppercase">The Patient Speaks</span>
           {isSpeaking && (
             <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="ml-3 text-[9px] font-mono text-cyan-500/60">
               ● VOICE ACTIVE
@@ -258,7 +258,7 @@ export default function GhostNarrator({ diagnosis }) {
           {!showAll && (
             <button
               onClick={handleShowAll}
-              className="text-[9px] font-mono text-cyan-800/30 hover:text-cyan-600/50 transition-colors ml-2"
+              className="text-[9px] font-mono text-cyan-400/50 hover:text-cyan-600/50 transition-colors ml-2"
             >
               Skip →
             </button>

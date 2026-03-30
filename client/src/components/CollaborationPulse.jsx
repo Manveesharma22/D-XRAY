@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
-const COLORS = ['#00e5ff', '#f59e0b', '#a78bfa', '#34d399', '#fb7185', '#fb923c'];
+const COLORS = ['#00fbff', '#ffc400', '#a78bfa', '#34d399', '#fb7185', '#fb923c'];
 
-export default function CollaborationPulse({ data }) {
+export default function CollaborationPulse({ data, isHealed }) {
     const canvasRef = useRef(null);
     const animRef = useRef(null);
     const [hoveredContributor, setHoveredContributor] = useState(null);
@@ -32,12 +32,15 @@ export default function CollaborationPulse({ data }) {
         const rowH = h / (contributors.length + 0.5);
 
         let offset = 0;
+        let frame = 0;
 
         // Build conflict map: buckets where 2+ contributors are active
         const conflictBuckets = new Set();
-        for (let b = 0; b < buckets; b++) {
-            const active = contributors.filter(c => (c.pulseData?.[b] || 0) > 0.45).length;
-            if (active >= 2) conflictBuckets.add(b);
+        if (!isHealed) {
+            for (let b = 0; b < buckets; b++) {
+                const active = contributors.filter(c => (c.pulseData?.[b] || 0) > 0.45).length;
+                if (active >= 2) conflictBuckets.add(b);
+            }
         }
 
         // Build sync map: buckets where all active contributors match
@@ -52,7 +55,7 @@ export default function CollaborationPulse({ data }) {
             ctx.clearRect(0, 0, w, h);
 
             // Background grid
-            ctx.strokeStyle = 'rgba(0,229,255,0.025)';
+            ctx.strokeStyle = 'rgba(0, 251, 255, 0.04)';
             ctx.lineWidth = 0.5;
             for (let gy = 0; gy < h; gy += rowH) {
                 ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(w, gy); ctx.stroke();
@@ -63,10 +66,10 @@ export default function CollaborationPulse({ data }) {
                 if (b >= buckets - 1) return;
                 const x = b * segW;
                 const grad = ctx.createLinearGradient(x, 0, x + segW, 0);
-                grad.addColorStop(0, 'rgba(245,200,80,0)');
-                grad.addColorStop(0.3, 'rgba(245,200,80,0.07)');
-                grad.addColorStop(0.7, 'rgba(245,200,80,0.07)');
-                grad.addColorStop(1, 'rgba(245,200,80,0)');
+                grad.addColorStop(0, 'rgba(255, 196, 0, 0)');
+                grad.addColorStop(0.3, 'rgba(255, 196, 0, 0.12)');
+                grad.addColorStop(0.7, 'rgba(255, 196, 0, 0.12)');
+                grad.addColorStop(1, 'rgba(255, 196, 0, 0)');
                 ctx.fillStyle = grad;
                 ctx.fillRect(x, 0, segW, h);
             });
@@ -135,33 +138,62 @@ export default function CollaborationPulse({ data }) {
 
                 ctx.beginPath();
                 drawPath();
+
+                // Glow pass — bloom
+                ctx.save();
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = color;
+                ctx.globalAlpha = alpha * 0.4;
+                ctx.stroke();
+                ctx.restore();
+
+                // Sharp pass
                 ctx.stroke();
 
                 // Contributor label on left axis
                 ctx.shadowBlur = 0;
-                ctx.globalAlpha = isHovered ? 0.5 : 0.15;
+                ctx.globalAlpha = isHovered ? 0.8 : 0.15;
                 ctx.fillStyle = color;
-                ctx.font = `${dpr > 1 ? 10 : 10}px monospace`;
+                ctx.font = `bold ${dpr > 1 ? 9 : 9}px 'Space Grotesk'`;
                 ctx.textAlign = 'right';
-                ctx.fillText(contributor.name?.split(' ')[0] || `dev${ci}`, 48, baseY + 3);
+                ctx.fillText(contributor.name?.split(' ')[0]?.toUpperCase() || `DEV_${ci}`, 48, baseY + 3);
 
                 ctx.shadowBlur = 0;
                 ctx.globalAlpha = 1;
             });
 
             // Sync bloom: if all lines fully synced, pulse a golden ring
-            if (syncBuckets.size > 3) {
-                const centerX = (offset * 0.4) % w;
-                const grad = ctx.createRadialGradient(centerX, h / 2, 0, centerX, h / 2, 60);
-                grad.addColorStop(0, 'rgba(245,200,80,0.08)');
-                grad.addColorStop(1, 'rgba(245,200,80,0)');
+            if (syncBuckets.size > 3 || isHealed) {
+                const centerX = isHealed ? w / 2 : (offset * 0.4) % w;
+                const grad = ctx.createRadialGradient(centerX, h / 2, 0, centerX, h / 2, isHealed ? w : 60);
+                grad.addColorStop(0, isHealed ? 'rgba(52, 211, 153, 0.12)' : 'rgba(255, 196, 0, 0.12)');
+                grad.addColorStop(1, 'rgba(0,0,0,0)');
                 ctx.fillStyle = grad;
                 ctx.fillRect(0, 0, w, h);
             }
 
-            offset += 0.7;
+            // ─── Draw Scanline ──────────────────────────────────────────────
+            const scanX = (frame * 3.5) % w;
+            const scanGrad = ctx.createLinearGradient(scanX - 80, 0, scanX, 0);
+            scanGrad.addColorStop(0, 'rgba(0,0,0,0)');
+            scanGrad.addColorStop(0.5, 'rgba(0, 251, 255, 0.06)');
+            scanGrad.addColorStop(1, 'rgba(0, 251, 255, 0.15)');
+            ctx.fillStyle = scanGrad;
+            ctx.fillRect(scanX - 80, 0, 80, h);
+
+            // Scanline leading edge
+            ctx.strokeStyle = 'rgba(0, 251, 255, 0.35)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(scanX, 0);
+            ctx.lineTo(scanX, h);
+            ctx.stroke();
+
+            offset += 0.05;
+
+            frame++;
             if (isVisible) animRef.current = requestAnimationFrame(draw);
-            else animRef.current = setTimeout(() => { if (isVisible) draw(); }, 500); // Poll when hidden
+            else animRef.current = setTimeout(() => { if (isVisible) draw(); }, 1000);
         }
 
         draw();
@@ -181,23 +213,26 @@ export default function CollaborationPulse({ data }) {
             animate={{ opacity: 1, y: 0 }}
             className="glass-panel rounded-2xl p-5 overflow-hidden"
         >
-            <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                    <div className="w-2.5 h-2.5 rounded-full bg-violet-400 animate-pulse" />
-                    <span className="text-xs font-mono text-cyan-800/50 tracking-[0.2em] uppercase">Collaboration Pulse</span>
+            <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-4">
+                    <div className="w-3 h-3 rounded-full bg-violet-500 shadow-[0_0_20px_rgba(167,139,250,0.7)] animate-pulse" />
+                    <div>
+                        <span className="text-[11px] font-technical text-cyan-400/80 tracking-[0.4em] uppercase font-bold block">Subject_Interaction_Pulse</span>
+                        <span className="text-[9px] font-technical text-cyan-400/40 tracking-[0.2em] uppercase">Real-time collaboration waveform analysis</span>
+                    </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-6">
                     {syncPct > 0 && (
-                        <span className="text-xs font-mono text-amber-400/60">
-                            {syncPct}% in sync
+                        <span className="text-[11px] font-technical text-amber-400/80 font-bold tracking-[0.2em] uppercase">
+                            {syncPct}%_SYNC_COHERENCE
                         </span>
                     )}
-                    <span className="text-xs font-mono text-cyan-800/30">{data.contributors.length} contributors</span>
+                    <span className="text-[11px] font-technical text-cyan-400/60 tracking-[0.3em] uppercase font-bold">{data.contributors.length}_MONITORED</span>
                 </div>
             </div>
 
             {/* Legend — hover to isolate */}
-            <div className="flex flex-wrap gap-3 mb-3">
+            <div className="flex flex-wrap gap-4 mb-6">
                 {data.contributors.map((c, i) => {
                     const color = c.color || COLORS[i % COLORS.length];
                     return (
@@ -205,11 +240,11 @@ export default function CollaborationPulse({ data }) {
                             key={i}
                             onMouseEnter={() => setHoveredContributor(i)}
                             onMouseLeave={() => setHoveredContributor(null)}
-                            className="flex items-center gap-1.5 transition-opacity"
-                            style={{ opacity: hoveredContributor === null || hoveredContributor === i ? 1 : 0.3 }}
+                            className="flex items-center gap-2.5 transition-all group"
+                            style={{ opacity: hoveredContributor === null || hoveredContributor === i ? 1 : 0.15 }}
                         >
-                            <div className="w-4 h-[2px] rounded" style={{ backgroundColor: color }} />
-                            <span className="text-xs font-mono" style={{ color: `${color}80` }}>{c.name}</span>
+                            <div className="w-3.5 h-[4px] rounded-full transition-all group-hover:scale-x-150" style={{ backgroundColor: color, boxShadow: `0 0 12px ${color}` }} />
+                            <span className="text-[9px] font-technical tracking-[0.1em] uppercase font-bold group-hover:text-white transition-colors" style={{ color: `${color}90` }}>{c.name?.replace(' ', '_')}</span>
                         </button>
                     );
                 })}
@@ -217,32 +252,40 @@ export default function CollaborationPulse({ data }) {
 
             <canvas
                 ref={canvasRef}
-                className="w-full rounded-lg"
-                style={{ background: 'rgba(0,0,0,0.35)', height: 180 }}
+                className="w-full rounded-xl border border-cyan-900/10"
+                style={{ background: 'rgba(0,0,0,0.5)', height: 220 }}
             />
 
             {/* Zone legend */}
-            <div className="flex gap-4 mt-3 text-xs font-mono">
-                <span className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ background: 'rgba(245,200,80,0.3)' }} />
-                    <span className="text-amber-400/50">Synchronized work</span>
+            <div className="flex gap-6 mt-4 px-2">
+                <span className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded" style={{ background: 'rgba(245,200,80,0.35)', border: '1px solid rgba(245,200,80,0.3)' }} />
+                    <span className="text-[10px] font-technical font-bold text-amber-400/70 uppercase tracking-wider">Synchronized_Work</span>
                 </span>
-                <span className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ background: 'rgba(251,113,133,0.25)' }} />
-                    <span className="text-rose-400/50">Conflict zone</span>
+                <span className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded" style={{ background: 'rgba(251,113,133,0.3)', border: '1px solid rgba(251,113,133,0.3)' }} />
+                    <span className="text-[10px] font-technical font-bold text-rose-400/70 uppercase tracking-wider">Conflict_Zone</span>
                 </span>
             </div>
 
-            {data.conflicts?.length > 0 && (
-                <div className="mt-4 flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-rose-400 mt-1.5 shrink-0" />
-                    <p className="text-sm font-mono text-rose-400/50">
+            {data.conflicts?.length > 0 && !isHealed && (
+                <div className="mt-5 flex items-start gap-3 p-4 rounded-xl bg-rose-500/[0.04] border border-rose-500/10">
+                    <div className="w-2 h-2 rounded-full bg-rose-400 mt-1.5 shrink-0 animate-pulse" />
+                    <p className="text-sm font-technical text-rose-300/80 leading-relaxed">
                         {data.conflicts.length} conflict zone{data.conflicts.length > 1 ? 's' : ''} detected — lines spike against each other when contributors touch the same files
                     </p>
                 </div>
             )}
+            {isHealed && (
+                <div className="mt-5 flex items-start gap-3 p-4 rounded-xl bg-emerald-500/[0.04] border border-emerald-500/10">
+                    <div className="w-2 h-2 rounded-full bg-emerald-400 mt-1.5 shrink-0" />
+                    <p className="text-sm font-technical text-emerald-300/80 leading-relaxed">
+                        Restoration complete — collaborative friction has been reconciled through clinical context.
+                    </p>
+                </div>
+            )}
             {data.finding && (
-                <p className="text-sm text-cyan-800/40 mt-3 leading-relaxed italic">{data.finding}</p>
+                <p className="text-sm text-cyan-400/60 mt-4 leading-relaxed font-technical italic p-4 rounded-xl bg-cyan-900/5 border border-cyan-900/10">{data.finding}</p>
             )}
         </motion.div>
     );

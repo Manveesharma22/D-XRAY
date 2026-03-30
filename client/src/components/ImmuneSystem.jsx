@@ -6,9 +6,9 @@ function MetricRing({ label, value, status }) {
     const r = 22, cx = 26, cy = 26, circumf = 2 * Math.PI * r;
     const pct = typeof value === 'number' ? Math.min(100, value) : 0;
     const dashLen = (pct / 100) * circumf;
-    const color = status === 'healthy' || status === 'fast' ? '#34d399'
-        : status === 'critical' || status === 'compromised' ? '#ef4444'
-            : '#f59e0b';
+    const color = status === 'healthy' || status === 'fast' ? '#00fbff'
+        : status === 'critical' || status === 'compromised' ? '#ff4444'
+            : '#ffc400';
     const displayVal = typeof value === 'number' ? (value > 10 ? `${value}d` : `${value}x`) : value;
 
     return (
@@ -38,9 +38,12 @@ function MetricRing({ label, value, status }) {
     );
 }
 
-export default function ImmuneSystem({ data }) {
+export default function ImmuneSystem({ data, isHealed }) {
     const canvasRef = useRef(null);
     const animRef = useRef(null);
+
+    const effectiveScore = isHealed ? 98 : (data?.immuneScore ?? 50);
+    const effectiveSpeed = isHealed ? 'moderate' : (data?.whiteCellSpeed || 'slow');
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -59,16 +62,15 @@ export default function ImmuneSystem({ data }) {
         }, { threshold: 0.1 });
         observer.observe(canvas);
 
-        const speed = data.whiteCellSpeed;
-        const cellCount = speed === 'fast' ? 22 : speed === 'moderate' ? 12 : speed === 'slow' ? 6 : 2;
-        const baseSpeed = speed === 'fast' ? 1.6 : speed === 'moderate' ? 0.85 : speed === 'slow' ? 0.38 : 0.12;
-
         // Immune color palette
-        const immuneColor = (data.immuneScore || 50) >= 70
-            ? [0, 229, 100]      // healthy: blue-green
-            : (data.immuneScore || 50) >= 40
-                ? [245, 158, 11]  // moderate: amber
-                : [239, 68, 68];  // critical: red
+        const immuneColor = effectiveScore >= 70
+            ? [0, 251, 255]      // supernova cyan
+            : effectiveScore >= 40
+                ? [255, 196, 0]  // electric amber
+                : [255, 68, 68];  // vibrant red
+
+        const cellCount = isHealed ? 20 : (effectiveSpeed === 'fast' ? 22 : effectiveSpeed === 'moderate' ? 12 : effectiveSpeed === 'slow' ? 6 : 2);
+        const baseSpeed = isHealed ? 0.6 : (effectiveSpeed === 'fast' ? 1.6 : effectiveSpeed === 'moderate' ? 0.85 : effectiveSpeed === 'slow' ? 0.38 : 0.12);
 
         // Branching vein paths (Y-junctions)
         const veins = [
@@ -87,9 +89,9 @@ export default function ImmuneSystem({ data }) {
                 t: Math.random(),
                 speed: baseSpeed * (0.6 + Math.random() * 0.8),
                 size: 3.5 + Math.random() * 2.5,
-                glow: speed === 'fast' ? 10 : speed === 'moderate' ? 6 : 4,
+                glow: effectiveSpeed === 'fast' ? 10 : effectiveSpeed === 'moderate' ? 6 : 4,
                 // Stopped cells for compromised state
-                stopped: speed === 'stopped' || (speed === 'slow' && Math.random() < 0.3),
+                stopped: effectiveSpeed === 'stopped' || (effectiveSpeed === 'slow' && Math.random() < 0.3),
                 stopPoint: Math.random(),
             });
         }
@@ -166,22 +168,22 @@ export default function ImmuneSystem({ data }) {
 
                 ctx.beginPath();
                 ctx.arc(pt.x, pt.y, cell.size, 0, Math.PI * 2);
-                if (cell.stopped) {
-                    ctx.fillStyle = 'rgba(180,180,180,0.35)';
+                if (cell.stopped && !isHealed) {
+                    ctx.fillStyle = 'rgba(180,180,180,0.45)';
                     ctx.fill();
                 } else {
-                    // Multi-pass glow
+                    // Multi-pass glow — clinical bloom
                     ctx.save();
-                    ctx.globalAlpha = 0.3;
-                    ctx.beginPath();
-                    ctx.arc(pt.x, pt.y, cell.size + 2, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(${immuneColor.join(',')}, 0.4)`;
-                    ctx.fill();
+                    const glowGrad = ctx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, cell.size + 4);
+                    glowGrad.addColorStop(0, isHealed ? 'rgba(52,211,153,0.4)' : `rgba(${immuneColor.join(',')}, 0.5)`);
+                    glowGrad.addColorStop(1, 'rgba(0,0,0,0)');
+                    ctx.fillStyle = glowGrad;
+                    ctx.fillRect(pt.x - 10, pt.y - 10, 20, 20);
                     ctx.restore();
 
                     ctx.beginPath();
                     ctx.arc(pt.x, pt.y, cell.size, 0, Math.PI * 2);
-                    ctx.fillStyle = 'rgba(255,255,255,0.95)';
+                    ctx.fillStyle = isHealed ? '#ecfdf5' : '#ffffff';
                     ctx.fill();
                 }
             });
@@ -200,21 +202,21 @@ export default function ImmuneSystem({ data }) {
 
     if (!data) return null;
 
-    const immuneScore = data.immuneScore ?? 50;
-    const immuneColor = immuneScore >= 70 ? 'text-emerald-400' : immuneScore >= 40 ? 'text-amber-400' : 'text-red-400';
-    const immuneLabel = immuneScore >= 70 ? 'HEALTHY' : immuneScore >= 40 ? 'MODERATE' : 'COMPROMISED';
+    const immuneColor = effectiveScore >= 70 ? 'text-cyan-400' : effectiveScore >= 40 ? 'text-amber-400' : 'text-red-400';
+    const immuneLabel = effectiveScore >= 70 ? 'HEALTHY' : effectiveScore >= 40 ? 'MODERATE' : 'COMPROMISED';
 
     // Build one-sentence verdict
     function buildVerdict() {
+        if (isHealed) return "Clinical context has been provided. The repository's immune response has been successfully reconciled.";
         if (data.verdict) return data.verdict;
-        const label = immuneScore >= 70 ? 'a healthy' : immuneScore >= 40 ? 'a moderately compromised' : 'a compromised';
+        const label = effectiveScore >= 70 ? 'a healthy' : effectiveScore >= 40 ? 'a moderately compromised' : 'a compromised';
         const vulnMetric = data.metrics?.find(m => m.label?.toLowerCase().includes('vuln') || m.label?.toLowerCase().includes('patch'));
-        if (vulnMetric && immuneScore < 50) {
+        if (vulnMetric && effectiveScore < 50) {
             const days = vulnMetric.avgDays || 47;
             const count = vulnMetric.count || 3;
             return `This codebase has ${label} immune system. It has ignored ${count} known vulnerabilities for an average of ${days} days each.`;
         }
-        return `This codebase has ${label} immune system. Response time to threats is ${data.whiteCellSpeed || 'slow'}.`;
+        return `This codebase has ${label} immune system. Response time to threats is ${effectiveSpeed}.`;
     }
 
     return (
@@ -223,21 +225,31 @@ export default function ImmuneSystem({ data }) {
             animate={{ opacity: 1, y: 0 }}
             className="glass-panel rounded-2xl p-5 overflow-hidden"
         >
-            <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-3">
-                    <div className="w-2.5 h-2.5 rounded-full bg-white animate-pulse" />
-                    <span className="text-xs font-mono text-cyan-800/50 tracking-[0.2em] uppercase">Immune System</span>
+            <div className="flex items-center justify-between mb-6 relative z-10">
+                <div className="flex items-center gap-4">
+                    <div className="w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_15px_white] animate-pulse" />
+                    <span className="text-[10px] font-technical text-cyan-500/40 tracking-[0.5em] uppercase font-bold">Biometric_Pathology_Core</span>
                 </div>
-                <div className="flex items-center gap-3">
-                    <span className={`text-sm font-mono font-bold ${immuneColor}`}>{immuneLabel}</span>
-                    <span className={`text-3xl font-black font-mono ${immuneColor}`}>{immuneScore}</span>
+                <div className="flex items-center gap-6">
+                    <span className={`text-[10px] font-technical font-bold tracking-[0.3em] uppercase ${immuneColor}`}>{immuneLabel}_RESPONSE</span>
+                    <span className={`text-4xl font-bold font-technical tracking-tighter holographic-bloom ${immuneColor}`}>{effectiveScore}</span>
                 </div>
             </div>
 
+            {/* Health Core Pulse — biological feel */}
+            <div className="absolute top-10 right-4 w-32 h-32 pointer-events-none opacity-20">
+                <motion.div
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.3, 0.15] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    className={`w-full h-full rounded-full blur-3xl ${effectiveScore >= 70 ? 'bg-emerald-500' : effectiveScore >= 40 ? 'bg-amber-500' : 'bg-red-500'}`}
+                />
+            </div>
+
             {/* One-sentence verdict — the clinical summary */}
-            <div className="mb-4 px-4 py-4 rounded-xl" style={{ background: 'rgba(0,0,0,0.3)', borderLeft: `3px solid ${immuneScore >= 70 ? 'rgba(52,211,153,0.3)' : immuneScore >= 40 ? 'rgba(245,158,11,0.3)' : 'rgba(239,68,68,0.3)'}` }}>
-                <p className="text-sm leading-relaxed italic" style={{ color: immuneScore < 50 ? 'rgba(239,68,68,0.7)' : 'rgba(255,255,255,0.5)' }}>
-                    {buildVerdict()}
+            <div className="mb-6 px-6 py-5 rounded-2xl relative z-10" style={{ background: 'rgba(0,10,20,0.6)', border: '1px solid rgba(255,255,255,0.05)', borderLeft: `6px solid ${effectiveScore >= 70 ? 'rgba(52,211,153,0.8)' : effectiveScore >= 40 ? 'rgba(245,158,11,0.8)' : 'rgba(239,68,68,0.8)'}`, boxShadow: 'inset 0 0 20px rgba(0,0,0,0.5)' }}>
+                <p className="text-[14px] leading-relaxed font-technical tracking-tight" style={{ color: effectiveScore < 50 ? '#fca5a5' : '#e2e8f0' }}>
+                    <span className="text-white/20 font-bold mr-2">DIAGNOSIS//</span>
+                    {buildVerdict().replace('.', '').toUpperCase()}
                 </p>
             </div>
 
@@ -257,7 +269,7 @@ export default function ImmuneSystem({ data }) {
             )}
 
             {data.finding && (
-                <p className="text-sm text-cyan-800/40 leading-relaxed italic border-t border-cyan-900/10 pt-3 mt-3">{data.finding}</p>
+                <p className="text-sm text-cyan-400/60 leading-relaxed font-technical italic border-t border-cyan-900/15 pt-3 mt-3">{data.finding}</p>
             )}
         </motion.div>
     );

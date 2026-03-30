@@ -62,70 +62,49 @@ export default function TimeBombAlert({ data }) {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-3xl overflow-hidden"
+            className="glass-panel rounded-3xl overflow-hidden"
             style={{
-                background: 'linear-gradient(135deg, rgba(20,0,0,0.95) 0%, rgba(12,2,0,0.97) 100%)',
-                border: '1px solid rgba(239,68,68,0.2)',
-                boxShadow: '0 0 60px rgba(239,68,68,0.06), inset 0 0 40px rgba(0,0,0,0.3)',
+                background: 'linear-gradient(135deg, rgba(30,0,0,0.98) 0%, rgba(15,2,0,0.98) 100%)',
+                boxShadow: '0 0 80px rgba(239,68,68,0.1), inset 0 0 100px rgba(0,0,0,0.8)',
             }}
         >
             {/* Header */}
-            <div style={{
-                padding: '24px 32px 20px',
-                borderBottom: '1px solid rgba(239,68,68,0.08)',
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                    {/* Animated bomb icon */}
-                    <motion.div
-                        animate={{ scale: [1, 1.08, 1], boxShadow: ['0 0 0px rgba(239,68,68,0)', '0 0 20px rgba(239,68,68,0.4)', '0 0 0px rgba(239,68,68,0)'] }}
-                        transition={{ duration: 1.4, repeat: Infinity }}
-                        style={{
-                            width: 40, height: 40, borderRadius: 12,
-                            background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        }}
-                    >
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2">
-                            <circle cx="12" cy="14" r="7" />
-                            <path d="M12 7v-3M16 5l2-2M8 5l-2-2" />
-                            <circle cx="12" cy="14" r="2" fill="#ef4444" />
-                        </svg>
-                    </motion.div>
-                    <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <h3 style={{ fontSize: 18, fontWeight: 800, color: '#fff', margin: 0 }}>Time Bomb Alert</h3>
-                            <span style={{
-                                fontSize: 8, fontFamily: 'monospace', letterSpacing: '0.15em',
-                                background: 'rgba(239,68,68,0.15)', color: 'rgba(239,68,68,0.9)',
-                                border: '1px solid rgba(239,68,68,0.3)', borderRadius: 6,
-                                padding: '2px 7px', textTransform: 'uppercase',
-                            }}>
-                                {risk || 'CRITICAL'}
-                            </span>
+            <div className="px-8 pt-8 pb-6 border-b border-white/5">
+                <div className="flex items-start justify-between gap-6">
+                    <div className="flex items-center gap-5">
+                        <motion.div
+                            animate={{ scale: [1, 1.05, 1], boxShadow: ['0 0 0px rgba(239,68,68,0)', '0 0 30px rgba(239,68,68,0.4)', '0 0 0px rgba(239,68,68,0)'] }}
+                            transition={{ duration: 0.8, repeat: Infinity }}
+                            className="w-12 h-12 rounded-xl flex items-center justify-center bg-red-500/10 border border-red-500/20 shadow-[0_0_20px_rgba(239,68,68,0.1)]"
+                        >
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2">
+                                <circle cx="12" cy="14" r="7" />
+                                <path d="M12 7v-3M16 5l2-2M8 5l-2-2" />
+                                <circle cx="12" cy="14" r="2" fill="#ef4444" />
+                            </svg>
+                        </motion.div>
+                        <div>
+                            <h3 className="text-xl font-bold text-white font-technical tracking-tighter uppercase leading-none">Detonation_Forensics_Engine</h3>
+                            <p className="text-[10px] text-red-500/30 font-technical tracking-[0.5em] uppercase font-bold mt-2">
+                                Temporal_Fracture_Analysis // v7.2
+                            </p>
                         </div>
-                        <p style={{ fontSize: 11, color: 'rgba(239,68,68,0.45)', fontFamily: 'monospace', margin: '3px 0 0', letterSpacing: '0.05em' }}>
-                            {bombs.length} active threat{bombs.length !== 1 ? 's' : ''} detected • Detonation imminent
-                        </p>
                     </div>
-                </div>
-                {criticalBombs.length > 0 && (
-                    <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontSize: 9, color: 'rgba(239,68,68,0.4)', fontFamily: 'monospace', letterSpacing: '0.15em', marginBottom: 4 }}>
-                            CRITICAL DETONATION IN
-                        </div>
+                    <div className="text-right">
+                        <div className="text-[8px] font-technical text-red-500/40 font-bold uppercase tracking-[0.1em] mb-2">DETONATION_FORECAST</div>
                         <CountdownClock seconds={criticalBombs[0]?.daysUntilDetonation
                             ? criticalBombs[0].daysUntilDetonation * 86400
                             : 864000} />
                     </div>
-                )}
+                </div>
             </div>
 
             {/* Summary */}
             {summary && (
-                <div style={{ padding: '14px 32px', background: 'rgba(239,68,68,0.04)', borderBottom: '1px solid rgba(239,68,68,0.06)' }}>
-                    <p style={{ fontSize: 12, color: 'rgba(255,200,200,0.6)', fontFamily: 'monospace', margin: 0, lineHeight: 1.6 }}>
-                        {summary}
+                <div className="px-8 py-5 border-b border-white/5 bg-red-500/5">
+                    <p className="text-[14px] leading-relaxed font-technical tracking-tight" style={{ color: '#fecaca' }}>
+                        <span className="text-white/20 font-bold mr-2">LOG//</span>
+                        "{summary.toUpperCase()}"
                     </p>
                 </div>
             )}

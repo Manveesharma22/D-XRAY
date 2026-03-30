@@ -342,7 +342,7 @@ export default function FractureReplay({ timeline, tracks }) {
           return (
             <div key={i} className="flex-1 text-center">
               {showLabel && (
-                <span className="text-[8px] font-mono text-cyan-800/30">
+                <span className="text-[8px] font-mono text-cyan-400/50">
                   {entry.date?.slice(5)}
                 </span>
               )}
@@ -360,7 +360,7 @@ export default function FractureReplay({ timeline, tracks }) {
             exit={{ height: 0, opacity: 0 }}
             className="mt-4 pt-4 border-t border-cyan-900/10 overflow-hidden"
           >
-            <div className="text-[9px] font-mono text-cyan-800/40 uppercase tracking-wider mb-2">
+            <div className="text-[9px] font-mono text-cyan-400/60 uppercase tracking-wider mb-2">
               {visibleEvents.length} fracture{visibleEvents.length !== 1 ? 's' : ''} visible at this point
             </div>
             <div className="space-y-1.5">
@@ -390,15 +390,15 @@ export default function FractureReplay({ timeline, tracks }) {
       <div className="flex gap-4 mt-4 justify-center">
         <div className="flex items-center gap-1.5">
           <div className="w-3 h-1.5 rounded-sm bg-emerald-500/40" />
-          <span className="text-[9px] font-mono text-cyan-800/40">Flow State</span>
+          <span className="text-[9px] font-mono text-cyan-400/60">Flow State</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="w-3 h-1.5 rounded-sm bg-amber-500/40" />
-          <span className="text-[9px] font-mono text-cyan-800/40">Friction</span>
+          <span className="text-[9px] font-mono text-cyan-400/60">Friction</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="w-3 h-1.5 rounded-sm bg-red-500/40" />
-          <span className="text-[9px] font-mono text-cyan-800/40">Crisis</span>
+          <span className="text-[9px] font-mono text-cyan-400/60">Crisis</span>
         </div>
       </div>
     </motion.div>

@@ -58,38 +58,32 @@ export default function EmotionalTimeline({ data }) {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-3xl overflow-hidden"
+            className="glass-panel rounded-3xl overflow-hidden"
             style={{
-                background: 'linear-gradient(135deg, rgba(5,3,12,0.97) 0%, rgba(8,5,16,0.95) 100%)',
-                border: '1px solid rgba(167,139,250,0.12)',
-                boxShadow: '0 0 50px rgba(139,92,246,0.04)',
+                background: 'linear-gradient(135deg, rgba(8,5,16,0.98) 0%, rgba(5,3,12,0.98) 100%)',
+                boxShadow: '0 0 60px rgba(139,92,246,0.03), inset 0 0 80px rgba(0,0,0,0.6)',
             }}
         >
             {/* Header */}
-            <div style={{ padding: '24px 32px 20px', borderBottom: '1px solid rgba(167,139,250,0.08)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 14, justifyContent: 'space-between' }}>
-                    <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
-                        <div style={{
-                            width: 40, height: 40, borderRadius: 12,
-                            background: 'rgba(167,139,250,0.1)', border: '1px solid rgba(167,139,250,0.25)',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        }}>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2">
+            <div className="px-8 pt-8 pb-6 border-b border-white/5">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-5">
+                        <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-violet-500/10 border border-violet-500/20 shadow-[0_0_20px_rgba(139,92,246,0.1)]">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2">
                                 <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                             </svg>
                         </div>
                         <div>
-                            <h3 style={{ fontSize: 18, fontWeight: 800, color: '#fff', margin: 0 }}>Emotional Timeline</h3>
-                            <p style={{ fontSize: 11, color: 'rgba(167,139,250,0.45)', fontFamily: 'monospace', margin: '3px 0 0' }}>
-                                The psychological arc of this codebase over time
+                            <h3 className="text-xl font-bold text-white font-technical tracking-tighter uppercase leading-none">Psychological_Trajectory</h3>
+                            <p className="text-[10px] text-violet-500/30 font-technical tracking-[0.5em] uppercase font-bold mt-2">
+                                Emotional_Biofeedback_Forensics // v4.1
                             </p>
                         </div>
                     </div>
                     {moodScore !== undefined && (
-                        <div style={{ textAlign: 'right' }}>
-                            <div style={{ fontSize: 9, color: 'rgba(167,139,250,0.4)', fontFamily: 'monospace', letterSpacing: '0.15em' }}>MOOD SCORE</div>
-                            <div style={{
-                                fontSize: 32, fontWeight: 900,
+                        <div className="text-right">
+                            <div className="text-[8px] font-technical text-violet-500/40 font-bold uppercase tracking-[0.1em] mb-1">STABILITY_INDEX</div>
+                            <div className="text-4xl font-bold font-technical tracking-tighter holographic-bloom" style={{
                                 color: moodScore >= 60 ? '#4ade80' : moodScore >= 35 ? '#fbbf24' : '#f87171',
                             }}>{moodScore}</div>
                         </div>

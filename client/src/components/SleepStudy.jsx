@@ -160,23 +160,23 @@ export default function SleepStudy({ data }) {
             animate={{ opacity: 1, y: 0 }}
             className="glass-panel rounded-2xl p-5 overflow-hidden"
         >
-            <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                    <div className="w-2.5 h-2.5 rounded-full bg-indigo-400 animate-pulse" />
-                    <span className="text-xs font-mono text-cyan-800/50 tracking-[0.2em] uppercase">Sleep Study — 24h Activity</span>
+            <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-4">
+                    <div className="w-2.5 h-2.5 rounded-full bg-indigo-500 shadow-[0_0_15px_#6366f1] animate-pulse" />
+                    <span className="text-[10px] font-technical text-cyan-400/70 tracking-[0.5em] uppercase font-bold">Circadian_Metabolism_Analysis</span>
                 </div>
-                <div className="flex items-center gap-4 text-xs font-mono">
+                <div className="flex items-center gap-6">
                     {data.bestHour !== undefined && (
-                        <span className="text-emerald-400/60 font-bold">peak: {formatHour(data.bestHour)}</span>
+                        <span className="text-[10px] font-technical text-emerald-400 font-bold uppercase tracking-widest">PEAK_EFFICIENCY // {formatHour(data.bestHour)}</span>
                     )}
                     {data.incidentCorrelation > 0 && (
-                        <span className="text-red-400/60 font-bold">{data.incidentCorrelation}% incidents post-{formatHour(data.worstHour || 18)}</span>
+                        <span className="text-[10px] font-technical text-red-500 font-bold uppercase tracking-widest holographic-bloom">{data.incidentCorrelation}%_FATIGUE_ERROR</span>
                     )}
                 </div>
             </div>
 
             {/* Animated EEG canvas */}
-            <div className="mb-3 rounded-lg overflow-hidden" style={{ background: 'rgba(0,0,0,0.4)', height: 80 }}>
+            <div className="mb-6 rounded-2xl overflow-hidden glass-panel" style={{ background: 'rgba(0,0,0,0.6)', height: 100, boxShadow: 'inset 0 0 40px rgba(0,0,0,0.8)' }}>
                 <canvas ref={canvasRef} className="w-full h-full" />
             </div>
 
@@ -223,19 +223,21 @@ export default function SleepStudy({ data }) {
             {/* Hour labels */}
             <div className="grid mb-3" style={{ gridTemplateColumns: 'repeat(24, 1fr)' }}>
                 {HOUR_LABELS.map((label, i) => (
-                    <div key={i} className="text-center text-[10px] font-mono text-cyan-900/30">{label}</div>
+                    <div key={i} className="text-center text-[10px] font-mono text-cyan-400/40">{label}</div>
                 ))}
             </div>
 
             {/* Bedtime Insight — the main callout */}
             {bedtimeInsight && (
-                <div className="mb-3 px-4 py-3 rounded-xl" style={{
-                    background: 'rgba(99,102,241,0.05)',
-                    border: '1px solid rgba(99,102,241,0.12)',
-                    borderLeft: '3px solid rgba(99,102,241,0.3)',
+                <div className="mb-6 px-6 py-5 rounded-2xl relative z-10" style={{
+                    background: 'rgba(99,102,241,0.08)',
+                    border: '1px solid rgba(99,102,241,0.2)',
+                    borderLeft: '6px solid #6366f1',
+                    boxShadow: 'inset 0 0 30px rgba(0,0,0,0.5)',
                 }}>
-                    <p className="text-sm leading-relaxed italic" style={{ color: 'rgba(165,180,252,0.65)' }}>
-                        {bedtimeInsight}
+                    <p className="text-[14px] leading-relaxed font-technical tracking-tight" style={{ color: '#c7d2fe' }}>
+                        <span className="text-white/20 font-bold mr-2">LOG//</span>
+                        "{bedtimeInsight.replace('.', '').toUpperCase()}"
                     </p>
                 </div>
             )}
@@ -250,7 +252,7 @@ export default function SleepStudy({ data }) {
             </div>
 
             {data.finding && (
-                <p className="text-sm text-cyan-800/40 leading-relaxed italic border-t border-cyan-900/10 pt-3 mt-4">{data.finding}</p>
+                <p className="text-sm text-cyan-400/60 leading-relaxed italic border-t border-cyan-900/10 pt-3 mt-4">{data.finding}</p>
             )}
         </motion.div>
     );

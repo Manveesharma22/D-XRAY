@@ -106,7 +106,7 @@ export default function TraumaTimeline({ data }) {
                     <div className="w-2.5 h-2.5 rounded-full bg-red-400 animate-pulse" />
                     <span className="text-xs font-mono text-cyan-800/50 tracking-[0.2em] uppercase">Trauma Timeline</span>
                 </div>
-                <div className="flex items-center gap-3 text-xs font-mono text-cyan-800/30">
+                <div className="flex items-center gap-3 text-xs font-mono text-cyan-400/50">
                     <span className="text-red-400/70">{events.filter(e => e.severity === 'critical').length} critical</span>
                     <span className="text-amber-400/50">{events.filter(e => e.severity !== 'critical').length} acute</span>
                 </div>
@@ -172,7 +172,7 @@ export default function TraumaTimeline({ data }) {
                                     </div>
                                     <div className="text-sm font-bold text-white">{active.displayDate}</div>
                                 </div>
-                                <button onClick={() => setActiveEvent(null)} className="text-cyan-800/30 hover:text-cyan-600/50 transition-colors text-lg">✕</button>
+                                <button onClick={() => setActiveEvent(null)} className="text-cyan-400/50 hover:text-cyan-600/50 transition-colors text-lg">✕</button>
                             </div>
 
                             {/* Full narrative paragraph */}
@@ -186,7 +186,7 @@ export default function TraumaTimeline({ data }) {
                                 {active.revertCount > 0 && <span className="text-red-400/60">{active.revertCount} reverts</span>}
                                 {active.topCommitter && <span style={{ color: `${style.color}70` }}>peak: {active.topCommitter}</span>}
                                 {active.messageLengthDrop > 20 && <span className="text-rose-400/60">msg quality ↓{active.messageLengthDrop}%</span>}
-                                {active.windowDays && <span className="text-cyan-800/30">{active.windowDays}-day window</span>}
+                                {active.windowDays && <span className="text-cyan-400/50">{active.windowDays}-day window</span>}
                             </div>
 
                             {/* Recovery indicator */}
@@ -202,11 +202,11 @@ export default function TraumaTimeline({ data }) {
             </AnimatePresence>
 
             {!activeEvent && (
-                <p className="text-xs text-cyan-800/25 font-mono mt-2">Click a fracture mark to expand the trauma report</p>
+                <p className="text-xs text-cyan-400/50 font-mono mt-2">Click a fracture mark to expand the trauma report</p>
             )}
 
             {data.finding && (
-                <p className="text-sm text-cyan-800/40 mt-4 leading-relaxed italic border-t border-cyan-900/10 pt-3">{data.finding}</p>
+                <p className="text-sm text-cyan-400/60 mt-4 leading-relaxed italic border-t border-cyan-900/10 pt-3">{data.finding}</p>
             )}
         </motion.div>
     );

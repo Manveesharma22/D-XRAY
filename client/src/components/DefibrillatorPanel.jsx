@@ -47,7 +47,7 @@ export default function DefibrillatorPanel({ diagnosis, onDismiss }) {
                         <div className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
                         <span className="text-xs font-mono text-red-400/80 tracking-[0.2em] uppercase">Emergency Triage</span>
                     </div>
-                    <button onClick={onDismiss} className="text-cyan-800/30 hover:text-cyan-600/50 text-sm transition-colors">✕</button>
+                    <button onClick={onDismiss} className="text-cyan-400/50 hover:text-cyan-600/50 text-sm transition-colors">✕</button>
                 </div>
 
                 {/* EKG flatline visualization */}

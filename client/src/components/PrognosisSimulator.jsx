@@ -14,8 +14,10 @@ const PrognosisSimulator = ({ data, currentScore }) => {
 
     if (!data || !data.timeline) return null;
 
+    const baselineScore = currentScore || data.currentScore || 50;
+
+    // Find the closest data point
     const currentFrame = useMemo(() => {
-        // Find the closest data point
         return data.timeline.reduce((prev, curr) =>
             Math.abs(curr.day - days) < Math.abs(prev.day - days) ? curr : prev
         );
@@ -35,8 +37,10 @@ const PrognosisSimulator = ({ data, currentScore }) => {
             .map(f => ({ day: f.day, text: isActing ? f.healingBeat : f.storyBeat }));
     }, [days, data.timeline, isActing]);
 
+    const activeBeat = visibleBeats.length > 0 ? visibleBeats[visibleBeats.length - 1] : null;
+
     return (
-        <div className="glass-panel rounded-3xl p-8 border-cyan-500/10 overflow-hidden relative">
+        <div id="prognosis-anchor" className="glass-panel rounded-3xl p-8 overflow-hidden relative" style={{ background: 'linear-gradient(135deg, #020c04 0%, #000402 100%)', boxShadow: '0 0 60px rgba(0,251,255,0.03), inset 0 0 80px rgba(0,0,0,0.6)' }}>
             {/* Background Narrative Watermark */}
             <div className="absolute inset-x-0 top-0 pointer-events-none opacity-[0.02] font-black text-[120px] flex items-center justify-center select-none uppercase tracking-tighter overflow-hidden whitespace-nowrap leading-none pt-12">
                 {isActing ? 'RESOLUTION' : phase}
@@ -44,29 +48,28 @@ const PrognosisSimulator = ({ data, currentScore }) => {
 
             <div className="flex flex-col md:flex-row justify-between items-start mb-10 gap-8 relative z-10">
                 <div className="flex-1">
-                    <div className="text-[10px] font-mono text-cyan-600/40 tracking-[0.3em] uppercase mb-2">Prognosis Engine v2.0 // Temporal Simulation</div>
-                    <h2 className="text-4xl font-black text-white mb-4 tracking-tight">The Price of Inactive Maintenance</h2>
-                    <p className="text-slate-400 text-sm max-w-lg leading-relaxed">
-                        Compounding debt is not a spreadsheet error—it is a **systemic atrophy**. <br className="hidden md:block" />
-                        <span className="text-white/60 font-mono text-[10px] uppercase tracking-widest">Witness the accumulation &rarr;</span>
+                    <div className="text-[10px] font-technical text-cyan-600/40 tracking-[0.4em] uppercase font-bold mb-2">Temporal_Simulation_Core // v4.0</div>
+                    <h2 className="text-4xl font-bold text-white mb-4 tracking-tighter uppercase font-technical leading-none">Simulation_Protocol</h2>
+                    <p className="text-slate-400 text-sm max-w-lg leading-relaxed font-technical tracking-tight uppercase">
+                        Systemic_Atrophy_Projection:_Compounding_Debt_Evolution <br className="hidden md:block" />
+                        <span className="text-cyan-500/30 font-technical text-[10px] uppercase tracking-[0.5em] font-bold">Scanning_Future_Coordinates &rarr;</span>
                     </p>
                 </div>
 
                 <div className="flex items-center gap-6">
                     <div className="bg-black/80 border border-amber-500/20 p-6 rounded-2xl min-w-[240px] text-center shadow-[0_0_50px_rgba(245,158,11,0.1)] relative overflow-hidden group">
                         {isActing && <motion.div initial={{ x: '-100%' }} animate={{ x: '200%' }} transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }} className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent skew-x-12" />}
-                        <div className="text-[10px] font-mono text-amber-500/60 uppercase mb-2 tracking-[0.3em]">Estimated Remediation Cost</div>
-
-                        <div className="flex items-center justify-center gap-1">
+                        <div className="text-[9px] font-technical text-amber-500/40 uppercase mb-3 tracking-[0.5em] font-bold">Projected_Remediation_Load</div>
+                        <div className="flex items-center justify-center gap-2">
                             <motion.div
                                 key={currentFrame.costToFix}
                                 initial={{ y: 20, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
-                                className="text-6xl font-black text-white tracking-tighter"
+                                className="text-6xl font-bold text-white tracking-tighter font-technical holographic-bloom"
                             >
                                 {currentFrame.costToFix}
                             </motion.div>
-                            <div className="text-xs text-slate-600 font-mono uppercase self-end mb-2">Eng Days</div>
+                            <div className="text-[10px] text-white/20 font-technical uppercase self-end mb-3 font-bold tracking-widest">ENG_DAYS</div>
                         </div>
 
                         {days > 0 && (
@@ -96,10 +99,10 @@ const PrognosisSimulator = ({ data, currentScore }) => {
                             <div className="text-[10px] font-mono text-cyan-500 uppercase tracking-widest">ADMITTED_STATE</div>
                             <div className="text-xs text-white/40">Baseline Morphology</div>
                         </div>
-                        <div className="text-2xl font-black text-cyan-500/40 font-mono">{currentScore}</div>
+                        <div className="text-2xl font-black text-cyan-500/40 font-mono">{baselineScore}</div>
                     </div>
                     <div className="aspect-[4/5] bg-black/40 rounded-3xl border border-white/5 relative overflow-hidden flex items-center justify-center">
-                        <XRayVisual score={currentScore} severity={0.1} />
+                        <XRayVisual score={baselineScore} severity={0.1} />
                     </div>
                 </div>
 
@@ -121,23 +124,23 @@ const PrognosisSimulator = ({ data, currentScore }) => {
 
                         {/* NARRATIVE OVERLAY — THE STORY TELLING PART */}
                         <AnimatePresence mode="wait">
-                            <motion.div
-                                key={visibleBeats.length > 0 ? visibleBeats[visibleBeats.length - 1].text : 'idle'}
-                                initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                                animate={{ opacity: 1, scale: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 1.05, y: -10 }}
-                                className="absolute inset-x-6 top-1/2 -translate-y-1/2 pointer-events-none text-center"
-                            >
-                                {visibleBeats.length > 0 && (
+                            {activeBeat && (
+                                <motion.div
+                                    key={activeBeat.text}
+                                    initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 1.05, y: -10 }}
+                                    className="absolute inset-x-6 top-1/2 -translate-y-1/2 pointer-events-none text-center"
+                                >
                                     <div className="bg-black/60 backdrop-blur-2xl border border-white/10 p-6 rounded-3xl shadow-2xl relative overflow-hidden">
                                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent" />
                                         <div className="text-[9px] font-mono text-cyan-500/80 mb-3 uppercase tracking-[0.3em]">Temporal Log // T-Plus {days} Days</div>
-                                        <div className={`text-base sm:text-lg font-black leading-tight tracking-tight ${isActing ? 'text-emerald-400' : (days >= 67 ? 'text-red-400' : 'text-white')}`}>
-                                            "{visibleBeats[visibleBeats.length - 1].text}"
+                                        <div className={`text-base sm:text-lg font-black leading-tight tracking-tight ${isActing ? 'text-emerald-400' : (activeBeat.day >= 67 ? 'text-red-400' : 'text-white')}`}>
+                                            "{activeBeat.text}"
                                         </div>
                                     </div>
-                                )}
-                            </motion.div>
+                                </motion.div>
+                            )}
                         </AnimatePresence>
 
                         {/* Phase Notifications */}
@@ -214,6 +217,28 @@ const PrognosisSimulator = ({ data, currentScore }) => {
                             <div className="text-white/10 text-[11px] text-center pt-12 italic text-balance font-light">Awaiting simulation data... Move the timeline slider to record the forensic narrative.</div>
                         )}
                         <div id="narrative-bottom" />
+                        {/* At-Risk Contributor Section */}
+                        {data.atRiskContributor && days > 60 && !isActing && (
+                            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="mt-8 p-6 rounded-2xl bg-red-500/10 border border-red-500/20">
+                                <div className="text-[9px] font-mono text-red-400 uppercase tracking-widest mb-3">Critical Personnel Threshold</div>
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center text-red-500 font-bold border border-red-500/30 font-technical uppercase">
+                                        {data.atRiskContributor.login?.slice(0, 2)}
+                                    </div>
+                                    <div>
+                                        <div className="text-sm font-bold text-white uppercase tracking-tight">{data.atRiskContributor.name || data.atRiskContributor.login}</div>
+                                        <div className="text-[10px] text-red-400/60 font-mono tracking-tight uppercase">Predicted Departure: {data.atRiskContributor.date}</div>
+                                    </div>
+                                    <div className="ml-auto text-right">
+                                        <div className="text-[8px] text-white/30 uppercase tracking-[0.2em]">Risk Level</div>
+                                        <div className="text-sm font-black text-red-500 uppercase tracking-tighter">{data.atRiskContributor.risk}</div>
+                                    </div>
+                                </div>
+                                <div className="mt-4 pt-4 border-t border-red-500/10 text-[10px] text-red-300/60 leading-relaxed font-technical uppercase">
+                                    SYSTEM IMPACT: {data.atRiskContributor.impact}
+                                </div>
+                            </motion.div>
+                        )}
                     </div>
                 </div>
 

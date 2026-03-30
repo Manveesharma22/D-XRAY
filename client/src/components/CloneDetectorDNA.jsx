@@ -119,12 +119,14 @@ export default function CloneDetectorDNA({ data }) {
             animate={{ opacity: 1, y: 0 }}
             className="glass-panel rounded-2xl p-5 overflow-hidden"
         >
-            <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                    <div className="w-2.5 h-2.5 rounded-full bg-violet-400 animate-pulse" />
-                    <span className="text-xs font-mono text-cyan-800/50 tracking-[0.2em] uppercase">Clone Detector — DNA Match</span>
+            <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-4">
+                    <div className="w-2.5 h-2.5 rounded-full bg-violet-600 shadow-[0_0_15px_#8b5cf6] animate-pulse" />
+                    <span className="text-[10px] font-technical text-cyan-400/70 tracking-[0.5em] uppercase font-bold">Genomic_Pattern_Sequencer</span>
                 </div>
-                <span className="text-[10px] font-mono text-cyan-800/30">{data.clones.length} duplicate pattern{data.clones.length > 1 ? 's' : ''}</span>
+                <span className="text-[10px] font-technical text-cyan-400/60 uppercase tracking-[0.3em] font-bold">
+                    {data.clones.length}_Duplicate_Sequences
+                </span>
             </div>
 
             {/* Organ rejection banner */}
@@ -133,16 +135,20 @@ export default function CloneDetectorDNA({ data }) {
                     <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
-                        className="mb-4 overflow-hidden"
+                        className="mb-6 overflow-hidden"
                     >
-                        <div className="flex items-start gap-2 px-4 py-3 rounded-xl" style={{
-                            background: 'rgba(251,113,133,0.06)',
-                            border: '1px solid rgba(251,113,133,0.18)',
+                        <div className="flex items-start gap-5 px-8 py-7 rounded-3xl relative z-10" style={{
+                            background: 'rgba(251,113,133,0.12)',
+                            border: '1px solid rgba(251,113,133,0.3)',
+                            borderLeft: '8px solid #fb7185',
+                            boxShadow: '0 0 50px rgba(251,113,133,0.1)',
                         }}>
-                            <span className="text-rose-400/70 text-sm mt-0.5">⚠</span>
-                            <p className="text-[11px] font-mono text-rose-400/60 leading-relaxed">
-                                <strong>Organ rejection detected.</strong> This body is fighting itself. Duplicated logic has diverged enough that a fix in one copy no longer propagates to the others.
-                            </p>
+                            <div className="w-full">
+                                <div className="text-[12px] font-technical text-rose-400 font-bold uppercase tracking-[0.5em] mb-3">CRITICAL_ORGAN_REJECTION</div>
+                                <p className="text-[18px] leading-tight font-technical font-bold tracking-tight text-white/90">
+                                    PATHOLOGY// <span className="text-rose-200">THIS_BODY_IS_FIGHTING_ITSELF. DUPLICATED_LOGIC_HAS_DIVERGED_ENOUGH_THAT_A_FIX_IN_ONE_COPY_NO_LONGER_PROPAGATES.</span>
+                                </p>
+                            </div>
                         </div>
                     </motion.div>
                 )}
@@ -155,16 +161,17 @@ export default function CloneDetectorDNA({ data }) {
             />
 
             {/* Active clone detail */}
-            {selected && (
-                <div className="mb-4 px-4 py-3 rounded-xl" style={{
-                    background: `${RISK_COLORS[selected.divergenceRisk]}08`,
-                    border: `1px solid ${RISK_COLORS[selected.divergenceRisk]}18`,
-                }}>
-                    <p className="text-[11px] font-mono leading-relaxed" style={{ color: `${RISK_COLORS[selected.divergenceRisk]}70` }}>
-                        {selected.finding || `This pattern exists in ${selected.count} different files. They have diverged enough that fixing a bug in one no longer fixes it in the others. You have ${selected.count} versions of the same organ and they are no longer compatible.`}
-                    </p>
-                </div>
-            )}
+            <div className="mb-8 px-8 py-6 rounded-3xl relative z-10" style={{
+                background: 'rgba(0,15,30,0.8)',
+                border: '1px solid rgba(0,229,255,0.15)',
+                borderLeft: `8px solid ${RISK_COLORS[selected.divergenceRisk]}`,
+                boxShadow: `0 0 40px ${RISK_COLORS[selected.divergenceRisk]}15`
+            }}>
+                <p className="text-[16px] leading-snug font-technical font-bold tracking-tight text-white/90">
+                    <span className="text-cyan-400/80 font-black mr-3 uppercase tracking-widest">SIGNAL//</span>
+                    {selected.finding ? selected.finding.toUpperCase() : `ENCOUNTERED_PATTERN_IN_${selected.count}_NODES_DIFFERENTIATION_DETECTED`.toUpperCase()}
+                </p>
+            </div>
 
             {/* Clone list */}
             <div className="space-y-2 max-h-52 overflow-y-auto">
@@ -184,11 +191,11 @@ export default function CloneDetectorDNA({ data }) {
                                             {clone.divergenceRisk.toUpperCase()} RISK
                                         </span>
                                     </div>
-                                    <div className="flex flex-wrap gap-1">
+                                    <div className="flex flex-wrap gap-1 mt-1">
                                         {clone.locations.slice(0, 3).map((loc, j) => (
-                                            <span key={j} className="text-[9px] font-mono text-cyan-800/30 truncate max-w-[150px]">{loc}</span>
+                                            <span key={j} className="text-[10px] font-mono text-cyan-400/50 truncate max-w-[150px]">{loc}</span>
                                         ))}
-                                        {clone.locations.length > 3 && <span className="text-[9px] font-mono text-cyan-900/20">+{clone.locations.length - 3} more</span>}
+                                        {clone.locations.length > 3 && <span className="text-[10px] font-mono text-cyan-400/30">+{clone.locations.length - 3}_MORE</span>}
                                     </div>
                                 </div>
                                 <span className="text-lg font-black shrink-0" style={{ color: riskColor }}>{clone.count}×</span>
@@ -199,7 +206,9 @@ export default function CloneDetectorDNA({ data }) {
             </div>
 
             {data.finding && (
-                <p className="text-xs text-cyan-800/40 mt-3 leading-relaxed italic border-t border-cyan-900/10 pt-3">{data.finding}</p>
+                <p className="text-sm text-cyan-400/60 mt-4 leading-relaxed font-technical italic border-t border-cyan-900/20 pt-4 bg-cyan-900/5 px-4 py-2 rounded-xl">
+                    {data.finding}
+                </p>
             )}
         </motion.div>
     );

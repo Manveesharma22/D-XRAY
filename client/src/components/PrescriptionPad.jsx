@@ -54,6 +54,7 @@ const MEDICINES = {
 
 function generatePrescriptions(tracks) {
   const prescriptions = [];
+  if (!tracks || typeof tracks !== 'object') return prescriptions;
   const ci = tracks['A'];
   if (ci) {
     if (ci.issues?.some(i => i.severity === 'critical' && i.message?.toLowerCase().includes('flaky')))
@@ -95,10 +96,26 @@ const COLOR_MAP = {
   cyan: { border: 'border-cyan-500/10', bg: 'bg-cyan-500/[0.02]', badge: 'bg-cyan-500/5 text-cyan-500/70 border-cyan-900/10', iconBg: 'bg-cyan-500/5', accent: '#00e5ff' }
 };
 
-export default function PrescriptionPad({ tracks }) {
+export default function PrescriptionPad({ tracks, findings, doctorNote }) {
   const [expandedRx, setExpandedRx] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
-  const prescriptions = generatePrescriptions(tracks);
+  const prescriptions = generatePrescriptions(tracks || {});
+  // When called from DischargeSummary with findings/doctorNote instead of tracks,
+  // render a simplified doctor's note view if no prescriptions generated
+  if (prescriptions.length === 0 && !tracks) {
+    if (!findings && !doctorNote) return null;
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="glass-panel rounded-2xl p-6 border border-cyan-500/10"
+      >
+        <div className="text-[10px] font-mono text-cyan-500/40 tracking-[0.4em] uppercase mb-3">Doctor's Note</div>
+        {doctorNote && <p className="text-sm text-cyan-200/60 leading-relaxed italic">{typeof doctorNote === 'string' ? doctorNote : doctorNote?.summary || ''}</p>}
+        {findings && <p className="text-xs text-white/30 mt-2 leading-relaxed">{typeof findings === 'string' ? findings : findings?.summary || ''}</p>}
+      </motion.div>
+    );
+  }
   if (prescriptions.length === 0) return null;
 
   const highUrgency = prescriptions.filter(p => p.urgency === 'HIGH');
@@ -129,9 +146,8 @@ export default function PrescriptionPad({ tracks }) {
       <div
         className="glass-panel rounded-2xl overflow-hidden"
         style={{
-          background: 'linear-gradient(160deg, rgba(0,6,14,0.92) 0%, rgba(0,15,30,0.85) 100%)',
-          border: '1px solid rgba(0,229,255,0.08)',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,229,255,0.04)',
+          background: 'linear-gradient(160deg, rgba(0,6,14,0.95) 0%, rgba(0,10,20,0.9) 100%)',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.6), inset 0 0 40px rgba(0,251,255,0.02)',
         }}
       >
         {/* Perforated top */}
@@ -140,27 +156,28 @@ export default function PrescriptionPad({ tracks }) {
         }} />
 
         {/* Header */}
-        <div className="px-8 pt-6 pb-5 border-b border-cyan-900/10 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="px-8 pt-6 pb-5 border-b border-white/5 flex items-center justify-between group">
+          <div className="flex items-center gap-5">
             <motion.span
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.6, type: 'spring', stiffness: 300 }}
-              style={{ fontFamily: "'Caveat', cursive", color: '#00e5ff', fontWeight: 700, fontSize: 52, letterSpacing: '-1px', lineHeight: 1 }}
+              className="text-6xl font-bold text-cyan-400 holographic-bloom italic leading-none"
+              style={{ fontFamily: "'Caveat', cursive" }}
             >
               Rx
             </motion.span>
             <div>
-              <h3 className="text-xl font-bold text-white tracking-tight">Prescription Pad</h3>
-              <p className="text-xs text-cyan-800/50 font-mono tracking-wider mt-0.5">
-                {prescriptions.length} MEDICINE{prescriptions.length > 1 ? 'S' : ''} PRESCRIBED
+              <h3 className="text-xl font-bold text-white font-technical tracking-tighter uppercase leading-tight">Prescription Pad</h3>
+              <p className="text-[10px] text-cyan-400/70 font-technical tracking-[0.4em] uppercase font-bold mt-1">
+                {prescriptions.length}_Medicine_Protocols_Active
               </p>
             </div>
           </div>
           <div className="text-right">
-            <div className="text-[10px] text-cyan-800/30 font-mono">DATE</div>
-            <div className="text-sm text-cyan-600/50 font-mono">{new Date().toLocaleDateString()}</div>
-            <div className="text-[9px] text-cyan-800/20 font-mono mt-0.5">REF: DX-{Date.now().toString(36).slice(-6).toUpperCase()}</div>
+            <div className="text-[9px] text-white/20 font-technical uppercase tracking-widest font-bold">Clinical_Date</div>
+            <div className="text-sm text-cyan-400 font-technical font-bold">{new Date().toLocaleDateString()}</div>
+            <div className="text-[8px] text-white/10 font-technical mt-1 uppercase tracking-widest">Auth_ID: DX-{Date.now().toString(36).slice(-6).toUpperCase()}</div>
           </div>
         </div>
 
@@ -194,7 +211,7 @@ export default function PrescriptionPad({ tracks }) {
           )}
           {lowRx.length > 0 && (
             <div>
-              <div className="text-xs text-cyan-800/30 font-mono uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
+              <div className="text-xs text-cyan-400/50 font-mono uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-cyan-600/30" />
                 PREVENTIVE CARE
               </div>
@@ -208,26 +225,27 @@ export default function PrescriptionPad({ tracks }) {
         </div>
 
         {/* Footer with doctor's signature */}
-        <div className="px-8 py-5 border-t border-cyan-900/10 flex items-end justify-between">
-          <div className="text-sm text-cyan-800/30 max-w-md">
-            <span className="text-amber-400/40 font-bold">WARNING:</span> Do not ignore. Technical debt left untreated becomes organizational debt.
+        <div className="px-8 py-6 border-t border-white/5 flex items-end justify-between bg-black/20">
+          <div className="text-[10px] font-technical text-white/30 max-w-md uppercase tracking-wider leading-relaxed">
+            <span className="text-amber-500 font-bold tracking-[0.2em]">Warning:</span> Treatment protocols are mandatory. Technical debt left untreated becomes terminal organizational failure.
           </div>
           <div className="text-right">
             <motion.div
               initial={{ opacity: 0, x: 10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 1.2, duration: 0.6 }}
-              style={{ fontFamily: "'Caveat', cursive", fontSize: 22, color: 'rgba(0,229,255,0.38)' }}
+              className="text-2xl font-bold text-cyan-400 holographic-bloom italic"
+              style={{ fontFamily: "'Caveat', cursive" }}
             >
               Dr. DX-Ray
             </motion.div>
-            <div className="text-[10px] text-cyan-800/20 font-mono -mt-1">Board Certified in Code Pathology</div>
+            <div className="text-[9px] font-technical text-white/20 uppercase tracking-widest mt-1">Board_Certified_Code_Pathology</div>
             <motion.div
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
               transition={{ delay: 1.4, duration: 0.4 }}
-              className="w-32 h-px bg-cyan-500/12 mt-1"
-              style={{ originX: 0 }}
+              className="w-32 h-[1px] bg-cyan-500/20 mt-2 ml-auto"
+              style={{ originX: 1 }}
             />
           </div>
         </div>
@@ -280,11 +298,11 @@ function MedicineCard({ rx, index, expanded, onToggle }) {
           </span>
         </div>
         <div className="mb-4">
-          <div className="text-xs text-cyan-800/40 font-mono uppercase tracking-wider mb-2">Diagnosis</div>
+          <div className="text-xs text-cyan-400/60 font-mono uppercase tracking-wider mb-2">Diagnosis</div>
           <div className="text-base text-cyan-200/90 leading-relaxed font-bold">{rx.condition}</div>
         </div>
         <div className="p-4 rounded-xl bg-black/40 border border-white/[0.05]">
-          <div className="text-xs text-cyan-800/40 font-mono uppercase tracking-wider mb-2">Directions</div>
+          <div className="text-xs text-cyan-400/60 font-mono uppercase tracking-wider mb-2">Directions</div>
           <div className="text-cyan-300 text-balance leading-tight" style={{ fontFamily: "'Caveat', cursive", fontSize: 18 }}>
             {rx.instruction}
           </div>
@@ -303,7 +321,7 @@ function MedicineCard({ rx, index, expanded, onToggle }) {
                   <span className="text-xs text-amber-400/60">{rx.sideEffect}</span>
                 </div>
                 <div className="flex gap-2">
-                  <span className="text-[9px] text-cyan-800/40 font-mono w-16 shrink-0 uppercase">Refills</span>
+                  <span className="text-[9px] text-cyan-400/60 font-mono w-16 shrink-0 uppercase">Refills</span>
                   <span className="text-xs text-cyan-300/60">Unlimited — lifestyle change</span>
                 </div>
               </div>
@@ -311,7 +329,7 @@ function MedicineCard({ rx, index, expanded, onToggle }) {
           )}
         </AnimatePresence>
         <div className="text-center mt-2">
-          <span className="text-[8px] text-cyan-900/30 font-mono">{expanded ? 'click to collapse' : 'click for details'}</span>
+          <span className="text-[10px] text-cyan-400/60 font-technical font-bold uppercase tracking-widest">{expanded ? 'click to collapse' : 'click for details'}</span>
         </div>
       </div>
     </motion.div>

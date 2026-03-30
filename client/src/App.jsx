@@ -6,9 +6,14 @@ import SharedScan from './pages/SharedScan';
 
 function App() {
   return (
-    <Router>
-      <div className="min-h-screen bg-black text-white">
-        <header className="border-b border-cyan-900/20 bg-black/80 backdrop-blur-md sticky top-0 z-50">
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <div className="min-h-screen bg-[#111417] text-[#e1e2e7] relative overflow-x-hidden">
+        {/* Cinematic Overlays */}
+        <div className="film-grain" />
+        <div className="light-leak-cyan top-[-100px] left-[-200px] opacity-40" />
+        <div className="light-leak-cyan bottom-[-50px] right-[-300px] opacity-30 rotate-45" />
+
+        <header className="border-b border-white/5 bg-[#111417]/80 backdrop-blur-3xl sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
             <a href="/" className="flex items-center gap-3 group">
               <div className="relative">
@@ -22,17 +27,17 @@ function App() {
                 <div className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
               </div>
               <div>
-                <h1 className="text-sm font-bold tracking-tight text-white group-hover:text-cyan-400 transition-colors">
-                  DX-Ray <span className="text-cyan-500/60 font-normal">Scanner</span>
+                <h1 className="text-sm font-bold tracking-tight text-white group-hover:text-cyan-400 transition-colors font-technical">
+                  DX-RAY <span className="text-cyan-500/60 font-normal">DIAGNOSTIC</span>
                 </h1>
-                <p className="text-[9px] text-cyan-800 font-medium tracking-widest uppercase">Full-Body Code Diagnostic</p>
+                <p className="text-[9px] text-cyan-400/50 font-technical tracking-[0.3em] uppercase">Operating Theatre v2.1</p>
               </div>
             </a>
             <nav className="flex items-center gap-4">
-              <span className="hidden sm:block text-[9px] font-mono tracking-wider" style={{ color: 'rgba(0,229,255,0.25)' }}>
+              <span className="hidden sm:block text-[9px] font-mono tracking-wider text-cyan-400/30">
                 The first tool that understands the humans who built it.
               </span>
-              <span className="text-[10px] font-mono text-cyan-900/50 tracking-wider">v2.1</span>
+              <span className="text-[10px] font-mono text-cyan-400/40 tracking-wider">v2.1</span>
             </nav>
           </div>
         </header>
@@ -44,9 +49,9 @@ function App() {
           <Route path="/scan/:slug" element={<SharedScan />} />
         </Routes>
 
-        <footer className="border-t border-cyan-900/10 py-6 mt-20">
-          <div className="max-w-7xl mx-auto px-6 text-center text-cyan-900/30 text-[10px] tracking-wider uppercase">
-            DX-Ray Scanner &mdash; The first tool that doesn&apos;t just scan your codebase. It understands the humans who built it.
+        <footer className="border-t border-white/5 py-8 mt-20 relative z-10">
+          <div className="max-w-7xl mx-auto px-6 text-center text-cyan-400/30 text-[9px] font-technical tracking-[0.4em] uppercase">
+            The Sterile Void &mdash; DX-Ray Operating Theatre
           </div>
         </footer>
       </div>

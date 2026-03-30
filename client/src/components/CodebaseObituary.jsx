@@ -269,13 +269,12 @@ export default function CodebaseObituary({ data }) {
             transition={{ duration: 1.5, ease: 'easeOut' }}
             style={{
                 position: 'relative',
-                borderRadius: 20,
+                borderRadius: 24,
                 overflow: 'hidden',
-                background: 'radial-gradient(ellipse at 50% 0%, rgba(30,10,18,0.98) 0%, rgba(5,0,8,0.99) 100%)',
-                border: '2px solid rgba(80,20,40,0.6)',
-                boxShadow: '0 0 0 1px rgba(157,78,110,0.08), 0 0 60px rgba(80,20,40,0.3), inset 0 0 80px rgba(0,0,0,0.5)',
-                marginTop: 32,
-                marginBottom: 32,
+                background: 'radial-gradient(ellipse at 50% 0%, rgba(40,15,25,0.98) 0%, rgba(10,5,10,0.99) 100%)',
+                boxShadow: '0 0 80px rgba(80,20,40,0.1), inset 0 0 100px rgba(0,0,0,0.8)',
+                marginTop: 40,
+                marginBottom: 40,
             }}
         >
             {/* Mourning border — animated shimmer */}
@@ -337,24 +336,18 @@ export default function CodebaseObituary({ data }) {
                             </motion.div>
                         </div>
 
-                        <div style={{ fontSize: 9, fontFamily: 'monospace', letterSpacing: '0.55em', textTransform: 'uppercase', color: 'rgba(157,78,110,0.45)', marginBottom: 16 }}>
-                            In Memoriam
+                        <div className="text-[10px] font-technical font-bold uppercase tracking-[0.6em] text-rose-500/40 mb-6">
+                            Project_Decommissioning_Report
                         </div>
 
                         <motion.h2
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.5, duration: 1.5 }}
+                            className="text-5xl md:text-6xl font-technical font-bold text-white tracking-tighter uppercase mb-4"
                             style={{
-                                fontSize: 'clamp(28px, 5vw, 44px)',
-                                fontFamily: "'Georgia', 'Times New Roman', serif",
-                                fontStyle: 'italic',
-                                fontWeight: 400,
-                                color: 'rgba(255,235,245,0.85)',
-                                letterSpacing: '0.02em',
-                                lineHeight: 1.2,
-                                textShadow: '0 0 40px rgba(157,78,110,0.2)',
-                                marginBottom: 12,
+                                textShadow: '0 0 60px rgba(244,63,94,0.3)',
+                                letterSpacing: '-0.05em'
                             }}
                         >
                             {data.repoName}
@@ -377,12 +370,12 @@ export default function CodebaseObituary({ data }) {
                             style={{ display: 'flex', justifyContent: 'center', gap: 32, flexWrap: 'wrap' }}
                         >
                             <div style={{ textAlign: 'center' }}>
-                                <div style={{ fontSize: 9, fontFamily: 'monospace', letterSpacing: '0.35em', textTransform: 'uppercase', color: 'rgba(157,78,110,0.35)', marginBottom: 4 }}>Age</div>
-                                <div style={{ fontSize: 14, color: 'rgba(255,220,235,0.6)', fontFamily: 'monospace' }}>{data.ageString}</div>
+                                <div style={{ fontSize: 9, fontFamily: 'monospace', letterSpacing: '0.35em', textTransform: 'uppercase', color: 'rgba(157,78,110,0.35)', marginBottom: 4 }}>Lifespan</div>
+                                <div style={{ fontSize: 14, color: 'rgba(255,220,235,0.6)', fontFamily: 'monospace' }}>{data.ageString.toUpperCase()}</div>
                             </div>
                             <div style={{ textAlign: 'center' }}>
-                                <div style={{ fontSize: 9, fontFamily: 'monospace', letterSpacing: '0.35em', textTransform: 'uppercase', color: 'rgba(157,78,110,0.35)', marginBottom: 4 }}>Passed</div>
-                                <div style={{ fontSize: 14, color: 'rgba(255,220,235,0.6)', fontFamily: 'monospace' }}>{data.deadDateString}</div>
+                                <div style={{ fontSize: 9, fontFamily: 'monospace', letterSpacing: '0.35em', textTransform: 'uppercase', color: 'rgba(157,78,110,0.35)', marginBottom: 4 }}>Last_Signal</div>
+                                <div style={{ fontSize: 14, color: 'rgba(255,220,235,0.6)', fontFamily: 'monospace' }}>{data.deadDateString.toUpperCase()}</div>
                             </div>
                             <div style={{ textAlign: 'center' }}>
                                 <div style={{ fontSize: 9, fontFamily: 'monospace', letterSpacing: '0.35em', textTransform: 'uppercase', color: 'rgba(157,78,110,0.35)', marginBottom: 4 }}>Silent For</div>

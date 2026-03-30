@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap');
 @import "tailwindcss";
 
 @layer base {
@@ -7,14 +8,31 @@
   }
 
   body {
-    @apply bg-black text-white min-h-screen antialiased;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    @apply bg-[#111417] text-[#e1e2e7] min-h-screen antialiased;
+    font-family: 'Inter', sans-serif;
+    background-color: #111417;
     background-image:
-      radial-gradient(ellipse at 20% 50%, rgba(0, 200, 255, 0.03) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 50%, rgba(0, 150, 255, 0.02) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 100%, rgba(0, 100, 200, 0.03) 0%, transparent 50%);
+      radial-gradient(circle at 10% 0%, rgba(0, 251, 255, 0.04) 0%, transparent 60%),
+      radial-gradient(circle at 90% 100%, rgba(255, 196, 0, 0.02) 0%, transparent 60%),
+      linear-gradient(rgba(255, 255, 255, 0.005) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.005) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 80px 80px, 80px 80px;
     background-attachment: fixed;
-    transition: background-color 3s ease, box-shadow 3s ease;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("https://www.transparenttextures.com/patterns/carbon-fibre.png");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 9999;
   }
 
   /* ===== AMBIENT ROOM — body reacts to codebase health ===== */
@@ -58,9 +76,65 @@
 
 @layer components {
   .glass-panel {
-    background: rgba(0, 10, 20, 0.6);
-    border: 1px solid rgba(0, 200, 255, 0.08);
-    backdrop-filter: blur(20px);
+    background: linear-gradient(135deg,
+        rgba(29, 32, 35, 0.8) 0%,
+        rgba(17, 20, 23, 0.8) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    position: relative;
+    box-shadow:
+      inset 0 0 20px rgba(0, 251, 255, 0.05),
+      0 30px 60px -15px rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(60px) saturate(180%);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    overflow: hidden;
+  }
+
+  /* Laser-cut border effect */
+  .glass-panel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid transparent;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent 40%, transparent 60%, rgba(255, 255, 255, 0.05)) border-box;
+    mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .glass-panel:hover {
+    border-color: rgba(0, 251, 255, 0.4);
+    background: rgba(29, 32, 35, 0.9);
+    box-shadow:
+      inset 0 0 30px rgba(0, 251, 255, 0.15),
+      0 0 40px rgba(0, 251, 255, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .font-technical {
+    font-family: 'Space Grotesk', system-ui;
+    letter-spacing: -0.03em;
+  }
+
+  /* Cinematic light leak */
+  .light-leak-cyan {
+    position: absolute;
+    width: 600px;
+    height: 120px;
+    background: radial-gradient(ellipse at center, rgba(0, 229, 255, 0.1) 0%, transparent 80%);
+    filter: blur(60px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .film-grain {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.15;
+    background-image: url("https://www.transparenttextures.com/patterns/pinstriped-suit.png");
   }
 
   .xray-glow {
@@ -80,12 +154,43 @@
   }
 
   .text-xray {
-    color: #00e5ff;
-    text-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+    color: #00fbff;
+    text-shadow: 0 0 15px rgba(0, 251, 255, 0.5), 0 0 30px rgba(0, 251, 255, 0.2);
+    letter-spacing: -0.02em;
+  }
+
+  .holographic-bloom {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), 0 0 8px rgba(255, 255, 255, 0.25), 0 0 15px rgba(0, 229, 255, 0.1);
+    letter-spacing: -0.01em;
+  }
+
+  .holographic-light {
+    color: rgba(0, 229, 255, 0.9);
+    text-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+  }
+
+  .text-technical-muted {
+    font-family: 'Space Grotesk', system-ui;
+    color: rgba(255, 255, 255, 0.75);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .story-header {
+    font-family: 'Space Grotesk', system-ui;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    color: #ffffff;
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
   }
 
   .text-xray-dim {
-    color: #0088aa;
+    color: #00b4d8;
+    opacity: 0.9;
   }
 
   .bg-xray {
@@ -375,6 +480,44 @@
   }
 }
 
+/* ===== HOLOGRAPHIC BREATH ===== */
+@keyframes holographicBreath {
+
+  0%,
+  100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 10px rgba(0, 251, 255, 0.3));
+  }
+
+  50% {
+    opacity: 0.85;
+    filter: drop-shadow(0 0 18px rgba(0, 251, 255, 0.5));
+  }
+}
+
+/* ===== OSCILLOSCOPE TICK ===== */
+@keyframes oscilloscopeTick {
+  0% {
+    transform: scaleX(1);
+    opacity: 0.8;
+  }
+
+  5% {
+    transform: scaleX(1.05);
+    opacity: 1;
+    filter: brightness(1.2);
+  }
+
+  10% {
+    transform: scaleX(1);
+    opacity: 0.8;
+  }
+}
+
+.animate-oscilloscope {
+  animation: oscilloscopeTick 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
 /* ===== DEFIBRILLATOR CHARGE ===== */
 @keyframes chargeGlow {
 
@@ -634,6 +777,7 @@ body {
 .font-mono {
   font-size: max(0.6875rem, 11px);
   letter-spacing: 0.04em;
+  text-shadow: 0 0 5px rgba(0, 229, 255, 0.15);
 }
 
 /* Ghost Narrator quote — larger, more cinematic */

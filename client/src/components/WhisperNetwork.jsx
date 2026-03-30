@@ -42,23 +42,23 @@ export default function WhisperNetwork({ data }) {
             animate={{ opacity: 1, y: 0 }}
             className="glass-panel rounded-2xl p-5 overflow-hidden relative"
         >
-            <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                    <div className="w-2.5 h-2.5 rounded-full bg-cyan-400/30 animate-pulse" />
-                    <span className="text-xs font-mono text-cyan-800/50 tracking-[0.2em] uppercase">Whisper Network</span>
+            <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-4">
+                    <div className="w-2.5 h-2.5 rounded-full bg-cyan-500 shadow-[0_0_15px_#00fbff] animate-pulse" />
+                    <span className="text-[10px] font-technical text-cyan-400/70 tracking-[0.5em] uppercase font-bold">Tribal_Knowledge_Network</span>
                 </div>
-                <span className="text-xs font-mono text-cyan-800/30">
-                    {data.whispers.length} unanswered question{data.whispers.length > 1 ? 's' : ''}
+                <span className="text-[10px] font-technical text-cyan-400/60 uppercase tracking-[0.3em] font-bold">
+                    {data.whispers.length}_Unanswered_Nodes
                 </span>
             </div>
 
             {/* Whisper display area */}
             <div
-                className="relative rounded-xl overflow-hidden"
+                className="relative rounded-2xl overflow-hidden glass-panel"
                 style={{
-                    background: 'rgba(0,0,0,0.45)',
-                    minHeight: 150,
-                    border: '1px solid rgba(0,229,255,0.04)'
+                    background: 'rgba(0,0,0,0.6)',
+                    minHeight: 160,
+                    boxShadow: 'inset 0 0 40px rgba(0,0,0,0.8)'
                 }}
             >
                 {/* Scan line texture */}
@@ -95,35 +95,30 @@ export default function WhisperNetwork({ data }) {
                             className="p-6 relative z-10"
                         >
                             {/* Author + timestamp */}
-                            <div className="flex items-center gap-2 mb-3">
-                                <div className="w-5 h-5 rounded-full border border-cyan-800/15 flex items-center justify-center bg-cyan-900/10">
-                                    <span className="text-[10px] font-mono text-cyan-600/40">@</span>
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="w-6 h-6 rounded-lg border border-white/10 flex items-center justify-center bg-white/5 shadow-[inset_0_0_10px_rgba(255,255,255,0.02)]">
+                                    <span className="text-[10px] font-technical text-white/30 font-bold">@</span>
                                 </div>
-                                <span className="text-xs font-mono text-cyan-700/35">{whisper.author || 'unknown'}</span>
-                                <span className="text-[10px] font-mono text-cyan-900/20">·</span>
-                                <span className="text-[10px] font-mono text-cyan-900/25">{whisper.daysAgo} days ago</span>
+                                <span className="text-[10px] font-technical text-cyan-400 font-bold uppercase tracking-widest">{whisper.author || 'UNKNOWN'}</span>
+                                <span className="text-[10px] font-technical text-white/10">//</span>
+                                <span className="text-[10px] font-technical text-white/20 uppercase tracking-widest">{whisper.daysAgo}_DAYS_SILENT</span>
                                 {isOld && (
-                                    <span className="text-xs font-mono px-1.5 py-0.5 rounded" style={{
-                                        background: 'rgba(239,68,68,0.08)',
-                                        border: '1px solid rgba(239,68,68,0.15)',
-                                        color: 'rgba(239,68,68,0.5)'
-                                    }}>
-                                        Still Unanswered
+                                    <span className="text-[8px] font-technical px-2 py-0.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 font-bold uppercase tracking-widest holographic-bloom">
+                                        Terminal_State
                                     </span>
                                 )}
                             </div>
 
                             {/* Full narrative sentence */}
                             <p
-                                className="text-sm leading-relaxed"
+                                className="text-base leading-relaxed font-technical tracking-tight"
                                 style={{
-                                    color: 'rgba(0,229,255,0.28)',
-                                    fontStyle: 'italic',
-                                    textShadow: '0 0 20px rgba(0,229,255,0.08)',
-                                    letterSpacing: '0.02em',
+                                    color: 'rgba(255,255,255,0.7)',
+                                    textShadow: '0 0 20px rgba(0,251,255,0.1)',
                                 }}
                             >
-                                {buildNarrative(whisper)}
+                                <span className="text-cyan-500 font-bold mr-2 uppercase tracking-widest text-[10px]">Signal//</span>
+                                "{buildNarrative(whisper).replace('.', '').toUpperCase()}"
                             </p>
 
                             {/* Echo — the unanswered question again, faint */}
@@ -163,7 +158,7 @@ export default function WhisperNetwork({ data }) {
             </div>
 
             {data.finding && (
-                <p className="text-sm text-cyan-800/40 mt-3 leading-relaxed italic border-t border-cyan-900/10 pt-3">{data.finding}</p>
+                <p className="text-sm text-cyan-400/60 mt-3 leading-relaxed italic border-t border-cyan-900/10 pt-3">{data.finding}</p>
             )}
         </motion.div>
     );

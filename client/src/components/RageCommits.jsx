@@ -97,7 +97,7 @@ function CommitCard({ r, i }) {
           </span>
           <span className="text-[9px] font-mono text-cyan-700/50">{r.author}</span>
         </div>
-        <span className="text-[10px] text-cyan-800/40 font-mono">
+        <span className="text-[10px] text-cyan-400/60 font-mono">
           {r.isLateNight ? `${hourLabel(r.hour)} 🌙` : hourLabel(r.hour)}
         </span>
       </div>
@@ -222,11 +222,10 @@ export default function RageCommits({ rageCommits }) {
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="rounded-2xl overflow-hidden"
+      className="glass-panel rounded-2xl overflow-hidden"
       style={{
-        background: 'linear-gradient(135deg, rgba(20,6,6,0.95) 0%, rgba(10,4,18,0.95) 100%)',
-        border: '1px solid rgba(239,68,68,0.15)',
-        boxShadow: '0 0 40px rgba(239,68,68,0.05), inset 0 1px 0 rgba(255,255,255,0.03)',
+        background: 'linear-gradient(135deg, rgba(20,6,6,0.98) 0%, rgba(10,4,18,0.98) 100%)',
+        boxShadow: '0 0 60px rgba(239,68,68,0.03), inset 0 0 80px rgba(0,0,0,0.6)',
       }}
     >
       {/* ── Header ─────────────────────────────────────────────────────── */}
@@ -246,29 +245,24 @@ export default function RageCommits({ rageCommits }) {
           </div>
 
           <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <h3 className="text-sm font-black text-white tracking-tight">
-                Rage Commit Detector
-              </h3>
-              <span
-                className="text-[8px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full"
-                style={{ background: 'rgba(239,68,68,0.15)', color: 'rgba(239,68,68,0.8)', border: '1px solid rgba(239,68,68,0.2)' }}
-              >
-                Human Signal
+            <div className="flex items-center gap-3">
+              <h3 className="text-sm font-bold text-white font-technical tracking-tighter uppercase leading-none">Human_Signal_Detector</h3>
+              <span className="text-[8px] font-technical font-bold uppercase tracking-[0.4em] px-2 py-0.5 rounded-full bg-red-500/10 text-red-500 border border-red-500/20">
+                Active_Trace
               </span>
             </div>
-            <p className="text-[9px] text-cyan-700/40 font-mono tracking-wider mt-0.5">
-              COMMIT SENTIMENT × VELOCITY ANALYSIS
+            <p className="text-[9px] text-cyan-400/70 font-technical tracking-[0.5em] uppercase font-bold mt-1.5">
+              Sentiment_Velocity_Projection // Forensic_Log
             </p>
           </div>
 
           {/* Big stat */}
           <div className="text-right shrink-0">
-            <div className="text-3xl font-black text-red-400/80 leading-none">
+            <div className="text-3xl font-bold font-technical text-white tracking-tighter holographic-bloom">
               {revealed ? <FlameCounter count={rageCommits.length} /> : '--'}
             </div>
-            <div className="text-[8px] text-red-500/40 font-mono uppercase tracking-wider">
-              signal{rageCommits.length > 1 ? 's' : ''}
+            <div className="text-[8px] text-red-500/40 font-technical uppercase tracking-[0.3em] font-bold">
+              SIGNAL_COUNT
             </div>
           </div>
         </div>
@@ -307,7 +301,7 @@ export default function RageCommits({ rageCommits }) {
           <div className="text-lg font-black text-orange-400/80">
             {totalNights}
           </div>
-          <div className="text-[8px] text-cyan-800/40 font-mono uppercase tracking-wider">
+          <div className="text-[8px] text-cyan-400/60 font-mono uppercase tracking-wider">
             bad night{totalNights > 1 ? 's' : ''}
           </div>
         </div>
@@ -315,7 +309,7 @@ export default function RageCommits({ rageCommits }) {
           <div className="text-lg font-black text-red-400/70">
             {rageCommits.filter(r => r.isLateNight).length}
           </div>
-          <div className="text-[8px] text-cyan-800/40 font-mono uppercase tracking-wider">
+          <div className="text-[8px] text-cyan-400/60 font-mono uppercase tracking-wider">
             after midnight
           </div>
         </div>
@@ -323,7 +317,7 @@ export default function RageCommits({ rageCommits }) {
           <div className="text-lg font-black text-purple-400/70">
             {rageCommits.filter(r => r.burstCommits > 2).length}
           </div>
-          <div className="text-[8px] text-cyan-800/40 font-mono uppercase tracking-wider">
+          <div className="text-[8px] text-cyan-400/60 font-mono uppercase tracking-wider">
             burst sessions
           </div>
         </div>
