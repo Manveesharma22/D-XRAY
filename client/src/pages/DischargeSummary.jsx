@@ -344,6 +344,24 @@ export default function DischargeSummary() {
           </motion.div>
         )}
 
+        {/* ═══ THE SIMULATION (Hero Position) ═══ */}
+        <div id="prognosis-simulation" className="mb-12">
+          {prognosis ? (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+              <div className="flex items-center justify-center gap-3 mb-6">
+                <div className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
+                <div className="text-[10px] font-mono text-cyan-400 tracking-[0.5em] uppercase font-black">Live Prognosis Simulation</div>
+              </div>
+              <PrognosisSimulator data={prognosis} currentScore={corpusScore?.dxScore} />
+            </motion.div>
+          ) : (
+            <div className="glass-panel p-10 rounded-3xl border border-dashed border-cyan-500/20 text-center">
+              <div className="text-xs font-mono text-cyan-500/40 uppercase tracking-widest mb-2 underline decoration-red-500/50 underline-offset-4 decoration-2">Simulation Engine: Standby</div>
+              <div className="text-[10px] text-slate-500 max-w-sm mx-auto">Click <span className="text-white">FORCE_SIM</span> in the header to manually engage the temporal layer for this instance.</div>
+            </div>
+          )}
+        </div>
+
         {/* ═══ CODEBASE OBITUARY — appears first if triggered ═══ */}
         {obituary?.isAbandoned && (
           <motion.div
@@ -424,16 +442,6 @@ export default function DischargeSummary() {
             <AIDoctor diagnosis={diagnosis} corpusScore={corpusScore} />
           </motion.div>
         )}
-
-        {/* The Simulation — Forward Prognosis */}
-        <div id="prognosis-simulation">
-          {prognosis && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }} className="mt-8">
-              <PrognosisSimulator data={prognosis} currentScore={corpusScore?.dxScore} />
-            </motion.div>
-          )}
-        </div>
-
 
         {/* Prescription */}
         {tracks && Object.keys(tracks).length >= 3 && (

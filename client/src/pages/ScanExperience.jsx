@@ -34,6 +34,7 @@ import EmotionalTimeline from '../components/EmotionalTimeline';
 import FirstDaySim from '../components/FirstDaySim';
 import CompetitorBenchmark from '../components/CompetitorBenchmark';
 import TheMirror from '../components/TheMirror';
+import PrognosisSimulator from '../components/PrognosisSimulator';
 
 const ACT_LABELS = {
   0: '',
@@ -739,6 +740,39 @@ export default function ScanExperience() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
             <input type="url" value={repoUrl} onChange={(e) => setRepoUrl(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && startScan()} placeholder="https://github.com/owner/repo"
               className="flex-1 bg-black/60 border border-cyan-900/20 rounded-xl py-2 px-4 text-sm font-mono text-cyan-100 placeholder:text-cyan-900/30 focus:outline-none focus:border-cyan-500/30 transition-all" />
+
+            <button
+              onClick={() => document.getElementById('prognosis-anchor')?.scrollIntoView({ behavior: 'smooth' })}
+              className="px-3 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-[9px] font-black text-cyan-400 tracking-[0.2em] hover:bg-cyan-500/20 transition-all"
+            >
+              PROGNOSIS
+            </button>
+
+            <button
+              onClick={() => {
+                setScanData(prev => ({
+                  ...prev,
+                  prognosis: {
+                    timeline: Array.from({ length: 46 }, (_, i) => ({
+                      day: i * 2,
+                      score: Math.max(10, 85 - (i * 1.5)),
+                      interventionScore: Math.min(95, 85 + (i * 0.3)),
+                      signals: i === 15 ? ["The Drift", "Build time +8%"] : i === 30 ? ["The Threshold", "Test flakiness"] : [],
+                      costToFix: Math.round(5 + (i * 1.2)),
+                      burnoutRisk: Math.min(100, i * 3)
+                    })),
+                    currentScore: 85,
+                    atRiskContributor: { login: 'nexus_subject', impact: 'Core architect' },
+                    compoundingCostRatio: 9
+                  }
+                }));
+                setTimeout(() => document.getElementById('prognosis-anchor')?.scrollIntoView({ behavior: 'smooth' }), 100);
+              }}
+              className="px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-[9px] font-black text-white/40 tracking-[0.2em] hover:text-white transition-all"
+            >
+              FORCE_SIM
+            </button>
+
             <button onClick={startScan} disabled={!repoUrl.trim() || scanning}
               className="px-5 py-2 rounded-xl font-bold text-xs tracking-wider uppercase transition-all disabled:opacity-30 disabled:cursor-not-allowed bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 text-white shadow-lg shadow-cyan-500/10">
               {scanning ? 'Scanning...' : 'New Scan'}
@@ -764,6 +798,20 @@ export default function ScanExperience() {
 
             {/* EKG */}
             <EKGMonitor bpm={ekgState.bpm} pattern={ekgState.pattern} reason={ekgState.reason} />
+
+            {/* LIVE PROGNOSIS HERO */}
+            <div id="prognosis-anchor" className="space-y-4">
+              {scanData.prognosis ? (
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="p-1 rounded-3xl border border-cyan-500/20 bg-cyan-500/5">
+                  <div className="text-[10px] font-mono text-cyan-500/40 py-2 text-center tracking-[0.3em] uppercase">Simulation Layer Active</div>
+                  <PrognosisSimulator data={scanData.prognosis} currentScore={scanData.corpusScore?.dxScore} />
+                </motion.div>
+              ) : (
+                <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                  <motion.div animate={{ x: ['-100%', '100%'] }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }} className="w-1/3 h-full bg-cyan-500/20" />
+                </div>
+              )}
+            </div>
 
             {/* X-Ray */}
             {currentAct >= 2 && (
@@ -871,6 +919,14 @@ export default function ScanExperience() {
             {scanData.whispers && <WhisperNetwork data={scanData.whispers} />}
             {scanData.clones && <CloneDetectorDNA data={scanData.clones} />}
             {scanData.sleepStudy && <SleepStudy data={scanData.sleepStudy} />}
+            <div id="prognosis-anchor">
+              {scanData.prognosis && (
+                <div className="mt-8">
+                  <PrognosisSimulator data={scanData.prognosis} currentScore={scanData.corpusScore?.dxScore} />
+                </div>
+              )}
+            </div>
+
             {scanData.scarTissue && <ScarTissue data={scanData.scarTissue} />}
 
             {/* ===== NEW FEATURE PANELS ===== */}
