@@ -812,7 +812,7 @@ export default function ScanExperience() {
             <EKGMonitor bpm={ekgState.bpm} pattern={ekgState.pattern} reason={ekgState.reason} />
 
             {/* LIVE PROGNOSIS HERO */}
-            <div id="prognosis-anchor" className="space-y-4">
+            <div id="prognosis-simulation" className="space-y-4">
               {scanData.prognosis ? (
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="p-1 rounded-3xl border border-cyan-500/20 bg-cyan-500/5">
                   <div className="text-[10px] font-mono text-cyan-500/40 py-2 text-center tracking-[0.3em] uppercase">Simulation Layer Active</div>
@@ -931,13 +931,6 @@ export default function ScanExperience() {
             {scanData.whispers && <WhisperNetwork data={scanData.whispers} />}
             {scanData.clones && <CloneDetectorDNA data={scanData.clones} />}
             {scanData.sleepStudy && <SleepStudy data={scanData.sleepStudy} />}
-            <div id="prognosis-anchor">
-              {scanData.prognosis && (
-                <div className="mt-8">
-                  <PrognosisSimulator data={scanData.prognosis} currentScore={scanData.corpusScore?.dxScore} />
-                </div>
-              )}
-            </div>
 
             {scanData.scarTissue && <ScarTissue data={scanData.scarTissue} />}
 

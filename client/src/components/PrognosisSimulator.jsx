@@ -187,31 +187,31 @@ const PrognosisSimulator = ({ data, currentScore }) => {
                 </div>
 
                 {/* THE TEMPORAL LOG — Suspense Story */}
-                <div ref={logRef} className="glass-panel border-white/5 bg-black/60 p-5 rounded-2xl h-[130px] overflow-y-auto font-mono scroll-smooth shadow-inner">
-                    <div className="text-[10px] text-cyan-600/40 uppercase tracking-widest mb-3 flex justify-between items-center sticky top-0 bg-black/40 backdrop-blur-sm py-1">
+                <div ref={logRef} className="glass-panel border-white/10 bg-black/80 p-8 rounded-[2rem] h-[220px] overflow-y-auto font-mono scroll-smooth shadow-[inset_0_0_50px_rgba(0,0,0,1)] scrollbar-hide">
+                    <div className="text-[10px] text-cyan-600/40 uppercase tracking-[0.4em] mb-5 flex justify-between items-center sticky top-0 bg-black/60 backdrop-blur-xl py-2 z-20">
                         <div className="flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
-                            <span>Forensic Transcript</span>
+                            <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
+                            <span>Forensic Transcript // Full Temporal History</span>
                         </div>
-                        <span className="text-[8px] opacity-40">System-Time: {new Date().toLocaleTimeString()}</span>
+                        <span className="text-[9px] opacity-40">System-Time: {new Date().toLocaleTimeString()}</span>
                     </div>
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                         {visibleBeats.length > 0 ? (
                             visibleBeats.map((beat, idx) => (
                                 <motion.div
                                     key={`${beat.day}-${idx}`}
                                     initial={{ opacity: 0, x: -10 }}
                                     animate={{ opacity: 1, x: 0 }}
-                                    className="flex gap-4 border-l border-white/5 pl-3 group"
+                                    className="flex gap-6 border-l-2 border-white/5 pl-5 group hover:border-cyan-500/30 transition-all"
                                 >
-                                    <span className="text-white/20 whitespace-nowrap text-[9px] pt-1 font-mono">D{beat.day.toString().padStart(2, '0')}</span>
-                                    <span className={`text-[11px] leading-relaxed transition-colors ${isActing ? 'text-emerald-400' : (beat.day >= 67 ? 'text-red-400' : 'text-slate-300')} group-hover:text-white`}>
+                                    <span className="text-white/20 whitespace-nowrap text-[10px] pt-1.5 font-mono tracking-widest">D. {beat.day.toString().padStart(2, '0')}</span>
+                                    <span className={`text-[13px] leading-relaxed transition-colors tracking-tight ${isActing ? 'text-emerald-400' : (beat.day >= 67 ? 'text-red-400' : 'text-slate-200')} group-hover:text-white`}>
                                         {beat.text}
                                     </span>
                                 </motion.div>
                             ))
                         ) : (
-                            <div className="text-white/10 text-[10px] text-center pt-8 italic text-balance">Awaiting simulation data... Move the slider to witness the narrative timeline.</div>
+                            <div className="text-white/10 text-[11px] text-center pt-12 italic text-balance font-light">Awaiting simulation data... Move the timeline slider to record the forensic narrative.</div>
                         )}
                         <div id="narrative-bottom" />
                     </div>
