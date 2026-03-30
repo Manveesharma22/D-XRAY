@@ -148,6 +148,7 @@ export default function ScanExperience() {
       case 'emotional_timeline': setScanData(prev => ({ ...prev, emotionalTimeline: data })); break;
       case 'first_day_sim': setScanData(prev => ({ ...prev, firstDaySim: data })); break;
       case 'competitor_benchmark': setScanData(prev => ({ ...prev, competitorBenchmark: data })); break;
+      case 'prognosis_data': setScanData(prev => ({ ...prev, prognosis: data })); break;
       case 'mirror_scan':
         setScanData(prev => {
           const updated = { ...prev, mirror: data };
@@ -209,7 +210,8 @@ export default function ScanExperience() {
       diagnosis: null, scanId: null, discharge: null,
       collaboration: null, trauma: null, immune: null, archaeology: null,
       whispers: null, clones: null, sleepStudy: null, scarTissue: null, livingAutopsy: null, obituary: null,
-      timeBomb: null, busFactor: null, emotionalTimeline: null, firstDaySim: null, competitorBenchmark: null
+      timeBomb: null, busFactor: null, emotionalTimeline: null, firstDaySim: null, competitorBenchmark: null,
+      prognosis: null
     });
     setCurrentAct(0); setXrayPhase(''); setShowConfessional(false); setConfessionProcessed(null);
     setActiveTrackTab(null); setShareUrl(''); setLastTrackResult(null); setScanComplete(false);
