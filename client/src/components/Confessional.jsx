@@ -560,7 +560,7 @@ export default function Confessional({ onConfess, healing, corpusScore, repoName
               transition={{ delay: 0.8 }}
               className="max-w-3xl mx-auto mb-10"
             >
-              <p className="text-3xl sm:text-4xl font-bold leading-tight tracking-tight"
+              <p className="text-xl sm:text-2xl font-bold leading-tight tracking-tight"
                 style={{ color: 'rgba(255,236,180,0.95)', fontStyle: 'italic' }}>
                 {certificate ? (
                   <TypedText text={certificate} speed={22} onDone={() => setCertificateDone(true)} />
@@ -695,7 +695,7 @@ export default function Confessional({ onConfess, healing, corpusScore, repoName
           </svg>
         </motion.div>
 
-        <h3 className="text-4xl sm:text-6xl font-black text-white mb-4 tracking-tighter">
+        <h3 className="text-2xl sm:text-4xl font-black text-white mb-4 tracking-tight">
           Would you like to confess?
         </h3>
         <p className="text-amber-200/40 text-lg mb-10 max-w-2xl mx-auto leading-relaxed">

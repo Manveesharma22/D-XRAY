@@ -264,7 +264,7 @@ export default function DebtInheritanceMap({ data }) {
                             boxShadow: 'inset 0 0 40px rgba(0,229,255,0.03)'
                           }}
                         >
-                          <p className="text-3xl sm:text-4xl text-white leading-tight font-black tracking-tighter">
+                          <p className="text-xl sm:text-2xl text-white leading-tight font-black tracking-tight">
                             {shockSentence}
                           </p>
                           <div className="mt-4 text-xs text-cyan-700/40 font-mono uppercase tracking-[0.3em]">

@@ -271,8 +271,8 @@ function MedicineCard({ rx, index, expanded, onToggle }) {
               {rx.icon}
             </div>
             <div>
-              <div className="text-2xl font-bold text-white mb-0.5" style={{ fontFamily: "'Caveat', cursive" }}>{rx.name}</div>
-              <div className="text-xs font-mono text-cyan-800/50">{rx.dose}</div>
+              <div className="text-xl font-bold text-white mb-0.5" style={{ fontFamily: "'Caveat', cursive" }}>{rx.name}</div>
+              <div className="text-[10px] font-mono text-cyan-800/50">{rx.dose}</div>
             </div>
           </div>
           <span className={`text-[9px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md border ${c.badge}`}>
@@ -285,7 +285,7 @@ function MedicineCard({ rx, index, expanded, onToggle }) {
         </div>
         <div className="p-4 rounded-xl bg-black/40 border border-white/[0.05]">
           <div className="text-xs text-cyan-800/40 font-mono uppercase tracking-wider mb-2">Directions</div>
-          <div className="text-cyan-300 text-balance leading-tight" style={{ fontFamily: "'Caveat', cursive", fontSize: 21 }}>
+          <div className="text-cyan-300 text-balance leading-tight" style={{ fontFamily: "'Caveat', cursive", fontSize: 18 }}>
             {rx.instruction}
           </div>
         </div>
