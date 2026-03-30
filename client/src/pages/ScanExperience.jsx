@@ -35,6 +35,7 @@ import FirstDaySim from '../components/FirstDaySim';
 import CompetitorBenchmark from '../components/CompetitorBenchmark';
 import TheMirror from '../components/TheMirror';
 import PrognosisSimulator from '../components/PrognosisSimulator';
+import { config } from '../api-config';
 
 const ACT_LABELS = {
   0: '',
@@ -192,7 +193,7 @@ export default function ScanExperience() {
   }, []);
 
   const connectWS = useCallback(() => {
-    const ws = new WebSocket('ws://localhost:3001');
+    const ws = new WebSocket(config.WS_URL);
     ws.onopen = () => console.log('WS connected');
     ws.onmessage = (event) => {
       try { handleMessage(JSON.parse(event.data)); } catch (e) { console.error('WS parse error:', e); }
@@ -237,7 +238,7 @@ export default function ScanExperience() {
     if (!scanData.scanId || !scanData.patient) return;
     const [owner, repo] = scanData.patient.name?.split('/') || ['unknown', 'repo'];
     try {
-      const res = await fetch('http://localhost:3001/api/scans/save', {
+      const res = await fetch(`${config.BACKEND_URL}/api/scans/save`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ scanId: scanData.scanId, owner, repo, data: scanData })
       });

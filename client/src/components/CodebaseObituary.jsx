@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { config } from '../api-config';
 
 /**
  * CodebaseObituary
@@ -62,7 +63,7 @@ function MemorialWall({ repoSlug, obituary }) {
 
     useEffect(() => {
         if (!repoSlug) return;
-        fetch(`http://localhost:3001/api/memorial/${repoSlug}`)
+        fetch(`${config.BACKEND_URL}/api/memorial/${repoSlug}`)
             .then(r => r.json())
             .then(data => {
                 setFlowers(data.flowers || []);
@@ -76,7 +77,7 @@ function MemorialWall({ repoSlug, obituary }) {
         if (!repoSlug || leaving) return;
         setLeaving(true);
         try {
-            const res = await fetch(`http://localhost:3001/api/memorial/${repoSlug}/flower`, {
+            const res = await fetch(`${config.BACKEND_URL}/api/memorial/${repoSlug}/flower`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ handle: handle.replace('@', '').trim() || 'anonymous' })

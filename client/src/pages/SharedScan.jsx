@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { config } from '../api-config';
 
 export default function SharedScan() {
   const { slug } = useParams();
@@ -9,7 +10,7 @@ export default function SharedScan() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetch(`http://localhost:3001/api/scans/${slug}`)
+    fetch(`${config.BACKEND_URL}/api/scans/${slug}`)
       .then(res => {
         if (!res.ok) throw new Error('Scan not found');
         return res.json();
@@ -83,10 +84,9 @@ export default function SharedScan() {
           <div className="text-[10px] font-mono text-cyan-600/50 tracking-[0.3em] uppercase mb-2">
             DX Score
           </div>
-          <div className={`text-8xl font-black ${
-            corpusScore.dxScore >= 70 ? 'text-emerald-400' :
-            corpusScore.dxScore >= 40 ? 'text-amber-400' : 'text-red-400'
-          }`}>
+          <div className={`text-8xl font-black ${corpusScore.dxScore >= 70 ? 'text-emerald-400' :
+              corpusScore.dxScore >= 40 ? 'text-amber-400' : 'text-red-400'
+            }`}>
             {corpusScore.dxScore}
           </div>
           <div className="text-sm text-cyan-600/60 mt-2">{corpusScore.severity}</div>
@@ -112,9 +112,8 @@ export default function SharedScan() {
               <div key={t.track} className="p-3 rounded-xl bg-black/20 border border-cyan-900/10">
                 <div className="text-[8px] text-cyan-800/40 font-mono uppercase">{t.anatomical}</div>
                 <div className="text-[10px] font-bold text-cyan-200 mt-0.5">{t.name}</div>
-                <div className={`text-xl font-black mt-1 ${
-                  t.score >= 70 ? 'text-emerald-400' : t.score >= 40 ? 'text-amber-400' : 'text-red-400'
-                }`}>
+                <div className={`text-xl font-black mt-1 ${t.score >= 70 ? 'text-emerald-400' : t.score >= 40 ? 'text-amber-400' : 'text-red-400'
+                  }`}>
                   {t.score}
                 </div>
               </div>

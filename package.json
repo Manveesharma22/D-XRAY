@@ -1,0 +1,12 @@
+{
+    "name": "dx-ray-monorepo",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "install:all": "npm install && cd server && npm install && cd ../client && npm install",
+        "build:client": "cd client && npm run build",
+        "start": "cd server && npm start",
+        "build": "npm run build:client",
+        "heroku-postbuild": "npm run build:client"
+    }
+}

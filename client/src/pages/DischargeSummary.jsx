@@ -33,6 +33,7 @@ import BiologicalShadow from '../components/BiologicalShadow';
 import SoundLayer from '../components/SoundLayer';
 import LastCommit from '../components/LastCommit';
 import PrognosisSimulator from '../components/PrognosisSimulator';
+import { config } from '../api-config';
 
 
 const TRACK_NAMES = {
@@ -143,7 +144,7 @@ export default function DischargeSummary() {
     if (!scanData) return;
     const [owner, repo] = scanData.patient?.name?.split('/') || ['unknown', 'repo'];
     try {
-      const res = await fetch('http://localhost:3001/api/scans/save', {
+      const res = await fetch(`${config.BACKEND_URL}/api/scans/save`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ scanId: scanData.scanId, owner, repo, data: scanData })
