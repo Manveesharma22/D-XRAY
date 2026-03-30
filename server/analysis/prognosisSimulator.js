@@ -17,36 +17,40 @@ class PrognosisSimulator {
             coupling: (scanResults.clones?.density || 0) * 0.05
         };
 
-        const timeline = [0, 30, 60, 90].map(days => {
+        const timeline = [];
+        for (let days = 0; days <= 90; days += 2) {
             const t = days / 90;
 
             // Linear + Exponential decay
-            const healthDrop = (currentScore * 0.4) * (t + Math.pow(t, 2) * 0.5);
-            const fatigueMultiplier = 1 + (decayFactors.burnout * t * 5);
+            const healthDrop = (currentScore * 0.45) * (t + Math.pow(t, 2) * 0.6);
+            const fatigueMultiplier = 1 + (decayFactors.burnout * t * 6);
 
             const projectedScore = Math.max(5, Math.round(currentScore - (healthDrop * fatigueMultiplier)));
 
             // Generate phase-specific markers
             let signals = [];
-            if (days === 30) signals = ["Minor build time drift (+12%)", "First silent burnout markers"];
-            if (days === 60) signals = ["Test flakiness threshold crossed", "Knowledge silos deepening"];
-            if (days === 90) signals = ["Death spiral entry point", "Critical contributor departure risk"];
+            if (days >= 30 && days < 35) signals = ["The Drift: Minor build time drift (+12%)", "First silent burnout markers"];
+            if (days >= 60 && days < 65) signals = ["The Threshold: Test flakiness threshold crossed", "Knowledge silos deepening"];
+            if (days >= 85) signals = ["The Crisis: Death spiral entry point", "Critical contributor departure risk"];
 
             // Calculate "Intervention" score (what if we act today?)
-            const interventionScore = Math.min(100, Math.round(currentScore + (100 - currentScore) * 0.3 * t));
+            // If we act early (days < 30), recovery is 90%. If we wait till 90, recovery is only 40%.
+            const recoveryPotential = 0.9 - (t * 0.5);
+            const interventionScore = Math.min(100, Math.round(currentScore + (100 - currentScore) * recoveryPotential * Math.sqrt(t || 1)));
 
-            return {
+            timeline.push({
                 day: days,
                 score: projectedScore,
-                interventionScore,
+                interventionScore: days === 0 ? currentScore : interventionScore,
                 signals,
                 costToFix: this._calculateCost(projectedScore, days),
-                burnoutRisk: Math.min(100, Math.round((decayFactors.burnout * 100) + (days * 0.8)))
-            };
-        });
+                burnoutRisk: Math.min(100, Math.round((decayFactors.burnout * 100) + (days * 0.9)))
+            });
+        }
 
         // Predict which contributor might leave
-        const atRiskContributor = this._predictDeparture(contributors, biologicalShadow, timeline[3].burnoutRisk);
+        const atRiskContributor = this._predictDeparture(contributors, biologicalShadow, timeline[timeline.length - 1].burnoutRisk);
+
 
         return {
             timeline,
