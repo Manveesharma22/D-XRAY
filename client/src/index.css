@@ -1,0 +1,700 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap');
+@import "tailwindcss";
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    @apply bg-black text-white min-h-screen antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(0, 200, 255, 0.03) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 50%, rgba(0, 150, 255, 0.02) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 100%, rgba(0, 100, 200, 0.03) 0%, transparent 50%);
+    background-attachment: fixed;
+    transition: background-color 3s ease, box-shadow 3s ease;
+  }
+
+  /* ===== AMBIENT ROOM — body reacts to codebase health ===== */
+  body.ambient-healthy {
+    background-color: #000508;
+    box-shadow: inset 0 0 200px rgba(0, 200, 100, 0.02);
+  }
+
+  body.ambient-stressed {
+    background-color: #080500;
+    box-shadow: inset 0 0 200px rgba(200, 120, 0, 0.04), inset 0 0 400px rgba(200, 80, 0, 0.02);
+  }
+
+  body.ambient-critical {
+    background-color: #080000;
+    box-shadow: inset 0 0 150px rgba(200, 0, 0, 0.06), inset 0 0 300px rgba(150, 0, 0, 0.04);
+    animation: ambientTick 2.4s ease-in-out infinite;
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 200, 255, 0.2);
+    border-radius: 999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 200, 255, 0.4);
+  }
+
+  ::selection {
+    background: rgba(0, 200, 255, 0.3);
+  }
+}
+
+@layer components {
+  .glass-panel {
+    background: rgba(0, 10, 20, 0.6);
+    border: 1px solid rgba(0, 200, 255, 0.08);
+    backdrop-filter: blur(20px);
+  }
+
+  .xray-glow {
+    box-shadow: 0 0 30px rgba(0, 200, 255, 0.1), 0 0 60px rgba(0, 200, 255, 0.05);
+  }
+
+  .scan-line {
+    background: linear-gradient(180deg, transparent, rgba(0, 200, 255, 0.4), transparent);
+    animation: scanSweep 3s ease-in-out infinite;
+  }
+
+  .ekg-line {
+    stroke: #00e5ff;
+    stroke-width: 2;
+    fill: none;
+    filter: drop-shadow(0 0 4px rgba(0, 229, 255, 0.6));
+  }
+
+  .text-xray {
+    color: #00e5ff;
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+  }
+
+  .text-xray-dim {
+    color: #0088aa;
+  }
+
+  .bg-xray {
+    background: #00e5ff;
+  }
+
+  .border-xray {
+    border-color: rgba(0, 229, 255, 0.2);
+  }
+
+  .pulse-ring {
+    animation: pulseRing 2s ease-out infinite;
+  }
+
+  .fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+
+  .typewriter {
+    overflow: hidden;
+    border-right: 2px solid #00e5ff;
+    white-space: nowrap;
+    animation: typewriter 2s steps(40) forwards, blinkCursor 0.75s step-end infinite;
+  }
+
+  /* ===== FILM NEGATIVE MODE ===== */
+  .film-negative {
+    filter: invert(1) hue-rotate(180deg);
+  }
+
+  /* Apply to children that should NOT be inverted */
+  .film-negative .no-invert {
+    filter: invert(1) hue-rotate(180deg);
+  }
+}
+
+/* ===== KEYFRAMES ===== */
+
+@keyframes scanSweep {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  90% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+@keyframes pulseRing {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes typewriter {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blinkCursor {
+  50% {
+    border-color: transparent;
+  }
+}
+
+@keyframes ekgPulse {
+  0% {
+    stroke-dashoffset: 1000;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes heartbeat {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  15% {
+    transform: scale(1.15);
+  }
+
+  30% {
+    transform: scale(1);
+  }
+
+  45% {
+    transform: scale(1.1);
+  }
+
+  60% {
+    transform: scale(1);
+  }
+}
+
+@keyframes flatline-beep {
+
+  0%,
+  90% {
+    opacity: 0;
+  }
+
+  91%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes ghost-rise {
+  0% {
+    transform: translateY(100px);
+    opacity: 0;
+    filter: blur(10px);
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 0.7;
+    filter: blur(0);
+  }
+}
+
+@keyframes fracture-heal {
+  0% {
+    stroke: #ff4444;
+    stroke-width: 3;
+  }
+
+  50% {
+    stroke: #ffffff;
+    stroke-width: 2;
+    filter: drop-shadow(0 0 8px white);
+  }
+
+  100% {
+    stroke: #00e5ff;
+    stroke-width: 1;
+    opacity: 0;
+  }
+}
+
+@keyframes skeleton-appear {
+  0% {
+    opacity: 0;
+    stroke-dashoffset: 1000;
+  }
+
+  100% {
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes glow-pulse {
+
+  0%,
+  100% {
+    filter: drop-shadow(0 0 3px rgba(0, 229, 255, 0.3));
+  }
+
+  50% {
+    filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.6));
+  }
+}
+
+@keyframes certificate-appear {
+  0% {
+    transform: scale(0.5) rotateX(90deg);
+    opacity: 0;
+  }
+
+  60% {
+    transform: scale(1.05) rotateX(-5deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1) rotateX(0);
+    opacity: 1;
+  }
+}
+
+/* ===== AMBIENT ROOM CRITICAL TICK ===== */
+@keyframes ambientTick {
+
+  0%,
+  94% {
+    box-shadow: inset 0 0 150px rgba(200, 0, 0, 0.06), inset 0 0 300px rgba(150, 0, 0, 0.04);
+  }
+
+  95%,
+  97% {
+    box-shadow: inset 0 0 200px rgba(200, 0, 0, 0.12), inset 0 0 400px rgba(150, 0, 0, 0.08);
+  }
+
+  100% {
+    box-shadow: inset 0 0 150px rgba(200, 0, 0, 0.06), inset 0 0 300px rgba(150, 0, 0, 0.04);
+  }
+}
+
+/* ===== WHISPER NETWORK ANIMATION ===== */
+@keyframes whisperFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+    filter: blur(4px);
+  }
+
+  20% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-4px);
+    filter: blur(2px);
+  }
+}
+
+.whisper-text {
+  animation: whisperFadeIn 5s ease-in-out;
+}
+
+/* ===== DNA HELIX ===== */
+@keyframes helixRotate {
+  0% {
+    transform: rotateY(0deg);
+  }
+
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+/* ===== SLEEP STUDY BARS ===== */
+@keyframes sleepBarGrow {
+  from {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* ===== DEFIBRILLATOR CHARGE ===== */
+@keyframes chargeGlow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(255, 34, 34, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 25px rgba(255, 34, 34, 0.6), 0 0 50px rgba(255, 34, 34, 0.3);
+  }
+}
+
+.defibrillator-ready {
+  animation: chargeGlow 0.8s ease-in-out infinite;
+}
+
+/* ===== VITAL SIGNS FLASH ===== */
+@keyframes vitalFlash {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.vital-critical {
+  animation: vitalFlash 1s ease-in-out infinite;
+}
+
+/* ===== ARCHAEOLOGY SLIDER ===== */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #00e5ff;
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(0, 229, 255, 0.4);
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+}
+
+/* ===== UTILITY CLASSES ===== */
+
+.animate-heartbeat {
+  animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+.animate-ghost-rise {
+  animation: ghost-rise 2s ease-out forwards;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+.skeleton-bone {
+  stroke: rgba(0, 229, 255, 0.4);
+  stroke-width: 2;
+  fill: none;
+  stroke-dasharray: 1000;
+  animation: skeleton-appear 3s ease forwards;
+}
+
+.fracture-line {
+  stroke: #ff4444;
+  stroke-width: 2;
+  stroke-dasharray: 5 3;
+  filter: drop-shadow(0 0 3px rgba(255, 68, 68, 0.5));
+}
+
+.coroner-tape {
+  background: repeating-linear-gradient(45deg,
+      #ff0000,
+      #ff0000 10px,
+      #ffdd00 10px,
+      #ffdd00 20px);
+  opacity: 0.8;
+}
+
+.certificate-appear {
+  animation: certificate-appear 0.8s ease-out forwards;
+}
+
+/* Transition for ambient room color changes */
+.transition-colors {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 3000ms;
+}
+
+.duration-3000 {
+  transition-duration: 3000ms;
+}
+
+/* ===== PRINT STYLES — DischargeSummary PDF export ===== */
+@media print {
+
+  nav,
+  header,
+  button,
+  canvas,
+  input,
+  textarea,
+  .no-print {
+    display: none !important;
+  }
+
+  body,
+  body.ambient-healthy,
+  body.ambient-stressed,
+  body.ambient-critical {
+    background: #ffffff !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    animation: none !important;
+    color: #111 !important;
+  }
+
+  .glass-panel {
+    background: #f8faff !important;
+    border: 1px solid #dde5f0 !important;
+    backdrop-filter: none !important;
+  }
+
+  .text-white {
+    color: #111111 !important;
+  }
+
+  .text-emerald-400 {
+    color: #059669 !important;
+  }
+
+  .text-red-400 {
+    color: #dc2626 !important;
+  }
+
+  .text-amber-400 {
+    color: #d97706 !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  @page {
+    margin: 1.5cm;
+    size: A4;
+  }
+}
+
+/* ===== EXTRA KEYFRAMES ===== */
+@keyframes shimmerRing {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.4;
+  }
+
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+@keyframes terminalBlink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+.animate-shimmer-ring {
+  animation: shimmerRing 2s ease-out infinite;
+}
+
+.animate-terminal-blink {
+  animation: terminalBlink 0.75s step-end infinite;
+}
+
+/* ===== OBITUARY — typewriter cursor ===== */
+.obit-cursor {
+  display: inline-block;
+  color: rgba(249, 168, 212, 0.5);
+  font-style: normal;
+  animation: terminalBlink 0.9s step-end infinite;
+  margin-left: 1px;
+}
+
+@keyframes mourningGlow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 30px rgba(80, 20, 40, 0.2), inset 0 0 60px rgba(0, 0, 0, 0.4);
+  }
+
+  50% {
+    box-shadow: 0 0 50px rgba(157, 78, 110, 0.12), inset 0 0 80px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* =========================================================
+   GLOBAL FONT SIZE INCREASES — D-XRAY Readability Layer
+   ========================================================= */
+
+/* Base body font bump — was effectively ~14px via Tailwind, now 16px */
+html {
+  font-size: 16px;
+}
+
+body {
+  line-height: 1.65;
+}
+
+/* Tailwind text-xs / text-sm / text-base bumped up */
+.text-xs {
+  font-size: 0.8125rem !important;
+}
+
+/* 12px → 13px */
+.text-sm {
+  font-size: 0.9375rem !important;
+}
+
+/* 14px → 15px */
+.text-base {
+  font-size: 1rem !important;
+}
+
+.text-lg {
+  font-size: 1.1875rem !important;
+}
+
+/* 18px → 19px */
+
+/* Monospace labels — floor of 11px everywhere */
+.font-mono {
+  font-size: max(0.6875rem, 11px);
+  letter-spacing: 0.04em;
+}
+
+/* Ghost Narrator quote — larger, more cinematic */
+.glass-panel .italic {
+  font-size: 1.125rem;
+  line-height: 1.85;
+}
+
+/* Track findings / issue messages */
+.glass-panel p,
+.glass-panel li {
+  line-height: 1.65;
+}
+
+/* Confessional textarea — very readable */
+textarea {
+  font-size: 15px !important;
+  line-height: 1.7;
+}
+
+/* Handwriting font (Caveat on PrescriptionPad) */
+[class*="font-caveat"],
+[style*="Caveat"] {
+  font-size: 1.25rem !important;
+}
+
+/* h2/h3 baseline across discharge summary */
+h3 {
+  font-size: 1.125rem;
+}
+
+h2 {
+  font-size: 1.45rem;
+}
+
+/* ── Inline style fontSize overrides via attribute selector ── */
+/* These target React elements that use style="font-size:Xpx" */
+[style*="font-size: 7px"] {
+  font-size: 11px !important;
+}
+
+[style*="font-size: 8px"] {
+  font-size: 11px !important;
+}
+
+[style*="font-size: 9px"] {
+  font-size: 12px !important;
+}
+
+[style*="font-size: 10px"] {
+  font-size: 13px !important;
+}
+
+[style*="font-size: 11px"] {
+  font-size: 13px !important;
+}
+
+[style*="font-size: 12px"] {
+  font-size: 14px !important;
+}
+
+.text-glow-orange {
+  text-shadow: 0 0 10px rgba(255, 140, 0, 0.4), 0 0 20px rgba(255, 120, 0, 0.2);
+}
