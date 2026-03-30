@@ -102,6 +102,26 @@ const PrognosisSimulator = ({ data, currentScore }) => {
                     <div className={`aspect-[4/5] rounded-3xl border transition-all duration-700 relative overflow-hidden flex items-center justify-center ${isActing ? 'bg-emerald-950/20 border-emerald-500/30' : (days > 60 ? 'bg-red-950/20 border-red-500/30 shadow-[inset_0_0_100px_rgba(0,0,0,0.8)]' : 'bg-black/60 border-white/5')}`}>
                         <XRayVisual score={displayScore} severity={severity} isFuture={true} />
 
+                        {/* NARRATIVE OVERLAY — THE STORY TELLING PART */}
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={`${days}-${isActing}`}
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 1.05 }}
+                                className="absolute inset-x-6 top-1/2 -translate-y-1/2 pointer-events-none text-center"
+                            >
+                                {visibleBeats.length > 0 && visibleBeats[visibleBeats.length - 1].day === days && (
+                                    <div className="bg-black/40 backdrop-blur-xl border border-white/10 p-5 rounded-2xl shadow-2xl">
+                                        <div className="text-[8px] font-mono text-cyan-500/60 mb-2 uppercase tracking-[0.2em]">Temporal Story // Log Day {days}</div>
+                                        <div className={`text-sm sm:text-base font-bold leading-tight ${isActing ? 'text-emerald-400' : (days >= 67 ? 'text-red-400' : 'text-white')}`}>
+                                            {visibleBeats[visibleBeats.length - 1].text}
+                                        </div>
+                                    </div>
+                                )}
+                            </motion.div>
+                        </AnimatePresence>
+
                         {/* Phase Notifications */}
                         <AnimatePresence mode="wait">
                             {currentFrame.signals.length > 0 && !isActing && (
@@ -117,23 +137,6 @@ const PrognosisSimulator = ({ data, currentScore }) => {
                                 </motion.div>
                             )}
                         </AnimatePresence>
-
-                        {/* Critical Person Risk */}
-                        {days >= 67 && data.atRiskContributor && !isActing && (
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                className="absolute bottom-6 left-6 right-6 p-5 bg-red-950/40 border border-red-500/40 rounded-2xl backdrop-blur-xl shadow-2xl"
-                            >
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-red-500/20 border border-red-500/40 flex items-center justify-center text-red-500 font-bold">!</div>
-                                    <div>
-                                        <div className="text-red-400 text-[10px] font-mono uppercase tracking-[0.2em]">Contributor Fracture: Day {days}</div>
-                                        <div className="text-white font-bold text-sm">@{data.atRiskContributor.login} at critical disengagement risk.</div>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        )}
                     </div>
                 </div>
             </div>
@@ -160,7 +163,7 @@ const PrognosisSimulator = ({ data, currentScore }) => {
                     {/* Scrubbing tip */}
                     {days === 0 && (
                         <motion.div animate={{ x: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 2 }} className="absolute -top-10 left-0 text-cyan-400 text-[10px] font-mono tracking-widest uppercase">
-                            Scrub timeline &rarr;
+                            Scrub timeline to read the story &rarr;
                         </motion.div>
                     )}
                 </div>
@@ -170,7 +173,7 @@ const PrognosisSimulator = ({ data, currentScore }) => {
                     <div className="text-[10px] text-cyan-600/40 uppercase tracking-widest mb-3 flex justify-between items-center sticky top-0 bg-black/40 backdrop-blur-sm py-1">
                         <div className="flex items-center gap-2">
                             <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
-                            <span>Temporal Log // Transcript</span>
+                            <span>Forensic Transcript</span>
                         </div>
                         <span className="text-[8px] opacity-40">System-Time: {new Date().toLocaleTimeString()}</span>
                     </div>
@@ -190,7 +193,7 @@ const PrognosisSimulator = ({ data, currentScore }) => {
                                 </motion.div>
                             ))
                         ) : (
-                            <div className="text-white/10 text-[10px] text-center pt-8 italic">Awaiting simulation data... Move the slider to witness the narrative timeline.</div>
+                            <div className="text-white/10 text-[10px] text-center pt-8 italic text-balance">Awaiting simulation data... Move the slider to witness the narrative timeline.</div>
                         )}
                         <div id="narrative-bottom" />
                     </div>
@@ -221,18 +224,21 @@ const PrognosisSimulator = ({ data, currentScore }) => {
 
 const XRayVisual = ({ score, severity, isFuture }) => {
     // Advanced visual logic: darker background, more fractures, unstable EKG
+    const ribColors = isFuture && score < 50 ? `rgba(255, 100, 100, ${0.4 + (1 - score / 100)})` : 'rgba(255,255,255,0.4)';
+    const spineColor = isFuture && score < 40 ? `rgba(255, 80, 80, 0.2)` : 'rgba(255,255,255,0.15)';
+
     return (
         <div className="relative w-full h-full flex items-center justify-center">
-            {/* Ambient Darkening */}
+            {/* Ambient Darkening / Film Grain */}
             <div
-                className="absolute inset-0 transition-opacity duration-1000"
-                style={{ background: isFuture ? `radial-gradient(circle at center, rgba(0,0,0,0) 0%, rgba(0,0,0,${Math.min(0.9, severity * 0.8)}) 100%)` : 'none' }}
+                className="absolute inset-0 transition-opacity duration-1000 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.05]"
+                style={{ background: isFuture ? `radial-gradient(circle at center, rgba(0,0,0,0) 0%, rgba(0,0,0,${Math.min(0.95, severity * 0.9)}) 100%)` : 'none' }}
             />
 
-            <svg width="220" height="320" viewBox="0 0 200 300" fill="none" className="z-10 transition-all duration-700">
+            <svg width="240" height="340" viewBox="0 0 200 300" fill="none" className="z-10 transition-all duration-700">
                 <defs>
                     <filter id="glow">
-                        <feGaussianBlur stdDeviation="1.5" result="coloredBlur" />
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur" />
                         <feMerge>
                             <feMergeNode in="coloredBlur" />
                             <feMergeNode in="SourceGraphic" />
@@ -240,30 +246,61 @@ const XRayVisual = ({ score, severity, isFuture }) => {
                     </filter>
                 </defs>
 
-                {/* Ribcage */}
-                {[...Array(7)].map((_, i) => (
-                    <motion.path
-                        key={i}
-                        d={`M 40 ${50 + i * 35} Q 100 ${45 + i * 38} 160 ${50 + i * 35}`}
-                        stroke={isFuture && score < 50 ? `rgba(255, 100, 100, ${0.3 + (1 - score / 100)})` : 'rgba(255,255,255,0.3)'}
-                        strokeWidth={4 - (i * 0.2)}
-                        filter="url(#glow)"
+                {/* THE SPINE (Vertebrae) */}
+                {[...Array(12)].map((_, i) => (
+                    <motion.rect
+                        key={`vert-${i}`}
+                        x="94" y={40 + i * 18} width="12" height="12" rx="4"
+                        fill={spineColor}
                         animate={{
-                            opacity: isFuture && score < 40 ? [0.3, 0.1, 0.3] : 0.3,
-                            strokeWidth: isFuture && score < 30 ? [3, 4.5, 3] : 3.5
+                            opacity: isFuture && score < 30 ? [0.2, 0.5, 0.2] : 0.2,
+                            scaleX: isFuture && score < 20 ? [1, 1.2, 1] : 1
                         }}
                     />
                 ))}
 
-                {/* Spine */}
-                <rect x="98" y="30" width="4" height="240" fill="rgba(255,255,255,0.15)" />
+                {/* CLAVICLES */}
+                <path d="M 60 45 Q 100 35 140 45" stroke="rgba(255,255,255,0.3)" strokeWidth="4" strokeLinecap="round" />
+                <path d="M 55 50 Q 100 40 145 50" stroke="rgba(255,255,255,0.2)" strokeWidth="2" strokeLinecap="round" />
 
-                {/* Growth of Fractures based on score */}
-                {isFuture && score < 80 && <Fracture x={130} y={70} scale={1 - score / 100} />}
-                {isFuture && score < 60 && <Fracture x={50} y={150} scale={1.2 - score / 100} rotation={180} />}
-                {isFuture && score < 40 && <Fracture x={140} y={220} scale={1.5 - score / 100} rotation={45} />}
-                {isFuture && score < 20 && <Fracture x={80} y={100} scale={2 - score / 100} rotation={90} />}
-                {isFuture && score < 15 && <Fracture x={100} y={180} scale={2.5 - score / 100} />}
+                {/* ORGANIC RIBCAGE */}
+                {[...Array(8)].map((_, i) => (
+                    <g key={`rib-pair-${i}`} opacity="0.6">
+                        {/* Left Rib */}
+                        <motion.path
+                            d={`M 95 ${60 + i * 22} Q ${40 - i * 5} ${65 + i * 25} 35 ${85 + i * 22}`}
+                            stroke={ribColors}
+                            strokeWidth={5 - (i * 0.3)}
+                            strokeLinecap="round"
+                            filter="url(#glow)"
+                            animate={{
+                                pathLength: [0.9, 1, 0.9],
+                                rotate: isFuture && score < 40 ? [0, 2, 0] : 0
+                            }}
+                        />
+                        {/* Right Rib */}
+                        <motion.path
+                            d={`M 105 ${60 + i * 22} Q ${160 + i * 5} ${65 + i * 25} 165 ${85 + i * 22}`}
+                            stroke={ribColors}
+                            strokeWidth={5 - (i * 0.3)}
+                            strokeLinecap="round"
+                            filter="url(#glow)"
+                            animate={{
+                                pathLength: [0.9, 1, 0.9],
+                                rotate: isFuture && score < 40 ? [0, -2, 0] : 0
+                            }}
+                        />
+                    </g>
+                ))}
+
+                {/* PELVIS HINT */}
+                <path d="M 50 260 Q 100 240 150 260" stroke="rgba(255,255,255,0.15)" strokeWidth="8" strokeLinecap="round" />
+
+                {/* FRACTURES */}
+                {isFuture && score < 85 && <Fracture x={130} y={70} scale={1.2 - score / 100} />}
+                {isFuture && score < 65 && <Fracture x={50} y={150} scale={1.4 - score / 100} rotation={160} />}
+                {isFuture && score < 45 && <Fracture x={140} y={210} scale={1.6 - score / 100} rotation={45} />}
+                {isFuture && score < 25 && <Fracture x={85} y={120} scale={2 - score / 100} rotation={280} />}
             </svg>
 
             {/* EKG - destabilizes at low score */}
