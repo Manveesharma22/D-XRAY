@@ -72,6 +72,12 @@ export default function DischargeSummary() {
   };
 
   useEffect(() => {
+    if (scanData?.prognosis) {
+      sessionStorage.setItem('dxray_scan', JSON.stringify(scanData));
+    }
+  }, [scanData?.prognosis]);
+
+  useEffect(() => {
     const stored = sessionStorage.getItem('dxray_scan');
     if (stored) {
       try {
@@ -259,6 +265,44 @@ export default function DischargeSummary() {
             SHADOW_SCAN
           </button>
 
+          <button
+            onClick={() => {
+              const el = document.getElementById('prognosis-simulation');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+              else alert('Simulation data not found. Try FORCE_SIM.');
+            }}
+            className="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-[9px] font-black text-cyan-400 tracking-[0.2em] hover:bg-cyan-500/20 transition-all flex items-center gap-2 group"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 group-hover:animate-ping" />
+            PROGNOSIS
+          </button>
+
+          <button
+            onClick={() => {
+              // Forced demo data for simulation verification
+              setScanData(prev => ({
+                ...prev,
+                prognosis: {
+                  timeline: Array.from({ length: 46 }, (_, i) => ({
+                    day: i * 2,
+                    score: Math.max(10, 80 - (i * 2)),
+                    interventionScore: Math.min(95, 80 + (i * 0.5)),
+                    signals: i === 15 ? ["The Drift", "Build time +12%"] : i === 30 ? ["The Threshold", "Test flakiness"] : i === 45 ? ["The Crisis", "Death spiral"] : [],
+                    costToFix: Math.round(5 + (i * 1.5)),
+                    burnoutRisk: Math.min(100, i * 4)
+                  })),
+                  currentScore: 80,
+                  atRiskContributor: { login: 'priya-singh', impact: 'Sole owner of authentication system' },
+                  compoundingCostRatio: 10
+                }
+              }));
+              setTimeout(() => document.getElementById('prognosis-simulation')?.scrollIntoView({ behavior: 'smooth' }), 100);
+            }}
+            className="px-3 py-1 rounded-full bg-black/40 border border-white/10 text-[9px] font-black text-white/40 tracking-[0.2em] hover:text-white transition-all"
+          >
+            FORCE_SIM
+          </button>
+
           <div className="h-4 w-[1px] bg-white/10 mx-1" />
 
           <button onClick={() => navigate('/')} className="text-[10px] font-mono text-cyan-700 hover:text-cyan-400 transition-colors uppercase tracking-widest hidden sm:block">New Scan</button>
@@ -382,11 +426,13 @@ export default function DischargeSummary() {
         )}
 
         {/* The Simulation — Forward Prognosis */}
-        {prognosis && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }} className="mt-8">
-            <PrognosisSimulator data={prognosis} currentScore={corpusScore?.dxScore} />
-          </motion.div>
-        )}
+        <div id="prognosis-simulation">
+          {prognosis && (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }} className="mt-8">
+              <PrognosisSimulator data={prognosis} currentScore={corpusScore?.dxScore} />
+            </motion.div>
+          )}
+        </div>
 
 
         {/* Prescription */}
