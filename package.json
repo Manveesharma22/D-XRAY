@@ -1,6 +1,6 @@
 {
     "name": "dx-ray-monorepo",
-    "version": "1.0.0",
+    "version": "2.2.0-clinical-final",
     "private": true,
     "scripts": {
         "install:all": "npm install && cd server && npm install && cd ../client && npm install",
