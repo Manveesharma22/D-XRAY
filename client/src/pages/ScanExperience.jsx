@@ -597,11 +597,18 @@ export default function ScanExperience() {
                 {/* === SKELETON (Animated) === */}
                 <motion.g
                   animate={{
-                    opacity: [0.7, 1, 0.7],
-                    scale: [0.98, 1, 0.98]
+                    opacity: [0.75, 1, 0.75],
+                    scale: [0.99, 1, 0.99]
                   }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  style={{ originX: "120px", originY: "200px" }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  style={{
+                    transformOrigin: "center",
+                    transformBox: "fill-box"
+                  }}
                 >
                   {/* Skull */}
                   <ellipse cx="120" cy="150" rx="16" ry="17" stroke="#00e5ff" strokeWidth="2" fill="rgba(0,229,255,0.05)" />
