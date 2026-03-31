@@ -216,6 +216,7 @@ export default function ScanExperience() {
     ws.onerror = () => setError('Connection error. Is the server running?');
     ws.onclose = () => console.log('WS disconnected');
     wsRef.current = ws;
+    return ws;
   }, [handleMessage]);
 
   const startScan = () => {
@@ -239,12 +240,22 @@ export default function ScanExperience() {
     setShowDefibrillator(false);
     setShowSimulation(false);
     setScanning(true); setError('');
-    connectWS();
-    setTimeout(() => {
-      if (wsRef.current?.readyState === 1) {
-        wsRef.current.send(JSON.stringify({ type: 'start_scan', repoUrl: repoUrl.trim() }));
+    const ws = connectWS();
+
+    // Guaranteed delivery: wait for connection
+    const sendWhenReady = () => {
+      if (ws && ws.readyState === 1) {
+        ws.send(JSON.stringify({ type: 'start_scan', repoUrl: repoUrl.trim() }));
+      } else if (ws) {
+        // Wait for onopen
+        const originalOnOpen = ws.onopen;
+        ws.onopen = (e) => {
+          if (originalOnOpen) originalOnOpen(e);
+          ws.send(JSON.stringify({ type: 'start_scan', repoUrl: repoUrl.trim() }));
+        };
       }
-    }, 600);
+    };
+    sendWhenReady();
   };
 
   const handleConfess = (confession) => {
