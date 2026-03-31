@@ -753,7 +753,7 @@ app.post('/api/memorial/:repoSlug/flower', express.json(), (req, res) => {
 // Single Page Application catch-all route
 // IMPORTANT: This must be after all API routes
 if (fs.existsSync(DIST_PATH)) {
-  app.use((req, res) => {
+  app.get(/^\/.*$/, (req, res) => {
     res.sendFile(path.join(DIST_PATH, 'index.html'));
   });
 }
