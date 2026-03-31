@@ -58,13 +58,13 @@ class GitHubClient {
   }
 
   async getCommitDetail(owner, repo, sha) {
-    const { data } = await axios.get(`${GITHUB_API}/repos/${owner}/${repo}/commits/${sha}`, { headers: this.headers });
+    const { data } = await this.api.get(`/repos/${owner}/${repo}/commits/${sha}`);
     return data;
   }
 
   async getContents(owner, repo, path = '') {
     try {
-      const { data } = await axios.get(`${GITHUB_API}/repos/${owner}/${repo}/contents/${path}`, { headers: this.headers });
+      const { data } = await this.api.get(`/repos/${owner}/${repo}/contents/${path}`);
       return data;
     } catch {
       return null;
@@ -85,13 +85,13 @@ class GitHubClient {
   }
 
   async getPullRequests(owner, repo, state = 'all', perPage = 30) {
-    const { data } = await axios.get(`${GITHUB_API}/repos/${owner}/${repo}/pulls?state=${state}&per_page=${perPage}&sort=created&direction=desc`, { headers: this.headers });
+    const { data } = await this.api.get(`/repos/${owner}/${repo}/pulls?state=${state}&per_page=${perPage}&sort=created&direction=desc`);
     return data;
   }
 
   async getWorkflows(owner, repo) {
     try {
-      const { data } = await axios.get(`${GITHUB_API}/repos/${owner}/${repo}/actions/workflows`, { headers: this.headers });
+      const { data } = await this.api.get(`/repos/${owner}/${repo}/actions/workflows`);
       return data;
     } catch {
       return { workflows: [] };
@@ -100,7 +100,7 @@ class GitHubClient {
 
   async getWorkflowRuns(owner, repo, perPage = 30) {
     try {
-      const { data } = await axios.get(`${GITHUB_API}/repos/${owner}/${repo}/actions/runs?per_page=${perPage}`, { headers: this.headers });
+      const { data } = await this.api.get(`/repos/${owner}/${repo}/actions/runs?per_page=${perPage}`);
       return data;
     } catch {
       return { workflow_runs: [] };
@@ -108,13 +108,13 @@ class GitHubClient {
   }
 
   async getLanguages(owner, repo) {
-    const { data } = await axios.get(`${GITHUB_API}/repos/${owner}/${repo}/languages`, { headers: this.headers });
+    const { data } = await this.api.get(`/repos/${owner}/${repo}/languages`);
     return data;
   }
 
   async getPackageJson(owner, repo) {
     try {
-      const { data } = await axios.get(`${GITHUB_API}/repos/${owner}/${repo}/contents/package.json`, { headers: this.headers });
+      const { data } = await this.api.get(`/repos/${owner}/${repo}/contents/package.json`);
       const content = Buffer.from(data.content, 'base64').toString('utf-8');
       return JSON.parse(content);
     } catch {
@@ -124,7 +124,7 @@ class GitHubClient {
 
   async getFileContent(owner, repo, path) {
     try {
-      const { data } = await axios.get(`${GITHUB_API}/repos/${owner}/${repo}/contents/${path}`, { headers: this.headers });
+      const { data } = await this.api.get(`/repos/${owner}/${repo}/contents/${path}`);
       return Buffer.from(data.content, 'base64').toString('utf-8');
     } catch {
       return null;
@@ -133,7 +133,7 @@ class GitHubClient {
 
   async getFileLastCommit(owner, repo, path) {
     try {
-      const { data } = await axios.get(`${GITHUB_API}/repos/${owner}/${repo}/commits?path=${path}&per_page=1`, { headers: this.headers });
+      const { data } = await this.api.get(`/repos/${owner}/${repo}/commits?path=${path}&per_page=1`);
       return data[0] || null;
     } catch {
       return null;
@@ -142,7 +142,7 @@ class GitHubClient {
 
   async getReadme(owner, repo) {
     try {
-      const { data } = await axios.get(`${GITHUB_API}/repos/${owner}/${repo}/readme`, { headers: this.headers });
+      const { data } = await this.api.get(`/repos/${owner}/${repo}/readme`);
       return Buffer.from(data.content, 'base64').toString('utf-8');
     } catch {
       return null;
@@ -151,7 +151,7 @@ class GitHubClient {
 
   async getAuthenticatedUser() {
     try {
-      const { data } = await axios.get(`${GITHUB_API}/user`, { headers: this.headers });
+      const { data } = await this.api.get(`/user`);
       return data;
     } catch (err) {
       console.error('getAuthenticatedUser failed:', err.message);
