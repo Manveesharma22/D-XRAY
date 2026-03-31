@@ -14,6 +14,13 @@ class GitHubClient {
     } else {
       console.warn('⚠ No GITHUB_TOKEN set — rate limited to 60 req/hr. Set it in server/.env');
     }
+
+    // Configure axios instance with 15s timeout
+    this.api = axios.create({
+      baseURL: GITHUB_API,
+      headers: this.headers,
+      timeout: 15000
+    });
   }
 
   parseRepoUrl(url) {
@@ -34,19 +41,19 @@ class GitHubClient {
   }
 
   async getRepoInfo(owner, repo) {
-    const { data } = await axios.get(`${GITHUB_API}/repos/${owner}/${repo}`, { headers: this.headers });
+    const { data } = await this.api.get(`/repos/${owner}/${repo}`);
     return data;
   }
 
   async getContributors(owner, repo) {
-    const { data } = await axios.get(`${GITHUB_API}/repos/${owner}/${repo}/contributors?per_page=30`, { headers: this.headers });
+    const { data } = await this.api.get(`/repos/${owner}/${repo}/contributors?per_page=30`);
     return data;
   }
 
   async getCommits(owner, repo, since = null, perPage = 100) {
     const params = { per_page: perPage };
     if (since) params.since = since;
-    const { data } = await axios.get(`${GITHUB_API}/repos/${owner}/${repo}/commits`, { headers: this.headers, params });
+    const { data } = await this.api.get(`/repos/${owner}/${repo}/commits`, { params });
     return data;
   }
 
@@ -65,8 +72,16 @@ class GitHubClient {
   }
 
   async getTree(owner, repo, sha) {
-    const { data } = await axios.get(`${GITHUB_API}/repos/${owner}/${repo}/git/trees/${sha}?recursive=1`, { headers: this.headers });
-    return data;
+    try {
+      // Try recursive first (High fidelity)
+      const { data } = await this.api.get(`/repos/${owner}/${repo}/git/trees/${sha}?recursive=1`);
+      return data;
+    } catch (err) {
+      console.warn(`[TREE_SAFEGUARD] Recursive tree failed for ${owner}/${repo} (${err.message}). Falling back to root-level scan.`);
+      // Fallback to non-recursive root (Low fidelity but stable for large repos)
+      const { data } = await this.api.get(`/repos/${owner}/${repo}/git/trees/${sha}`);
+      return data;
+    }
   }
 
   async getPullRequests(owner, repo, state = 'all', perPage = 30) {
