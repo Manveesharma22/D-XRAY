@@ -119,7 +119,9 @@ async function runScan(ws, repoUrl, options = {}) {
   const gh = new GitHubClient(options.githubToken);
 
   try {
+    console.log(`[SCAN_INIT] Starting scan for: ${repoUrl}`);
     const { owner, repo } = gh.parseRepoUrl(repoUrl);
+    console.log(`[SCAN_TARGET] Identified: ${owner}/${repo}`);
 
     // Check cache first
     const cached = getCachedScan(owner, repo);
@@ -195,7 +197,10 @@ async function runScan(ws, repoUrl, options = {}) {
     sendWS(ws, 'act', { act: 1, name: 'Intake', message: 'Admitting patient...' });
     await delay(400);
 
+    console.log(`[ACT_1_INTAKE] Fetching repo info for ${owner}/${repo}...`);
     const repoInfo = await gh.getRepoInfo(owner, repo);
+    console.log(`[ACT_1_SUCCESS] Data retrieved for ${repoInfo.full_name}`);
+
     const patient = {
       name: repoInfo.full_name,
       dateOfBirth: repoInfo.created_at,
@@ -217,22 +222,24 @@ async function runScan(ws, repoUrl, options = {}) {
     sendWS(ws, 'xray_beam', { phase: 'sweep_1', message: 'Scanning file structure...' });
     await delay(400);
 
+    console.log(`[ACT_2_XRAY] Parallel polling initiated for all tracks...`);
     const [tree, commits, contributors, pullRequests, workflows, workflowRuns, languages, packageJson, readme, issues] = await Promise.all([
-      gh.getTree(owner, repo, repoInfo.default_branch).catch(() => ({ tree: [] })),
-      gh.getCommits(owner, repo, null, 100).catch(() => []),
-      gh.getContributors(owner, repo).catch(() => []),
-      gh.getPullRequests(owner, repo, 'all', 30).catch(() => []),
-      gh.getWorkflows(owner, repo).catch(() => ({ workflows: [] })),
-      gh.getWorkflowRuns(owner, repo, 30).catch(() => ({ workflow_runs: [] })),
-      gh.getLanguages(owner, repo).catch(() => ({})),
-      gh.getPackageJson(owner, repo).catch(() => null),
-      gh.getReadme(owner, repo).catch(() => null),
-      gh.getIssues ? gh.getIssues(owner, repo, 'open', 20).catch(() => []) : Promise.resolve([])
+      gh.getTree(owner, repo, repoInfo.default_branch).catch(e => { console.warn(`[TREE_FAIL] ${e.message}`); return { tree: [] }; }),
+      gh.getCommits(owner, repo, null, 100).catch(e => { console.warn(`[COMMITS_FAIL] ${e.message}`); return []; }),
+      gh.getContributors(owner, repo).catch(e => { console.warn(`[CONTRIB_FAIL] ${e.message}`); return []; }),
+      gh.getPullRequests(owner, repo, 'all', 30).catch(e => { console.warn(`[PR_FAIL] ${e.message}`); return []; }),
+      gh.getWorkflows(owner, repo).catch(e => { console.warn(`[WORKFLOW_FAIL] ${e.message}`); return { workflows: [] }; }),
+      gh.getWorkflowRuns(owner, repo, 30).catch(e => { console.warn(`[RUN_FAIL] ${e.message}`); return { workflow_runs: [] }; }),
+      gh.getLanguages(owner, repo).catch(e => { console.warn(`[LANG_FAIL] ${e.message}`); return {}; }),
+      gh.getPackageJson(owner, repo).catch(e => { console.warn(`[PKGJ_FAIL] ${e.message}`); return null; }),
+      gh.getReadme(owner, repo).catch(e => { console.warn(`[README_FAIL] ${e.message}`); return null; }),
+      gh.getIssues ? gh.getIssues(owner, repo, 'open', 20).catch(e => { console.warn(`[ISSUE_FAIL] ${e.message}`); return []; }) : Promise.resolve([])
     ]);
 
+    console.log(`[ACT_2_SUCCESS] All diagnostic data points secured.`);
     sendWS(ws, 'xray_beam', { phase: 'sweep_1_done', message: 'File structure mapped' });
     await delay(200);
-    sendWS(ws, 'xray_beam', { phase: 'sweep_2', message: 'Running all 8 diagnostic tracks...' });
+    sendWS(ws, 'xray_beam', { phase: 'sweep_2', message: 'Initiating deep analysis...' });
 
     // Run ALL 8 CORE TRACKS IN PARALLEL
     const ciAnalyzer = new CIAnalyzer();

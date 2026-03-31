@@ -17,9 +17,20 @@ class GitHubClient {
   }
 
   parseRepoUrl(url) {
-    const match = url.match(/github\.com\/([^\/]+)\/([^\/\.]+)/);
-    if (!match) throw new Error('Invalid GitHub URL');
-    return { owner: match[1], repo: match[2] };
+    if (!url) throw new Error('Repository identifier is missing');
+
+    // Normalize: remove trailing .git and trailing slashes
+    const cleanUrl = url.trim().replace(/\.git$/, '').replace(/\/$/, '');
+
+    // Pattern 1: Full GitHub URL
+    const fullMatch = cleanUrl.match(/github\.com\/([^\/]+)\/([^\/]+)/);
+    if (fullMatch) return { owner: fullMatch[1], repo: fullMatch[2] };
+
+    // Pattern 2: Shorthand owner/repo
+    const shortMatch = cleanUrl.match(/^([^\/]+)\/([^\/]+)$/);
+    if (shortMatch) return { owner: shortMatch[1], repo: shortMatch[2] };
+
+    throw new Error('Invalid GitHub format. Use user/repo or the full URL.');
   }
 
   async getRepoInfo(owner, repo) {

@@ -220,7 +220,10 @@ export default function ScanExperience() {
 
   const startScan = () => {
     if (!repoUrl.trim()) return;
-    if (!repoUrl.includes('github.com')) { setError('Please enter a valid GitHub repository URL'); return; }
+    if (!repoUrl.includes('/') || repoUrl.length < 3) {
+      setError('Please enter a valid GitHub repository (e.g., owner/repo or full URL)');
+      return;
+    }
     if (wsRef.current) { wsRef.current.close(); wsRef.current = null; }
     setScanData({
       patient: null, tracks: {}, debtMap: null, deadCode: null, corpusScore: null,
