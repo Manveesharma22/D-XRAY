@@ -594,63 +594,71 @@ export default function ScanExperience() {
                 {/* Film panel background */}
                 <rect x="30" y="128" width="180" height="142" rx="8" fill="rgba(0,6,16,1)" stroke="rgba(0,229,255,0.55)" strokeWidth="1.5" />
 
-                {/* === SKELETON (fully hardcoded, no filters) === */}
+                {/* === SKELETON (Animated) === */}
+                <motion.g
+                  animate={{
+                    opacity: [0.7, 1, 0.7],
+                    scale: [0.98, 1, 0.98]
+                  }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  style={{ originX: "120px", originY: "200px" }}
+                >
+                  {/* Skull */}
+                  <ellipse cx="120" cy="150" rx="16" ry="17" stroke="#00e5ff" strokeWidth="2" fill="rgba(0,229,255,0.05)" />
+                  <path d="M107 160 Q120 168 133 160" stroke="#00e5ff" strokeWidth="1.5" fill="none" strokeLinecap="round" />
 
-                {/* Skull */}
-                <ellipse cx="120" cy="150" rx="16" ry="17" stroke="#00e5ff" strokeWidth="2" fill="rgba(0,229,255,0.05)" />
-                <path d="M107 160 Q120 168 133 160" stroke="#00e5ff" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+                  {/* Clavicles */}
+                  <path d="M75 170 Q98 163 119 167" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" />
+                  <path d="M165 170 Q142 163 121 167" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" />
 
-                {/* Clavicles */}
-                <path d="M75 170 Q98 163 119 167" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" />
-                <path d="M165 170 Q142 163 121 167" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" />
+                  {/* Spine */}
+                  <rect x="118" y="167" width="4" height="74" rx="2" fill="#00e5ff" opacity="0.9" />
 
-                {/* Spine */}
-                <rect x="118" y="167" width="4" height="74" rx="2" fill="#00e5ff" opacity="0.9" />
+                  {/* Vertebrae — left side */}
+                  <rect x="108" y="169" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                  <rect x="108" y="178" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                  <rect x="108" y="187" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                  <rect x="108" y="196" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                  <rect x="108" y="205" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                  <rect x="108" y="214" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                  <rect x="108" y="223" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
 
-                {/* Vertebrae — left side */}
-                <rect x="108" y="169" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
-                <rect x="108" y="178" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
-                <rect x="108" y="187" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
-                <rect x="108" y="196" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
-                <rect x="108" y="205" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
-                <rect x="108" y="214" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
-                <rect x="108" y="223" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                  {/* Vertebrae — right side */}
+                  <rect x="122" y="169" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                  <rect x="122" y="178" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                  <rect x="122" y="187" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                  <rect x="122" y="196" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                  <rect x="122" y="205" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                  <rect x="122" y="214" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                  <rect x="122" y="223" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
 
-                {/* Vertebrae — right side */}
-                <rect x="122" y="169" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
-                <rect x="122" y="178" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
-                <rect x="122" y="187" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
-                <rect x="122" y="196" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
-                <rect x="122" y="205" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
-                <rect x="122" y="214" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
-                <rect x="122" y="223" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                  {/* Ribs — left */}
+                  <path d="M119 177 Q95 182 80 190" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.9" />
+                  <path d="M119 186 Q92 192 77 200" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.85" />
+                  <path d="M119 195 Q90 202 76 211" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.8" />
+                  <path d="M119 204 Q89 212 77 222" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.75" />
+                  <path d="M119 213 Q90 222 80 232" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.65" />
 
-                {/* Ribs — left */}
-                <path d="M119 177 Q95 182 80 190" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.9" />
-                <path d="M119 186 Q92 192 77 200" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.85" />
-                <path d="M119 195 Q90 202 76 211" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.8" />
-                <path d="M119 204 Q89 212 77 222" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.75" />
-                <path d="M119 213 Q90 222 80 232" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.65" />
+                  {/* Ribs — right */}
+                  <path d="M121 177 Q145 182 160 190" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.9" />
+                  <path d="M121 186 Q148 192 163 200" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.85" />
+                  <path d="M121 195 Q150 202 164 211" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.8" />
+                  <path d="M121 204 Q151 212 163 222" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.75" />
+                  <path d="M121 213 Q150 222 160 232" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.65" />
 
-                {/* Ribs — right */}
-                <path d="M121 177 Q145 182 160 190" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.9" />
-                <path d="M121 186 Q148 192 163 200" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.85" />
-                <path d="M121 195 Q150 202 164 211" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.8" />
-                <path d="M121 204 Q151 212 163 222" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.75" />
-                <path d="M121 213 Q150 222 160 232" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.65" />
-
-                {/* Pelvis arc */}
-                <path d="M90 242 Q120 234 150 242" stroke="#00e5ff" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.75" />
-                <path d="M90 242 Q86 252 94 258" stroke="#00e5ff" strokeWidth="1.8" fill="none" strokeLinecap="round" opacity="0.5" />
-                <path d="M150 242 Q154 252 146 258" stroke="#00e5ff" strokeWidth="1.8" fill="none" strokeLinecap="round" opacity="0.5" />
+                  {/* Pelvis arc */}
+                  <path d="M90 242 Q120 234 150 242" stroke="#00e5ff" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.75" />
+                  <path d="M90 242 Q86 252 94 258" stroke="#00e5ff" strokeWidth="1.8" fill="none" strokeLinecap="round" opacity="0.5" />
+                  <path d="M150 242 Q154 252 146 258" stroke="#00e5ff" strokeWidth="1.8" fill="none" strokeLinecap="round" opacity="0.5" />
+                </motion.g>
 
                 {/* Red fracture */}
                 <path d="M103 191 L99 200 L107 199" stroke="#ff3c3c" strokeWidth="2" fill="none" />
 
-                {/* Animated scan beam */}
-                <motion.rect x="30" y="48" width="180" height="6" rx="3" fill="url(#scanBeam)"
-                  initial={{ y: 48 }} animate={{ y: [48, 128, 48], opacity: [0, 0.9, 0] }}
-                  transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }} />
+                {/* Animated scan beam — now oriented to the skeleton box */}
+                <motion.rect x="30" y="132" width="180" height="4" rx="2" fill="url(#scanBeam)"
+                  animate={{ y: [132, 265, 132], opacity: [0.3, 1, 0.3] }}
+                  transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }} />
 
                 {/* Emitter glow */}
                 <motion.ellipse cx="120" cy="48" rx="16" ry="4" fill="rgba(0,229,255,0.15)"
