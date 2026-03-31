@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-export default function TheMirror({ data }) {
+export default function TheMirror({ data, onClose }) {
     if (!data) return null;
 
     const { user, heartbeat, shadow, fingerprint, debtSignature, burnout } = data;
@@ -30,6 +30,17 @@ export default function TheMirror({ data }) {
             }}
             className="custom-scrollbar"
         >
+            {/* Close button */}
+            <button
+                onClick={onClose}
+                className="absolute top-4 right-4 w-6 h-6 rounded-full border border-cyan-500/20 flex items-center justify-center text-cyan-500/40 hover:text-cyan-400 hover:border-cyan-400/40 transition-all z-50 bg-black/20"
+                title="Close Reflection"
+            >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+
             {/* Mourning / Clinical Border */}
             <div style={{ position: 'absolute', inset: 8, border: '1px solid rgba(0, 229, 255, 0.05)', borderRadius: '12px', pointerEvents: 'none' }} />
 

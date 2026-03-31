@@ -25,6 +25,7 @@ import BiologicalShadow from '../components/BiologicalShadow';
 import SoundLayer from '../components/SoundLayer';
 import LastCommit from '../components/LastCommit';
 import PrognosisSimulator from '../components/PrognosisSimulator';
+import { simulatePrognosis } from '../utils/prognosisEngine';
 import { config } from '../api-config';
 
 const TRACK_NAMES = {
@@ -46,39 +47,98 @@ export default function DischargeSummary() {
   const [shareUrl, setShareUrl] = useState('');
   const [mirrorSpoken, setMirrorSpoken] = useState(false);
   const [isRotating, setIsRotating] = useState(false);
+  const [showMirror, setShowMirror] = useState(false);
   const [showMourning, setShowMourning] = useState(false);
+  const [mourningDismissed, setMourningDismissed] = useState(false);
+  const [showPrognosis, setShowPrognosis] = useState(false);
 
-  const forceMirror = () => {
-    setScanData(prev => ({
-      ...prev,
-      mirror: {
-        user: { login: 'nexus_subject', name: 'OVERRIDE PROTOCOL', avatar: 'https://github.com/github.png' },
-        heartbeat: { hourDistribution: new Array(24).fill(2), peakHour: 14, type: 'Pragmatist', perceivedVsReal: 'SYSTEM DIAGNOSTIC: This is a forced reflection for UI verification.' },
-        shadow: { gravity: 'High', description: 'Diagnostic test of the influence layer.' },
-        fingerprint: { words: ['Diagnostic', 'Synthetic', 'Force'], description: 'System-generated stylistic mark.' },
-        debtSignature: { role: 'The Protocol', description: 'Automated debt reconciliation active.' },
-        burnout: { risk: 'Stable', description: 'System integrity holding.' }
-      }
-    }));
+  const toggleMirror = () => {
+    if (!scanData?.mirror) {
+      setScanData(prev => ({
+        ...prev,
+        mirror: {
+          user: { login: 'nexus_subject', name: 'OVERRIDE PROTOCOL', avatar: 'https://github.com/github.png' },
+          heartbeat: { hourDistribution: new Array(24).fill(2), peakHour: 14, type: 'Pragmatist', perceivedVsReal: 'SYSTEM DIAGNOSTIC: This is a forced reflection for UI verification.' },
+          shadow: { gravity: 'High', description: 'Diagnostic test of the influence layer.' },
+          fingerprint: { words: ['Diagnostic', 'Synthetic', 'Force'], description: 'System-generated stylistic mark.' },
+          debtSignature: { role: 'The Protocol', description: 'Automated debt reconciliation active.' },
+          burnout: { risk: 'Stable', description: 'System integrity holding.' }
+        }
+      }));
+    }
+    setShowMirror(prev => !prev);
+    setIsRotating(prev => !prev);
   };
 
   useEffect(() => {
     // Use localStorage so data persists when opened in a new tab
-    const stored = localStorage.getItem('dxray_scan');
-    if (stored) {
-      try {
-        setScanData(JSON.parse(stored));
-      } catch (e) {
-        console.error('Failed to parse scan data');
+    const loadStored = () => {
+      const stored = localStorage.getItem('dxray_scan');
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          setScanData(parsed);
+        } catch (e) {
+          console.error('Failed to parse scan data');
+        }
       }
-    }
+    };
+
+    loadStored();
     setLoading(false);
+
+    // Sync across tabs if ScanExperience updates the data
+    const handleStorageChange = (e) => {
+      if (e.key === 'dxray_scan') loadStored();
+    };
+    window.addEventListener('storage', handleStorageChange);
+
+    // FAIL-SAFE POLLING: If prognosis is missing, poll every 2.5s to "self-heal"
+    const pollTimer = setInterval(() => {
+      const currentStored = localStorage.getItem('dxray_scan');
+      if (currentStored) {
+        try {
+          const parsed = JSON.parse(currentStored);
+          // Only update if we were missing it but now have it (use functional update to avoid stale closure)
+          setScanData(prev => {
+            if (!prev?.prognosis?.timeline && parsed.prognosis?.timeline) return parsed;
+            return prev;
+          });
+        } catch (e) { }
+      }
+    }, 2500);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(pollTimer);
+    };
   }, []);
 
+  // Fail-safe: Calculate prognosis locally if it's missing but we have baseline data
+  useEffect(() => {
+    if (scanData?.corpusScore && !scanData?.prognosis?.timeline) {
+      console.log('PrognosisProtocol: Missing data detected. Initializing client-side engine.');
+      try {
+        const generated = simulatePrognosis(scanData);
+        if (generated) {
+          const updated = { ...scanData, prognosis: generated };
+          setScanData(updated);
+          // Persist immediately to prevent polling-override
+          try { localStorage.setItem('dxray_scan', JSON.stringify(updated)); } catch (e) { }
+        }
+      } catch (e) {
+        console.error('Prognosis Engine failed:', e);
+      }
+    }
+  }, [scanData?.corpusScore?.dxScore, !!scanData?.prognosis?.timeline]);
+
+  // The Mirror: Automatic reflection trigger
   useEffect(() => {
     if (scanData?.mirror && !mirrorSpoken) {
+      console.log('TheMirror Protocol: Subject detected. Initializing reflection.');
       const timer = setTimeout(() => {
         setIsRotating(true);
+        setShowMirror(true);
         if ('speechSynthesis' in window) {
           window.speechSynthesis.cancel();
           const utterance = new SpeechSynthesisUtterance("We also scanned the person who submitted this repo.");
@@ -93,6 +153,14 @@ export default function DischargeSummary() {
       return () => clearTimeout(timer);
     }
   }, [scanData?.mirror, mirrorSpoken]);
+
+  // Mourning Mode: Automatic trigger for ghostly repos
+  useEffect(() => {
+    if (scanData?.mourning?.triggered && !showMourning && !mourningDismissed) {
+      console.log('MourningProtocol: Eternal Echo detected. Initializing mourning mode.');
+      setShowMourning(true);
+    }
+  }, [scanData?.mourning, showMourning, mourningDismissed]);
 
   const handleConfess = (confession) => {
     const c = confession.toLowerCase();
@@ -184,7 +252,10 @@ export default function DischargeSummary() {
             <SoundLayer mode="mourning" />
             <LastCommit
               mourningData={scanData?.mourning}
-              onClose={() => setShowMourning(false)}
+              onClose={() => {
+                setShowMourning(false);
+                setMourningDismissed(true);
+              }}
             />
           </motion.div>
         )}
@@ -193,12 +264,12 @@ export default function DischargeSummary() {
       <SoundLayer isMirrorActive={isRotating} />
 
       {/* Sticky Header */}
-      <header className="p-4 border-b border-white/5 flex justify-between items-center bg-black/40 backdrop-blur-md sticky top-0 z-40">
+      <header className="p-4 border-b border-white/5 flex flex-wrap justify-between items-center gap-4 bg-black/40 backdrop-blur-md sticky top-0 z-[101]">
         <div className="flex items-center gap-3">
           <div
-            onClick={forceMirror}
-            className="w-10 h-10 bg-cyan-500/10 border border-cyan-500/20 rounded-xl flex items-center justify-center text-cyan-400 font-black tracking-tighter text-xl shadow-[0_0_20px_rgba(0,229,255,0.1)] cursor-pointer hover:border-cyan-400/40 transition-all flex-shrink-0"
-            title="D-XRAY Clinical Instance"
+            onClick={toggleMirror}
+            className="w-10 h-10 bg-cyan-500/10 border border-cyan-500/20 rounded-xl flex items-center justify-center text-cyan-400 font-black tracking-tighter text-xl shadow-[0_0_20px_rgba(0,229,255,0.1)] flex-shrink-0 cursor-pointer hover:border-cyan-400/50 transition-all font-technical"
+            title="Toggle Subject Reflection"
           >
             DX
           </div>
@@ -207,7 +278,23 @@ export default function DischargeSummary() {
             <div className="text-xs font-bold text-white/70 leading-none">Discharge Summary</div>
           </div>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 flex-wrap">
+          <button
+            onClick={() => setShowPrognosis(!showPrognosis)}
+            className={`px-3 py-1 rounded-full text-[9px] font-bold tracking-widest border transition-all flex items-center gap-2 ${showPrognosis ? 'border-cyan-500/50 text-cyan-400 bg-cyan-500/5' : 'border-white/10 text-white/30 hover:border-white/50'}`}
+          >
+            <span className={`w-1.5 h-1.5 rounded-full ${showPrognosis ? 'bg-cyan-500 animate-pulse' : 'bg-white/20'}`} />
+            PROGNOSIS
+          </button>
+
+          <button
+            onClick={toggleMirror}
+            className={`px-3 py-1 rounded-full text-[9px] font-bold tracking-widest border transition-all flex items-center gap-2 ${showMirror ? 'border-cyan-500/50 text-cyan-400 bg-cyan-500/5' : 'border-white/10 text-white/30 hover:border-white/50'}`}
+          >
+            <span className={`w-1.5 h-1.5 rounded-full ${showMirror ? 'bg-cyan-500 animate-pulse' : 'bg-white/20'}`} />
+            THE_MIRROR
+          </button>
+
           <button
             onClick={() => {
               if (!scanData?.mourning) {
@@ -223,9 +310,9 @@ export default function DischargeSummary() {
               }
               setShowMourning(true);
             }}
-            className={`px-3 py-1 rounded-full text-[9px] font-bold tracking-widest border transition-all flex items-center gap-2 ${scanData?.mourning ? 'border-orange-500/50 text-orange-400 bg-orange-500/5' : 'border-white/10 text-white/30 hover:border-white/50'}`}
+            className={`px-3 py-1 rounded-full text-[9px] font-bold tracking-widest border transition-all flex items-center gap-2 ${showMourning ? 'border-orange-500/50 text-orange-400 bg-orange-500/5' : 'border-white/10 text-white/30 hover:border-white/50'}`}
           >
-            <span className={`w-1.5 h-1.5 rounded-full ${scanData?.mourning ? 'bg-orange-500 animate-pulse' : 'bg-white/20'}`} />
+            <span className={`w-1.5 h-1.5 rounded-full ${showMourning || scanData?.mourning ? 'bg-orange-500 animate-pulse' : 'bg-white/20'}`} />
             MOURNING_MODE
           </button>
 
@@ -257,6 +344,52 @@ export default function DischargeSummary() {
         transition={{ duration: 2.5, ease: 'easeInOut' }}
         className="max-w-7xl mx-auto px-4 sm:px-6 py-8"
       >
+        {/* Inline Prognosis Protocol */}
+        <AnimatePresence>
+          {showPrognosis && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="overflow-hidden mb-12"
+            >
+              <div className="p-1 rounded-3xl border border-cyan-500/20 bg-cyan-500/5">
+                <div className="text-[10px] font-mono text-cyan-500/40 py-2 text-center tracking-[0.3em] uppercase">Simulation Layer Active</div>
+                {prognosis?.timeline ? (
+                  <PrognosisSimulator
+                    data={prognosis}
+                    currentScore={corpusScore?.dxScore}
+                    onClose={() => setShowPrognosis(false)}
+                  />
+                ) : (
+                  <div className="py-20 text-center flex flex-col items-center">
+                    <div className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-ping mb-6 mx-auto shadow-[0_0_15px_rgba(0,229,255,0.8)]" />
+                    <p className="text-[10px] font-mono text-cyan-500/40 tracking-[0.3em] uppercase mb-4">SYNCHRONIZING_FUTURE_COORDINATES...</p>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log('PrognosisProtocol: Manual override triggered.');
+                        try {
+                          const generated = simulatePrognosis(scanData);
+                          if (generated) {
+                            setScanData(prev => ({ ...prev, prognosis: generated }));
+                          }
+                        } catch (err) {
+                          console.error('Manual Simulation failed:', err);
+                        }
+                      }}
+                      className="px-6 py-2 rounded-full border border-cyan-500/20 text-[10px] font-bold text-cyan-400/60 hover:bg-cyan-500/10 hover:text-cyan-400 hover:border-cyan-500/50 transition-all uppercase tracking-widest bg-black/20 backdrop-blur-sm z-50 relative"
+                    >
+                      Force_Initialize_Simulation
+                    </button>
+                    <p className="text-[8px] font-mono text-white/10 mt-6 uppercase tracking-[0.2em]">Secondary Protocol: Client-Side Simulation Ready</p>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Results header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8">
           <div className="text-[10px] font-mono text-cyan-600/40 tracking-[0.3em] uppercase mb-2">Discharge Summary</div>
@@ -351,12 +484,7 @@ export default function DischargeSummary() {
           </motion.div>
         )}
 
-        {/* The Simulation — Forward Prognosis */}
-        {prognosis && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }} className="mt-8">
-            <PrognosisSimulator data={prognosis} currentScore={corpusScore?.dxScore} />
-          </motion.div>
-        )}
+
 
         {/* Prescription */}
         {tracks && Object.keys(tracks).length >= 3 && (
@@ -567,8 +695,17 @@ export default function DischargeSummary() {
         </motion.div>
       </motion.div>
 
-      {/* THE MIRROR */}
-      {mirror && <TheMirror data={mirror} />}
+      {/* THE MIRROR — click outside to dismiss */}
+      {mirror && showMirror && (
+        <>
+          {/* Invisible full-screen backdrop — click to close */}
+          <div
+            onClick={toggleMirror}
+            style={{ position: 'fixed', inset: 0, zIndex: 99, background: 'transparent', cursor: 'default' }}
+          />
+          <TheMirror data={mirror} onClose={toggleMirror} />
+        </>
+      )}
     </div>
   );
 }

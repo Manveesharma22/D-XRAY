@@ -12,10 +12,14 @@ export default function CollaborationPulse({ data, isHealed }) {
         const canvas = canvasRef.current;
         if (!canvas || !data?.contributors?.length) return;
 
-        let isVisible = true;
+        let isVisible = false;
         const observer = new IntersectionObserver(([entry]) => {
+            const wasVisible = isVisible;
             isVisible = entry.isIntersecting;
-        }, { threshold: 0.1 });
+            if (!wasVisible && isVisible) {
+                draw(); // Restart if it becomes visible
+            }
+        }, { threshold: 0.01 });
         observer.observe(canvas);
 
         const ctx = canvas.getContext('2d');
@@ -52,6 +56,8 @@ export default function CollaborationPulse({ data, isHealed }) {
         }
 
         function draw() {
+            if (!isVisible) return;
+
             ctx.clearRect(0, 0, w, h);
 
             // Background grid
@@ -192,8 +198,7 @@ export default function CollaborationPulse({ data, isHealed }) {
             offset += 0.05;
 
             frame++;
-            if (isVisible) animRef.current = requestAnimationFrame(draw);
-            else animRef.current = setTimeout(() => { if (isVisible) draw(); }, 1000);
+            animRef.current = requestAnimationFrame(draw);
         }
 
         draw();

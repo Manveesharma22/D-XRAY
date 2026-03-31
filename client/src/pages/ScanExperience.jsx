@@ -93,6 +93,7 @@ export default function ScanExperience() {
   const [showDefibrillator, setShowDefibrillator] = useState(false);
   const [autopsyInterrupt, setAutopsyInterrupt] = useState(false);
   const [obituaryInterrupt, setObituaryInterrupt] = useState(false);
+  const [showSimulation, setShowSimulation] = useState(false);
   const autopsyRef = useRef(null);
   const obituaryRef = useRef(null);
 
@@ -150,11 +151,24 @@ export default function ScanExperience() {
       case 'emotional_timeline': setScanData(prev => ({ ...prev, emotionalTimeline: data })); break;
       case 'first_day_sim': setScanData(prev => ({ ...prev, firstDaySim: data })); break;
       case 'competitor_benchmark': setScanData(prev => ({ ...prev, competitorBenchmark: data })); break;
-      case 'prognosis_data': setScanData(prev => ({ ...prev, prognosis: data })); break;
+      case 'prognosis_data':
+        setScanData(prev => {
+          const updated = { ...prev, prognosis: data };
+          try { localStorage.setItem('dxray_scan', JSON.stringify(updated)); } catch (e) { }
+          return updated;
+        });
+        break;
       case 'mirror_scan':
         setScanData(prev => {
           const updated = { ...prev, mirror: data };
-          localStorage.setItem('dxray_scan', JSON.stringify(updated));
+          try { localStorage.setItem('dxray_scan', JSON.stringify(updated)); } catch (e) { }
+          return updated;
+        });
+        break;
+      case 'mourning_detected':
+        setScanData(prev => {
+          const updated = { ...prev, mourning: data };
+          try { localStorage.setItem('dxray_scan', JSON.stringify(updated)); } catch (e) { }
           return updated;
         });
         break;
@@ -220,6 +234,7 @@ export default function ScanExperience() {
     setActiveTrackTab(null); setShareUrl(''); setLastTrackResult(null); setScanComplete(false);
     setEkgState({ bpm: 60, pattern: 'normal', reason: '' });
     setShowDefibrillator(false);
+    setShowSimulation(false);
     setScanning(true); setError('');
     connectWS();
     setTimeout(() => {
@@ -532,67 +547,9 @@ export default function ScanExperience() {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.9, ease: 'easeOut' }}
               className="relative mx-auto"
-              style={{ width: 240, height: 220 }}
+              style={{ width: 240, height: 280 }}
             >
-              <svg width="240" height="220" viewBox="0 0 240 220" fill="none" style={{ overflow: 'visible' }}>
-                {/* Machine arm / gantry — top */}
-                <rect x="20" y="8" width="200" height="22" rx="6" fill="rgba(0,229,255,0.06)" stroke="rgba(0,229,255,0.18)" strokeWidth="1" />
-                {/* Center beam emitter */}
-                <rect x="104" y="30" width="32" height="18" rx="4" fill="rgba(0,229,255,0.10)" stroke="rgba(0,229,255,0.25)" strokeWidth="1" />
-                {/* Left support column */}
-                <rect x="28" y="28" width="10" height="110" rx="3" fill="rgba(0,229,255,0.05)" stroke="rgba(0,229,255,0.12)" strokeWidth="1" />
-                {/* Right support column */}
-                <rect x="202" y="28" width="10" height="110" rx="3" fill="rgba(0,229,255,0.05)" stroke="rgba(0,229,255,0.12)" strokeWidth="1" />
-
-                {/* X-ray film / table */}
-                <rect x="36" y="140" width="168" height="52" rx="8" fill="rgba(0,10,20,0.98)" stroke="rgba(0,229,255,0.4)" strokeWidth="1.5" />
-                {/* Film content — skeleton bones — BOOSTED OPACITY */}
-                {/* Spine */}
-                <rect x="118" y="150" width="4" height="32" rx="1" fill="rgba(0,229,255,0.7)" />
-                {[0, 1, 2, 3, 4].map(i => (
-                  <g key={i}>
-                    <rect x="122" y={153 + i * 6} width="10" height="2" rx="1" fill="rgba(0,229,255,0.5)" />
-                    <rect x="108" y={153 + i * 6} width="10" height="2" rx="1" fill="rgba(0,229,255,0.5)" />
-                  </g>
-                ))}
-                {/* Ribcage outlines */}
-                <ellipse cx="120" cy="160" rx="28" ry="16" stroke="rgba(0,229,255,0.35)" strokeWidth="1.2" fill="none" />
-                {/* Fracture hairline mark */}
-                <path d="M100 156 L97 162 L102 162" stroke="rgba(255,68,68,0.8)" strokeWidth="1" fill="none" />
-
-                {/* Animated scan beam */}
-                <motion.rect
-                  x="36" y="48"
-                  width="168" height="6"
-                  rx="3"
-                  fill="url(#scanBeam)"
-                  initial={{ y: 48, opacity: 0.8 }}
-                  animate={{ y: [48, 128, 48], opacity: [0, 0.9, 0] }}
-                  transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }}
-                />
-
-                {/* Glow around emitter when beam active */}
-                <motion.ellipse
-                  cx="120" cy="48" rx="16" ry="4"
-                  fill="rgba(0,229,255,0.15)"
-                  animate={{ opacity: [0.4, 1, 0.4] }}
-                  transition={{ duration: 3.5, repeat: Infinity }}
-                />
-
-                {/* Status lights */}
-                <motion.circle cx="52" cy="19" r="3" fill="rgba(16,185,129,0.8)"
-                  animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 1.8, repeat: Infinity }} />
-                <motion.circle cx="64" cy="19" r="3" fill="rgba(245,158,11,0.6)"
-                  animate={{ opacity: [0.3, 0.8, 0.3] }} transition={{ duration: 2.4, repeat: Infinity, delay: 0.6 }} />
-                <motion.circle cx="76" cy="19" r="3" fill="rgba(0,229,255,0.5)"
-                  animate={{ opacity: [0.2, 0.7, 0.2] }} transition={{ duration: 1.2, repeat: Infinity, delay: 0.3 }} />
-
-                {/* EKG mini-line on machine panel */}
-                <polyline
-                  points="158,19 163,19 165,13 167,24 169,19 172,19 174,14 176,22 178,19 188,19"
-                  stroke="rgba(16,185,129,0.5)" strokeWidth="1" fill="none"
-                />
-
+              <svg width="240" height="280" viewBox="0 0 240 280" fill="none" style={{ overflow: 'visible' }}>
                 <defs>
                   <linearGradient id="scanBeam" x1="0" y1="0" x2="1" y2="0">
                     <stop offset="0%" stopColor="rgba(0,229,255,0)" />
@@ -602,6 +559,88 @@ export default function ScanExperience() {
                     <stop offset="100%" stopColor="rgba(0,229,255,0)" />
                   </linearGradient>
                 </defs>
+
+                {/* Machine gantry arm */}
+                <rect x="20" y="8" width="200" height="22" rx="6" fill="rgba(0,229,255,0.06)" stroke="rgba(0,229,255,0.2)" strokeWidth="1" />
+                {/* Beam emitter box */}
+                <rect x="104" y="30" width="32" height="18" rx="4" fill="rgba(0,229,255,0.1)" stroke="rgba(0,229,255,0.3)" strokeWidth="1" />
+                {/* Left column */}
+                <rect x="28" y="28" width="10" height="100" rx="3" fill="rgba(0,229,255,0.04)" stroke="rgba(0,229,255,0.15)" strokeWidth="1" />
+                {/* Right column */}
+                <rect x="202" y="28" width="10" height="100" rx="3" fill="rgba(0,229,255,0.04)" stroke="rgba(0,229,255,0.15)" strokeWidth="1" />
+
+                {/* Status lights */}
+                <motion.circle cx="52" cy="19" r="3" fill="#10b981" animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 1.8, repeat: Infinity }} />
+                <motion.circle cx="64" cy="19" r="3" fill="#f59e0b" animate={{ opacity: [0.3, 0.8, 0.3] }} transition={{ duration: 2.4, repeat: Infinity, delay: 0.6 }} />
+                <motion.circle cx="76" cy="19" r="3" fill="#00e5ff" animate={{ opacity: [0.2, 0.7, 0.2] }} transition={{ duration: 1.2, repeat: Infinity, delay: 0.3 }} />
+
+                {/* EKG on gantry */}
+                <polyline points="158,19 163,19 165,13 167,24 169,19 172,19 174,14 176,22 178,19 188,19" stroke="rgba(16,185,129,0.6)" strokeWidth="1" fill="none" />
+
+                {/* Film panel background */}
+                <rect x="30" y="128" width="180" height="142" rx="8" fill="rgba(0,6,16,1)" stroke="rgba(0,229,255,0.55)" strokeWidth="1.5" />
+
+                {/* === SKELETON (fully hardcoded, no filters) === */}
+
+                {/* Skull */}
+                <ellipse cx="120" cy="150" rx="16" ry="17" stroke="#00e5ff" strokeWidth="2" fill="rgba(0,229,255,0.05)" />
+                <path d="M107 160 Q120 168 133 160" stroke="#00e5ff" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+
+                {/* Clavicles */}
+                <path d="M75 170 Q98 163 119 167" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" />
+                <path d="M165 170 Q142 163 121 167" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" />
+
+                {/* Spine */}
+                <rect x="118" y="167" width="4" height="74" rx="2" fill="#00e5ff" opacity="0.9" />
+
+                {/* Vertebrae — left side */}
+                <rect x="108" y="169" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                <rect x="108" y="178" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                <rect x="108" y="187" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                <rect x="108" y="196" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                <rect x="108" y="205" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                <rect x="108" y="214" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                <rect x="108" y="223" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+
+                {/* Vertebrae — right side */}
+                <rect x="122" y="169" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                <rect x="122" y="178" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                <rect x="122" y="187" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                <rect x="122" y="196" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                <rect x="122" y="205" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                <rect x="122" y="214" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+                <rect x="122" y="223" width="10" height="3" rx="1" fill="#00e5ff" opacity="0.8" />
+
+                {/* Ribs — left */}
+                <path d="M119 177 Q95 182 80 190" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.9" />
+                <path d="M119 186 Q92 192 77 200" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.85" />
+                <path d="M119 195 Q90 202 76 211" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.8" />
+                <path d="M119 204 Q89 212 77 222" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.75" />
+                <path d="M119 213 Q90 222 80 232" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.65" />
+
+                {/* Ribs — right */}
+                <path d="M121 177 Q145 182 160 190" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.9" />
+                <path d="M121 186 Q148 192 163 200" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.85" />
+                <path d="M121 195 Q150 202 164 211" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.8" />
+                <path d="M121 204 Q151 212 163 222" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.75" />
+                <path d="M121 213 Q150 222 160 232" stroke="#00e5ff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.65" />
+
+                {/* Pelvis arc */}
+                <path d="M90 242 Q120 234 150 242" stroke="#00e5ff" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.75" />
+                <path d="M90 242 Q86 252 94 258" stroke="#00e5ff" strokeWidth="1.8" fill="none" strokeLinecap="round" opacity="0.5" />
+                <path d="M150 242 Q154 252 146 258" stroke="#00e5ff" strokeWidth="1.8" fill="none" strokeLinecap="round" opacity="0.5" />
+
+                {/* Red fracture */}
+                <path d="M103 191 L99 200 L107 199" stroke="#ff3c3c" strokeWidth="2" fill="none" />
+
+                {/* Animated scan beam */}
+                <motion.rect x="30" y="48" width="180" height="6" rx="3" fill="url(#scanBeam)"
+                  initial={{ y: 48 }} animate={{ y: [48, 128, 48], opacity: [0, 0.9, 0] }}
+                  transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }} />
+
+                {/* Emitter glow */}
+                <motion.ellipse cx="120" cy="48" rx="16" ry="4" fill="rgba(0,229,255,0.15)"
+                  animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 3.5, repeat: Infinity }} />
               </svg>
 
               {/* Outer glow rings */}
@@ -630,7 +669,7 @@ export default function ScanExperience() {
                 <span className="text-cyan-400">HUMANS</span>{' '}
                 <span className="text-white">behind the code.</span>
               </h2>
-              <p className="text-cyan-800/40 text-base sm:text-lg mt-6 max-w-xl mx-auto leading-relaxed font-technical tracking-wide">
+              <p className="text-cyan-200/55 text-base sm:text-lg mt-6 max-w-xl mx-auto leading-relaxed font-technical tracking-wide">
                 Paste a GitHub repository. Acquire a full X-ray &mdash; not just of syntax, but of architectural trauma, contributor heartbeats, and the ghosts within the machine.
               </p>
             </motion.div>
@@ -674,7 +713,7 @@ export default function ScanExperience() {
               >
                 INITIALIZE_AUTOPSY
               </motion.button>
-              <p className="text-[10px] text-cyan-900/25 tracking-wider font-mono">
+              <p className="text-[10px] text-cyan-400/40 tracking-wider font-mono">
                 No account. No config. Public repos only. 16 diagnostic modules.
               </p>
             </motion.div>
@@ -731,274 +770,353 @@ export default function ScanExperience() {
               ))}
             </motion.div>
           </div>
-        </motion.div>
-      )}
+        </motion.div >
+      )
+      }
 
       {/* ===== COMPACT INPUT BAR ===== */}
-      {(scanning || scanComplete) && (
-        <div className="border-b border-cyan-900/10 bg-black/60 backdrop-blur-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
-            <input type="url" value={repoUrl} onChange={(e) => setRepoUrl(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && startScan()} placeholder="https://github.com/owner/repo"
-              className="flex-1 bg-black/60 border border-cyan-900/20 rounded-xl py-2 px-4 text-sm font-mono text-cyan-100 placeholder:text-cyan-900/30 focus:outline-none focus:border-cyan-500/30 transition-all" />
+      {
+        (scanning || scanComplete) && (
+          <div className="border-b border-cyan-900/10 bg-black/60 backdrop-blur-sm">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
+              <input type="url" value={repoUrl} onChange={(e) => setRepoUrl(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && startScan()} placeholder="https://github.com/owner/repo"
+                className="flex-1 bg-black/60 border border-cyan-900/20 rounded-xl py-2 px-4 text-sm font-mono text-cyan-100 placeholder:text-cyan-900/30 focus:outline-none focus:border-cyan-500/30 transition-all" />
 
-            <button
-              onClick={() => document.getElementById('prognosis-anchor')?.scrollIntoView({ behavior: 'smooth' })}
-              className="px-3 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-[9px] font-black text-cyan-400 tracking-[0.2em] hover:bg-cyan-500/20 transition-all"
-            >
-              PROGNOSIS
-            </button>
+              <button
+                onClick={() => {
+                  setShowSimulation(true);
+                  setTimeout(() => document.getElementById('prognosis-anchor')?.scrollIntoView({ behavior: 'smooth' }), 80);
+                }}
+                className="px-3 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-[9px] font-black text-cyan-400 tracking-[0.2em] hover:bg-cyan-500/20 transition-all"
+              >
+                PROGNOSIS
+              </button>
 
-            <button
-              onClick={() => {
-                setScanData(prev => ({
-                  ...prev,
-                  prognosis: {
-                    timeline: Array.from({ length: 46 }, (_, i) => {
-                      const day = i * 2;
-                      let storyBeat = null;
-                      if (day === 0) storyBeat = "Admission: The codebase arrives with chronic internal hemorrhaging.";
-                      if (day === 10) storyBeat = "The Silence: Communication channels are beginning to fray.";
-                      if (day === 30) storyBeat = "The Drift: Major tectonic shifts in dependency alignment.";
-                      if (day === 67) storyBeat = "The Crisis: Mass exodus of the 'Hero' architect context.";
-                      if (day === 90) storyBeat = "Terminal State: The repository is now an archaeological site.";
+              <button
+                onClick={() => {
+                  setScanData(prev => ({
+                    ...prev,
+                    prognosis: {
+                      timeline: Array.from({ length: 46 }, (_, i) => {
+                        const day = i * 2;
+                        let storyBeat = null;
+                        if (day === 0) storyBeat = "Admission: The codebase arrives with chronic internal hemorrhaging.";
+                        if (day === 10) storyBeat = "The Silence: Communication channels are beginning to fray.";
+                        if (day === 30) storyBeat = "The Drift: Major tectonic shifts in dependency alignment.";
+                        if (day === 67) storyBeat = "The Crisis: Mass exodus of the 'Hero' architect context.";
+                        if (day === 90) storyBeat = "Terminal State: The repository is now an archaeological site.";
 
-                      return {
-                        day,
-                        score: Math.max(10, 85 - (i * 1.5)),
-                        interventionScore: Math.min(95, 85 + (i * 0.3)),
-                        signals: i === 15 ? ["The Drift", "Build time +8%"] : i === 30 ? ["The Threshold", "Test flakiness"] : [],
-                        costToFix: Math.round(5 + (i * 1.2)),
-                        burnoutRisk: Math.min(100, i * 3),
-                        storyBeat,
-                        healingBeat: day === 0 ? "Intervention: First aid applied." : (day === 90 ? "Recovery: Structural integrity restored." : null)
-                      }
-                    }),
-                    currentScore: 85,
-                    atRiskContributor: { login: 'nexus_subject', impact: 'Core architect' },
-                    compoundingCostRatio: 9
-                  }
-                }));
-                setTimeout(() => document.getElementById('prognosis-anchor')?.scrollIntoView({ behavior: 'smooth' }), 100);
-              }}
-              className="px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-[9px] font-black text-white/40 tracking-[0.2em] hover:text-white transition-all"
-            >
-              FORCE_SIM
-            </button>
+                        return {
+                          day,
+                          score: Math.max(10, 85 - (i * 1.5)),
+                          interventionScore: Math.min(95, 85 + (i * 0.3)),
+                          signals: i === 15 ? ["The Drift", "Build time +8%"] : i === 30 ? ["The Threshold", "Test flakiness"] : [],
+                          costToFix: Math.round(5 + (i * 1.2)),
+                          burnoutRisk: Math.min(100, i * 3),
+                          storyBeat,
+                          healingBeat: day === 0 ? "Intervention: First aid applied." : (day === 90 ? "Recovery: Structural integrity restored." : null)
+                        }
+                      }),
+                      currentScore: 85,
+                      atRiskContributor: { login: 'nexus_subject', impact: 'Core architect' },
+                      compoundingCostRatio: 9
+                    }
+                  }));
+                  setTimeout(() => document.getElementById('prognosis-anchor')?.scrollIntoView({ behavior: 'smooth' }), 100);
+                }}
+                className="px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-[9px] font-black text-white/40 tracking-[0.2em] hover:text-white transition-all"
+              >
+                FORCE_SIM
+              </button>
 
-            <button onClick={startScan} disabled={!repoUrl.trim() || scanning}
-              className="px-5 py-2 rounded-xl font-bold text-xs tracking-wider uppercase transition-all disabled:opacity-30 disabled:cursor-not-allowed bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 text-white shadow-lg shadow-cyan-500/10">
-              {scanning ? 'Scanning...' : 'New Scan'}
-            </button>
+              <button onClick={startScan} disabled={!repoUrl.trim() || scanning}
+                className="px-5 py-2 rounded-xl font-bold text-xs tracking-wider uppercase transition-all disabled:opacity-30 disabled:cursor-not-allowed bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 text-white shadow-lg shadow-cyan-500/10">
+                {scanning ? 'Scanning...' : 'New Scan'}
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )
+      }
 
       {/* ===== ACTIVE SCAN ===== */}
-      {(scanning || scanComplete) && (
-        <div className="relative">
-          {(xrayPhase === 'sweep_1' || xrayPhase === 'sweep_2') && (
-            <div className="fixed inset-0 pointer-events-none z-40 overflow-hidden"><div className="scan-line w-full h-24 absolute" /></div>
-          )}
+      {
+        (scanning || scanComplete) && (
+          <div className="relative">
+            {(xrayPhase === 'sweep_1' || xrayPhase === 'sweep_2') && (
+              <div className="fixed inset-0 pointer-events-none z-40 overflow-hidden"><div className="scan-line w-full h-24 absolute" /></div>
+            )}
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
-            {/* Act title */}
-            <AnimatePresence mode="wait">
-              <motion.div key={currentAct} initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="text-center py-2">
-                <span className="text-xs font-mono text-cyan-500/60 tracking-[0.3em] uppercase">{ACT_LABELS[currentAct]}</span>
-              </motion.div>
-            </AnimatePresence>
-
-            {/* EKG */}
-            <EKGMonitor bpm={ekgState.bpm} pattern={ekgState.pattern} reason={ekgState.reason} />
-
-            {/* LIVE PROGNOSIS HERO */}
-            <div id="prognosis-simulation" className="space-y-4">
-              {scanData.prognosis ? (
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="p-1 rounded-3xl border border-cyan-500/20 bg-cyan-500/5">
-                  <div className="text-[10px] font-mono text-cyan-500/40 py-2 text-center tracking-[0.3em] uppercase">Simulation Layer Active</div>
-                  <PrognosisSimulator data={scanData.prognosis} currentScore={scanData.corpusScore?.dxScore} />
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+              {/* Act title */}
+              <AnimatePresence mode="wait">
+                <motion.div key={currentAct} initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="text-center py-2">
+                  <span className="text-xs font-mono text-cyan-500/60 tracking-[0.3em] uppercase">{ACT_LABELS[currentAct]}</span>
                 </motion.div>
-              ) : (
-                <div className="h-1 bg-white/5 rounded-full overflow-hidden">
-                  <motion.div animate={{ x: ['-100%', '100%'] }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }} className="w-1/3 h-full bg-cyan-500/20" />
-                </div>
+              </AnimatePresence>
+
+              {/* EKG */}
+              <EKGMonitor bpm={ekgState.bpm} pattern={ekgState.pattern} reason={ekgState.reason} />
+
+              {/* X-Ray */}
+              {currentAct >= 2 && (
+                <XRayVisualization phase={xrayPhase} patient={scanData.patient} tracks={scanData.tracks} deadCode={scanData.deadCode} />
               )}
-            </div>
 
-            {/* X-Ray */}
-            {currentAct >= 2 && (
-              <XRayVisualization phase={xrayPhase} patient={scanData.patient} tracks={scanData.tracks} deadCode={scanData.deadCode} />
-            )}
-
-            {/* Patient File */}
-            {scanData.patient && (
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-panel rounded-2xl p-6 xray-glow">
-                <div className="flex items-center gap-2 mb-5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
-                  <span className="text-xs font-mono text-cyan-500 tracking-[0.3em] uppercase">Patient File</span>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-5 gap-6">
-                  <div><div className="text-[11px] text-cyan-800/50 font-mono uppercase tracking-wider">Patient</div><div className="text-lg font-bold text-cyan-100 mt-1">{scanData.patient.name}</div></div>
-                  <div><div className="text-[11px] text-cyan-800/50 font-mono uppercase tracking-wider">Date of Birth</div><div className="text-lg font-bold text-cyan-100 mt-1">{new Date(scanData.patient.dateOfBirth).toLocaleDateString()}</div></div>
-                  <div><div className="text-[11px] text-cyan-800/50 font-mono uppercase tracking-wider">Admitted</div><div className="text-lg font-bold text-cyan-100 mt-1">{new Date(scanData.patient.admissionTime || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div></div>
-                  <div><div className="text-[11px] text-cyan-800/50 font-mono uppercase tracking-wider">Language</div><div className="text-lg font-bold text-cyan-100 mt-1">{scanData.patient.language || 'Unknown'}</div></div>
-                  <div><div className="text-[11px] text-cyan-800/50 font-mono uppercase tracking-wider">Family</div><div className="text-lg font-bold text-cyan-100 mt-1">{scanData.patient.familyMembers || 0} members</div></div>
-                </div>
-              </motion.div>
-            )}
-
-            {/* 8 Diagnostic Stations */}
-            {Object.keys(scanData.tracks).length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {Object.entries(TRACK_NAMES).map(([key, track]) => (
-                  <TrackStation key={key} trackKey={key} track={track} findings={scanData.tracks[key]} isActive={activeTrackTab === key} onClick={() => setActiveTrackTab(key === activeTrackTab ? null : key)} />
-                ))}
-              </div>
-            )}
-
-            {/* Expanded Track Detail */}
-            <AnimatePresence>
-              {activeTrackTab && scanData.tracks[activeTrackTab] && (
-                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
-                  <div className="glass-panel rounded-2xl p-8">
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="flex items-center gap-4">
-                        <span className="text-sm font-mono text-cyan-500 uppercase tracking-widest">{TRACK_NAMES[activeTrackTab]?.anatomical}</span>
-                        <span className="text-2xl font-black text-white tracking-tight">{TRACK_NAMES[activeTrackTab]?.name}</span>
-                      </div>
-                      <span className={`text-5xl font-black ${scanData.tracks[activeTrackTab].score >= 70 ? 'text-emerald-400' : scanData.tracks[activeTrackTab].score >= 40 ? 'text-amber-400' : 'text-red-400'}`}>{scanData.tracks[activeTrackTab].score}</span>
-                    </div>
-                    {activeTrackTab === 'F' && scanData.tracks['F']?.rageCommits?.length > 0 && <div className="mb-4"><RageCommits rageCommits={scanData.tracks['F'].rageCommits} /></div>}
-                    <div className="space-y-3">
-                      {scanData.tracks[activeTrackTab].issues?.map((issue, i) => (
-                        <div key={i} className={`p-5 rounded-2xl border ${issue.severity === 'critical' ? 'bg-red-500/5 border-red-500/10' : issue.severity === 'warning' ? 'bg-amber-500/5 border-amber-500/10' : issue.severity === 'good' ? 'bg-emerald-500/5 border-emerald-500/10' : 'bg-cyan-500/5 border-cyan-500/10'}`}>
-                          <div className={`text-base font-black uppercase tracking-tight ${issue.severity === 'critical' ? 'text-red-300' : issue.severity === 'warning' ? 'text-amber-300' : issue.severity === 'good' ? 'text-emerald-300' : 'text-cyan-300'}`}>{issue.message}</div>
-                          {issue.detail && <div className="text-sm text-cyan-100/40 mt-2 leading-relaxed font-medium">{issue.detail}</div>}
-                        </div>
-                      ))}
-                      {(!scanData.tracks[activeTrackTab].issues || scanData.tracks[activeTrackTab].issues.length === 0) && <div className="text-base text-cyan-800/40 text-center py-6">No issues detected</div>}
-                    </div>
+              {/* Patient File */}
+              {scanData.patient && (
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-panel rounded-2xl p-6 xray-glow">
+                  <div className="flex items-center gap-2 mb-5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
+                    <span className="text-xs font-mono text-cyan-500 tracking-[0.3em] uppercase">Patient File</span>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-6">
+                    <div><div className="text-[11px] text-cyan-800/50 font-mono uppercase tracking-wider">Patient</div><div className="text-lg font-bold text-cyan-100 mt-1">{scanData.patient.name}</div></div>
+                    <div><div className="text-[11px] text-cyan-800/50 font-mono uppercase tracking-wider">Date of Birth</div><div className="text-lg font-bold text-cyan-100 mt-1">{new Date(scanData.patient.dateOfBirth).toLocaleDateString()}</div></div>
+                    <div><div className="text-[11px] text-cyan-800/50 font-mono uppercase tracking-wider">Admitted</div><div className="text-lg font-bold text-cyan-100 mt-1">{new Date(scanData.patient.admissionTime || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div></div>
+                    <div><div className="text-[11px] text-cyan-800/50 font-mono uppercase tracking-wider">Language</div><div className="text-lg font-bold text-cyan-100 mt-1">{scanData.patient.language || 'Unknown'}</div></div>
+                    <div><div className="text-[11px] text-cyan-800/50 font-mono uppercase tracking-wider">Family</div><div className="text-lg font-bold text-cyan-100 mt-1">{scanData.patient.familyMembers || 0} members</div></div>
                   </div>
                 </motion.div>
               )}
-            </AnimatePresence>
 
-            {/* DX Score */}
-            {scanData.corpusScore && (
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="glass-panel rounded-3xl p-12 text-center xray-glow">
-                <div className="text-xs font-mono text-cyan-600/50 tracking-[0.3em] uppercase mb-4">Total DX Score</div>
-                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200, damping: 15 }} className={`text-[120px] font-black leading-none ${scanData.corpusScore.dxScore >= 70 ? 'text-emerald-400' : scanData.corpusScore.dxScore >= 40 ? 'text-amber-400' : 'text-red-400'}`}>{scanData.corpusScore.dxScore}</motion.div>
-                <div className="text-xl text-cyan-600/60 mt-4 font-bold uppercase tracking-widest">{scanData.corpusScore.severity}</div>
-                <div className="flex justify-center gap-8 mt-5 text-xs font-mono">
-                  <span className="text-red-400">{scanData.corpusScore.criticalIssues} critical</span>
-                  <span className="text-amber-400">{scanData.corpusScore.warningIssues} warnings</span>
-                  <span className="text-emerald-400">{scanData.corpusScore.goodFindings} good</span>
+              {/* Ghost — The Patient Speaks — rises just below patient file */}
+              {currentAct >= 4 && scanData.diagnosis && (
+                <motion.div initial={{ opacity: 0, y: 60, filter: 'blur(8px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: 1.8, ease: 'easeOut' }}>
+                  <GhostNarrator diagnosis={scanData.diagnosis} />
+                </motion.div>
+              )}
+
+              {/* 8 Diagnostic Stations */}
+              {Object.keys(scanData.tracks).length > 0 && (
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {Object.entries(TRACK_NAMES).map(([key, track]) => (
+                    <TrackStation key={key} trackKey={key} track={track} findings={scanData.tracks[key]} isActive={activeTrackTab === key} onClick={() => setActiveTrackTab(key === activeTrackTab ? null : key)} />
+                  ))}
                 </div>
-              </motion.div>
-            )}
+              )}
 
-            {/* Prescription Pad */}
-            {Object.keys(scanData.tracks).length >= 3 && <PrescriptionPad tracks={scanData.tracks} />}
+              {/* Expanded Track Detail */}
+              <AnimatePresence>
+                {activeTrackTab && scanData.tracks[activeTrackTab] && (
+                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                    <div className="glass-panel rounded-2xl p-8">
+                      <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-4">
+                          <span className="text-sm font-mono text-cyan-500 uppercase tracking-widest">{TRACK_NAMES[activeTrackTab]?.anatomical}</span>
+                          <span className="text-2xl font-black text-white tracking-tight">{TRACK_NAMES[activeTrackTab]?.name}</span>
+                        </div>
+                        <span className={`text-5xl font-black ${scanData.tracks[activeTrackTab].score >= 70 ? 'text-emerald-400' : scanData.tracks[activeTrackTab].score >= 40 ? 'text-amber-400' : 'text-red-400'}`}>{scanData.tracks[activeTrackTab].score}</span>
+                      </div>
+                      {activeTrackTab === 'F' && scanData.tracks['F']?.rageCommits?.length > 0 && <div className="mb-4"><RageCommits rageCommits={scanData.tracks['F'].rageCommits} /></div>}
+                      <div className="space-y-3">
+                        {scanData.tracks[activeTrackTab].issues?.map((issue, i) => (
+                          <div key={i} className={`p-5 rounded-2xl border ${issue.severity === 'critical' ? 'bg-red-500/5 border-red-500/10' : issue.severity === 'warning' ? 'bg-amber-500/5 border-amber-500/10' : issue.severity === 'good' ? 'bg-emerald-500/5 border-emerald-500/10' : 'bg-cyan-500/5 border-cyan-500/10'}`}>
+                            <div className={`text-base font-black uppercase tracking-tight ${issue.severity === 'critical' ? 'text-red-300' : issue.severity === 'warning' ? 'text-amber-300' : issue.severity === 'good' ? 'text-emerald-300' : 'text-cyan-300'}`}>{issue.message}</div>
+                            {issue.detail && <div className="text-sm text-cyan-100/40 mt-2 leading-relaxed font-medium">{issue.detail}</div>}
+                          </div>
+                        ))}
+                        {(!scanData.tracks[activeTrackTab].issues || scanData.tracks[activeTrackTab].issues.length === 0) && <div className="text-base text-cyan-800/40 text-center py-6">No issues detected</div>}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
-            {/* Debt Inheritance Map */}
-            {scanData.debtMap && <DebtInheritanceMap data={scanData.debtMap} />}
+              {/* DX Score */}
+              {scanData.corpusScore && (
+                <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="glass-panel rounded-3xl p-12 text-center xray-glow">
+                  <div className="text-xs font-mono text-cyan-600/50 tracking-[0.3em] uppercase mb-4">Total DX Score</div>
+                  <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200, damping: 15 }} className={`text-[120px] font-black leading-none ${scanData.corpusScore.dxScore >= 70 ? 'text-emerald-400' : scanData.corpusScore.dxScore >= 40 ? 'text-amber-400' : 'text-red-400'}`}>{scanData.corpusScore.dxScore}</motion.div>
+                  <div className="text-xl text-cyan-600/60 mt-4 font-bold uppercase tracking-widest">{scanData.corpusScore.severity}</div>
+                  <div className="flex justify-center gap-8 mt-5 text-xs font-mono">
+                    <span className="text-red-400">{scanData.corpusScore.criticalIssues} critical</span>
+                    <span className="text-amber-400">{scanData.corpusScore.warningIssues} warnings</span>
+                    <span className="text-emerald-400">{scanData.corpusScore.goodFindings} good</span>
+                  </div>
+                </motion.div>
+              )}
 
-            {/* The Blame Map — Temporal Guilt Diffusion Engine */}
-            {scanData.debtMap?.contributors?.length >= 2 && (
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-                <BlameMap data={scanData.debtMap} />
-              </motion.div>
-            )}
+              {/* Prescription Pad */}
+              {Object.keys(scanData.tracks).length >= 3 && <PrescriptionPad tracks={scanData.tracks} />}
 
-            {/* Dead Code Coroner */}
-            {scanData.deadCode && <DeadCodeCoroner data={scanData.deadCode} />}
+              {/* Debt Inheritance Map */}
+              {scanData.debtMap && <DebtInheritanceMap data={scanData.debtMap} />}
 
-            {/* Ghost — rises from X-ray table */}
-            {currentAct >= 4 && scanData.diagnosis && (
-              <motion.div initial={{ opacity: 0, y: 60, filter: 'blur(8px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: 1.8, ease: 'easeOut' }}>
-                <GhostNarrator diagnosis={scanData.diagnosis} />
-              </motion.div>
-            )}
+              {/* The Blame Map — Temporal Guilt Diffusion Engine */}
+              {scanData.debtMap?.contributors?.length >= 2 && (
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+                  <BlameMap data={scanData.debtMap} />
+                </motion.div>
+              )}
 
-            {/* Fracture Replay */}
-            {scanData.debtMap?.debtTimeline && scanData.debtMap.debtTimeline.length > 0 && <FractureReplay timeline={scanData.debtMap.debtTimeline} tracks={scanData.tracks} />}
+              {/* Dead Code Coroner */}
+              {scanData.deadCode && <DeadCodeCoroner data={scanData.deadCode} />}
 
-            {/* ===== V2 EXTENDED DIAGNOSTICS ===== */}
-            {scanData.collaboration && <CollaborationPulse data={scanData.collaboration} />}
-            {scanData.trauma && <TraumaTimeline data={scanData.trauma} />}
-            {scanData.immune && <ImmuneSystem data={scanData.immune} />}
-            {scanData.archaeology && <ArchaeologyLayer data={scanData.archaeology} />}
-            {scanData.whispers && <WhisperNetwork data={scanData.whispers} />}
-            {scanData.clones && <CloneDetectorDNA data={scanData.clones} />}
-            {scanData.sleepStudy && <SleepStudy data={scanData.sleepStudy} />}
 
-            {scanData.scarTissue && <ScarTissue data={scanData.scarTissue} />}
+              {/* Fracture Replay */}
+              {scanData.debtMap?.debtTimeline && scanData.debtMap.debtTimeline.length > 0 && <FractureReplay timeline={scanData.debtMap.debtTimeline} tracks={scanData.tracks} />}
 
-            {/* ===== NEW FEATURE PANELS ===== */}
-            {scanData.timeBomb?.triggered && <TimeBombAlert data={scanData.timeBomb} />}
-            {scanData.busFactor?.triggered && <BusFactorObituary data={scanData.busFactor} />}
-            {scanData.emotionalTimeline?.events?.length > 0 && <EmotionalTimeline data={scanData.emotionalTimeline} />}
-            {scanData.firstDaySim?.steps?.length > 0 && <FirstDaySim data={scanData.firstDaySim} />}
-            {scanData.competitorBenchmark?.benchmarks?.length > 0 && <CompetitorBenchmark data={scanData.competitorBenchmark} />}
+              {/* ===== V2 EXTENDED DIAGNOSTICS ===== */}
+              {scanData.collaboration && <CollaborationPulse data={scanData.collaboration} />}
+              {scanData.trauma && <TraumaTimeline data={scanData.trauma} />}
+              {scanData.immune && <ImmuneSystem data={scanData.immune} isHealed={!!confessionProcessed} />}
+              {scanData.archaeology && <ArchaeologyLayer data={scanData.archaeology} />}
+              {scanData.whispers && <WhisperNetwork data={scanData.whispers} />}
+              {scanData.clones && <CloneDetectorDNA data={scanData.clones} />}
+              {scanData.sleepStudy && <SleepStudy data={scanData.sleepStudy} />}
 
-            {/* Second Opinion — appears after diagnosis */}
-            {scanData.diagnosis && scanData.corpusScore && (
-              <SecondOpinion diagnosis={scanData.diagnosis} corpusScore={scanData.corpusScore} />
-            )}
+              {scanData.scarTissue && <ScarTissue data={scanData.scarTissue} />}
 
-            {/* Living Autopsy — if triggered */}
-            <div ref={autopsyRef}>
-              {scanData.livingAutopsy?.triggered && <LivingAutopsy data={scanData.livingAutopsy} />}
-            </div>
+              {/* ===== NEW FEATURE PANELS ===== */}
+              {scanData.timeBomb?.triggered && <TimeBombAlert data={scanData.timeBomb} />}
+              {scanData.busFactor?.triggered && <BusFactorObituary data={scanData.busFactor} />}
+              {scanData.emotionalTimeline?.events?.length > 0 && <EmotionalTimeline data={scanData.emotionalTimeline} />}
+              {scanData.firstDaySim?.steps?.length > 0 && <FirstDaySim data={scanData.firstDaySim} />}
+              {scanData.competitorBenchmark?.benchmarks?.length > 0 && <CompetitorBenchmark data={scanData.competitorBenchmark} />}
 
-            {/* Codebase Obituary — if detected */}
-            <div ref={obituaryRef}>
-              {scanData.obituary?.isAbandoned && <CodebaseObituary data={scanData.obituary} />}
-            </div>
+              {/* Prognosis Protocol Trigger — Unfolds inline below the button */}
+              {scanData.diagnosis && (
+                <div id="prognosis-anchor" className="mt-16 mb-12 relative z-10">
+                  <div className="text-center">
+                    <button
+                      onClick={() => {
+                        setShowSimulation(!showSimulation);
+                      }}
+                      className={`group relative inline-flex items-center gap-3 px-6 py-2 rounded-full border text-[11px] font-bold tracking-[0.2em] uppercase transition-all shadow-[0_0_20px_rgba(0,251,255,0.05)] active:scale-[0.98] ${showSimulation
+                        ? 'border-cyan-500/50 text-cyan-400 bg-cyan-500/5'
+                        : 'border-white/10 text-white/30 hover:border-white/40 hover:text-white/60'
+                        }`}
+                    >
+                      <div className="flex items-center gap-2 relative z-10">
+                        <span className={`w-1.5 h-1.5 rounded-full ${showSimulation ? 'bg-cyan-500 animate-pulse' : 'bg-white/20'}`} />
+                        {showSimulation ? (
+                          <>CLOSE_PROGNOSIS</>
+                        ) : !scanData.prognosis ? (
+                          <>COMPUTING_PROGNOSIS...</>
+                        ) : (
+                          <>PROGNOSIS</>
+                        )}
+                      </div>
+                    </button>
+                    {!showSimulation && <p className="text-[10px] font-technical text-indigo-400/40 mt-4 tracking-[0.4em] uppercase font-bold">Project 90-day codebase mortality & stabilization trajectory</p>}
+                  </div>
 
-            {/* ╔══════════════════════════════════════╗
+                  {/* Inline Simulator Content */}
+                  <AnimatePresence>
+                    {showSimulation && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                        animate={{ opacity: 1, height: 'auto', marginTop: 32 }}
+                        exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                        className="overflow-hidden"
+                      >
+                        {scanData.prognosis ? (
+                          <div className="p-1 rounded-3xl border border-indigo-500/20 bg-indigo-500/5">
+                            <div className="text-[10px] font-mono text-indigo-500/40 py-2 text-center tracking-[0.3em] uppercase">Simulation Layer Active</div>
+                            <PrognosisSimulator
+                              data={scanData.prognosis}
+                              currentScore={scanData.corpusScore?.dxScore}
+                              onClose={() => setShowSimulation(false)}
+                            />
+                          </div>
+                        ) : (
+                          <div className="p-12 rounded-3xl border border-indigo-500/10 bg-black/40 text-center">
+                            <div className="text-[10px] font-mono text-indigo-500/30 tracking-[0.3em] uppercase mb-4">Simulation Layer Active</div>
+                            <div className="text-sm text-white/20 font-mono italic">Synchronizing future coordinates...</div>
+                            <div className="mt-6 h-1 w-48 mx-auto bg-white/5 rounded-full overflow-hidden">
+                              <motion.div animate={{ x: ['-100%', '100%'] }} transition={{ duration: 1.8, repeat: Infinity, ease: 'linear' }} className="w-1/3 h-full bg-indigo-500/30" />
+                            </div>
+                          </div>
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )}
+
+              {/* Second Opinion — appears after diagnosis */}
+              {scanData.diagnosis && scanData.corpusScore && (
+                <SecondOpinion diagnosis={scanData.diagnosis} corpusScore={scanData.corpusScore} />
+              )}
+
+              {/* Living Autopsy — if triggered */}
+              <div ref={autopsyRef}>
+                {scanData.livingAutopsy?.triggered && <LivingAutopsy data={scanData.livingAutopsy} />}
+              </div>
+
+              {/* Codebase Obituary — if detected */}
+              <div ref={obituaryRef}>
+                {scanData.obituary?.isAbandoned && <CodebaseObituary data={scanData.obituary} />}
+              </div>
+
+              {/* ╔══════════════════════════════════════╗
                 ║ Act V — The Confessional             ║
                 ║ Appears after scan completes.        ║
                 ╚══════════════════════════════════════╝ */}
-            {showConfessional && !confessionProcessed && (
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-              >
-                <Confessional
-                  onConfess={handleConfess}
-                  healing={confessionProcessed}
-                  corpusScore={scanData.corpusScore}
-                  repoName={scanData.patient?.name}
-                />
-              </motion.div>
-            )}
-
-            {/* Show Results button */}
-            {scanComplete && (
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="text-center py-8">
-                <a
-                  href={scanData.scanId ? `/discharge/${scanData.scanId}` : '/results'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => {
-                    // Refresh localStorage with latest scanData right before opening
-                    try { localStorage.setItem('dxray_scan', JSON.stringify(scanData)); } catch (e) { }
-                  }}
-                  className="group relative inline-flex items-center gap-3 px-12 py-5 bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 text-white rounded-2xl text-lg font-bold tracking-wider uppercase transition-all shadow-xl shadow-cyan-500/20 active:scale-[0.97] no-underline"
+              {showConfessional && !confessionProcessed && (
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.3 }}
                 >
-                  View Full Results
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="group-hover:translate-x-1 transition-transform">
-                    <path d="M5 12h14" /><path d="M12 5l7 7-7 7" />
-                  </svg>
-                </a>
-                <p className="text-[11px] text-cyan-400/50 font-technical font-bold mt-3 tracking-wider uppercase">Full discharge summary with all 16 diagnostics</p>
-              </motion.div>
-            )}
+                  <Confessional
+                    onConfess={handleConfess}
+                    onSkip={() => setShowConfessional(false)}
+                    healing={confessionProcessed}
+                    corpusScore={scanData.corpusScore}
+                    repoName={scanData.patient?.name}
+                  />
+                </motion.div>
+              )}
+
+              {/* Show Results button — both at bottom and sticky floating */}
+              {scanComplete && (
+                <>
+                  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="text-center py-8">
+                    <a
+                      href={scanData.scanId ? `/discharge/${scanData.scanId}` : '/results'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => {
+                        try { localStorage.setItem('dxray_scan', JSON.stringify(scanData)); } catch (e) { }
+                      }}
+                      className="group relative inline-flex items-center gap-3 px-12 py-5 bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 text-white rounded-2xl text-lg font-bold tracking-wider uppercase transition-all shadow-xl shadow-cyan-500/20 active:scale-[0.97] no-underline"
+                    >
+                      View Full Results
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="group-hover:translate-x-1 transition-transform">
+                        <path d="M5 12h14" /><path d="M12 5l7 7-7 7" />
+                      </svg>
+                    </a>
+                    <p className="text-[11px] text-cyan-400/50 font-technical font-bold mt-3 tracking-wider uppercase">Full discharge summary with all 16 diagnostics</p>
+                  </motion.div>
+
+                  {/* Sticky Floating Action Button */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8, y: 40 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    className="fixed bottom-8 right-8 z-[60]"
+                  >
+                    <a
+                      href={scanData.scanId ? `/discharge/${scanData.scanId}` : '/results'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => {
+                        try { localStorage.setItem('dxray_scan', JSON.stringify(scanData)); } catch (e) { }
+                      }}
+                      className="flex items-center gap-3 px-6 py-4 bg-cyan-500 text-white rounded-full font-bold shadow-[0_0_30px_rgba(0,229,255,0.4)] hover:bg-cyan-400 hover:scale-105 active:scale-95 transition-all no-underline animate-bounce"
+                    >
+                      <span className="hidden sm:inline">VIEW FULL RESULTS</span>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M5 12h14" /><path d="M12 5l7 7-7 7" />
+                      </svg>
+                    </a>
+                  </motion.div>
+                </>
+              )}
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )
+      }
+    </div >
   );
 }

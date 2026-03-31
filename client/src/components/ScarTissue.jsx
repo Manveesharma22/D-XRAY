@@ -55,6 +55,7 @@ export default function ScarTissue({ data }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="glass-panel rounded-2xl p-5 overflow-hidden"
+            style={{ transform: 'translateZ(0)', willChange: 'transform' }}
         >
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-4">

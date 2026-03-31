@@ -196,7 +196,7 @@ function CertificateView({ tokens, scoreBoost, dxBase, narrative, repoName }) {
 }
 
 // ─── Main Component ────────────────────────────────────────────────────────
-export default function Confessional({ onConfess, healing, corpusScore, repoName }) {
+export default function Confessional({ onConfess, onSkip, healing, corpusScore, repoName }) {
   const [confession, setConfession] = useState('');
   const [phase, setPhase] = useState('idle');    // idle → healing → absolved
   const [detectedTokens, setDetectedTokens] = useState([]);
@@ -748,7 +748,10 @@ export default function Confessional({ onConfess, healing, corpusScore, repoName
               Confess &amp; Heal
             </motion.button>
             <button
-              onClick={() => setPhase('idle')}
+              onClick={() => {
+                if (onSkip) onSkip();
+                else setPhase('idle');
+              }}
               className="px-10 py-5 bg-transparent border border-cyan-500/20 text-cyan-500/60 rounded-2xl text-xl font-black hover:border-cyan-500/40 hover:text-cyan-400 transition-all uppercase tracking-wider"
             >
               Skip

@@ -226,6 +226,8 @@ export default function RageCommits({ rageCommits }) {
       style={{
         background: 'linear-gradient(135deg, rgba(20,6,6,0.98) 0%, rgba(10,4,18,0.98) 100%)',
         boxShadow: '0 0 60px rgba(239,68,68,0.03), inset 0 0 80px rgba(0,0,0,0.6)',
+        transform: 'translateZ(0)',
+        willChange: 'transform'
       }}
     >
       {/* ── Header ─────────────────────────────────────────────────────── */}

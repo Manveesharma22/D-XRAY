@@ -1,89 +1,82 @@
-# 🩻 DX-Ray: The Living Autopsy
-> **A High-Fidelity Clinical Diagnostic Suite for Git Repositories.**
+# 🩻 DX-Ray: The Clinical Repository Autopsy
+> **"Understand the HUMANS behind the code."**
 
-DX-Ray is not a static code analyzer. It is a **temporal diagnostic platform** that treats codebases as living organisms. It uses a cinematic, medical-grade interface to visualize the trauma, immune response, and biological shadow of your project's history.
+DX-Ray is a zero-configuration diagnostic platform that treats codebases as biological organisms. It is not a linter; it is a **temporal autopsy suite** that surfaces the hidden human context—frustration, burnout, legacy trauma, and architectural fractures—that static analysis misses.
 
 ---
 
-## 🩺 The Operating Theatre (Core Features)
+## 🩺 The Operating Theatre (Core Diagnostics)
 
-### 1. **Biometric Dashboard (Vital Signs)**
-- **EKG Monitor**: Real-time visualization of commit frequency and velocity.
-- **Immune System**: Tracks the repository's "Antibody" (Refactor) vs. "Infection" (Debt) balance.
-- **Trauma Timeline**: A chronological record of high-severity breaks, rage-commits, and architectural fractures.
+### 📊 Act 1: The Anatomical Audit
+We map the repository’s health across 8 critical biological systems:
+- **The Spine (CI/CD)**: Structural build integrity.
+- **The Heartbeat (Developer Flow)**: Commitment rhythm and momentum.
+- **The Skull (Documentation)**: Knowledge architecture.
+- **The Veins (Dependencies)**: Supply-chain health.
 
-### 2. **Deep Pathology Suite**
-- **Scar Tissue Detector**: Identifies files that have been rewritten so many times they are "encrusted" and difficult to move.
-- **Debt Inheritance Map**: A genealogical tree showing which contributors passed on legacy debt and technical burden.
-- **Whisper Network**: Captures unresolved "echoes" — those old, critical questions in comments that were never answered.
-- **Sleep Study**: Visualizes the circadian rhythm of your team. Identifies "Golden Hours" vs. "Crisis Sprints" (incidents post-6PM).
-- **Archaeology Layer**: A dual-exposure view that lets you morph between the original v1.0 architecture and the current "drifted" state.
+### 🧬 Act 2: Pathological Visualizers
+High-fidelity visualizations of the project’s hidden struggles:
+- **Trauma Timeline**: A seismographic record of historical 'fractures' and rage-commits.
+- **Scar Tissue**: Heatmaps identify modules that have calcified into unyielding technical debt.
+- **Whisper Network**: Captures the hidden social graph and collaboration 'echoes' between teams.
 
-### 3. **The Temporal Absolution Engine**
-- **The Confessional**: A cinematic healing terminal where developers can "declare" context. Sealing fractures with white light and stabilizing code health scores in real-time.
-- **Mourning Mode (Eternal Echo)**: A specialized UI mode that triggers when a "Digital Ghost" (a legendary, departed contributor) is detected in the commit history.
-- **Prognosis Simulator**: A forward-looking 90-day simulation that predicts codebase entropy if current architectural trends continue.
+### 🫀 Act 3: Vital Signs Dashboard
+Real-time telemetry of the codebase's survival metrics:
+- **Immune System**: Monitoring the balance between refactor 'antibodies' and technical debt 'infections.'
+- **Sleep Study**: Visualizing the circadian rhythm of the team to identify high-risk 'Crisis Sprints.'
+
+---
+
+## 🔮 The Clinical Results (Discharge Summary)
+
+### 📈 Prognosis Protocol
+A forward-looking 90-day simulation engine. It projects current technical debt and personnel risk onto a temporal trajectory, predicting the exact moment of a potential project 'flatline.'
+
+### 🪞 The Mirror
+A biometric stylometry reflection. Analyzes the unique stylistic fingerprint of the developer to identify burnout risks and stylistic fragmentation before they impact quality.
+
+### 🕯️ Mourning Mode (The Eternal Echo)
+A cinematic tribute layer that triggers automatically for abandoned repositories, honoring the 'Last Commit' and the human legacy of past creators.
 
 ---
 
 ## 🛠 Technology Stack
-
-### **Frontend (The Visual Cortex)**
-- **Framework**: [React](https://reactjs.org/) + [Vite](https://vitejs.dev/)
-- **Animations**: [Framer Motion](https://www.framer.com/motion/) & [GSAP](https://greensock.com/gsap/)
-- **Visuals**: [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) (high-performance EKG renders) & [SVG](https://developer.mozilla.org/en-US/docs/Web/SVG)
-- **Styling**: Vanilla CSS + [TailwindCSS](https://tailwindcss.com/) (Glassmorphism & Clinical Palettes)
-
-### **Backend (The Neural Engine)**
-- **Runtime**: [Node.js](https://nodejs.org/) + [Express](https://expressjs.com/)
-- **Real-time**: [Socket.io](https://socket.io/) (Live diagnostic streaming)
-- **Analysis**: Custom Git-Pathology Analyzers (Blame-chaining, Trauma detection)
+- **Visual Cortex**: React, Framer Motion, GSAP, Canvas API, TailwindCSS.
+- **Neural Engine**: Node.js, Express, WebSocket (Socket.io), Custom Git-Pathology Analyzers.
+- **Clinical Data**: GitHub REST & GraphQL API, Biometric Stylometry, Causal Reasoning.
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Admission Procedure
 
 ### **Prerequisites**
 - Node.js (v18.x or higher)
-- npm or yarn
+- GitHub Personal Access Token (for high-fidelity scans)
 
 ### **Installation**
-
-1. **Clone the repository:**
+1. **Clone the patient record:**
    ```bash
    git clone https://github.com/Manveesharma22/D-XRAY.git
    cd D-XRAY
    ```
 
-2. **Setup Server:**
+2. **Initialize the Server:**
    ```bash
-   cd server
-   npm install
-   npm start
+   cd server && npm install && npm start
    ```
 
-3. **Setup Client:**
+3. **Initialize the UI:**
    ```bash
-   cd ../client
-   npm install
-   npm run dev
+   cd ../client && npm install && npm run dev
    ```
 
 4. **Visit the Hospital:**
-   Navigate to `http://localhost:5173` to begin your first scan.
+   Navigate to `http://localhost:5173` to begin your first autopsy.
 
 ---
 
-## 🧪 Special UI Modes
-
-- **Film Negative**: A high-contrast mode for identifying structural patterns.
-- **MRI Scan**: Density-based visualization of code complexity.
-- **Hospital Soundscape**: Immersive ambient audio that responds to code health (EKG beeps, static echoes, atmospheric pads).
-
----
-
-## 📄 License
-This project is licensed under the MIT License.
+## 📜 Technical Absolution
+Once the diagnosis is complete, developers enter **The Confessional** to provide context for their fractures. Upon successful admission of truth, the system generates a **Certificate of Context**—granting the repository full clinical discharge and technical absolution.
 
 ---
 *Created with 🤍 for the ghosts of abandoned repositories.*

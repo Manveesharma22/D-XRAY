@@ -2,23 +2,22 @@ import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 
 // Small metric ring gauge
-function MetricRing({ label, value, status }) {
-    const r = 22, cx = 26, cy = 26, circumf = 2 * Math.PI * r;
+function MetricRing({ label, value, displayValue, status }) {
+    const r = 30, cx = 36, cy = 36, circumf = 2 * Math.PI * r;
     const pct = typeof value === 'number' ? Math.min(100, value) : 0;
     const dashLen = (pct / 100) * circumf;
     const color = status === 'healthy' || status === 'fast' ? '#00fbff'
         : status === 'critical' || status === 'compromised' ? '#ff4444'
             : '#ffc400';
-    const displayVal = typeof value === 'number' ? (value > 10 ? `${value}d` : `${value}x`) : value;
 
     return (
-        <div className="flex flex-col items-center gap-1">
-            <div style={{ position: 'relative', width: 52, height: 52 }}>
-                <svg width="52" height="52" style={{ transform: 'rotate(-90deg)' }}>
-                    <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="3" />
+        <div className="flex flex-col items-center gap-2">
+            <div style={{ position: 'relative', width: 72, height: 72 }}>
+                <svg width="72" height="72" style={{ transform: 'rotate(-90deg)' }}>
+                    <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="4" />
                     <motion.circle
                         cx={cx} cy={cy} r={r} fill="none"
-                        stroke={color} strokeWidth="3" strokeLinecap="round"
+                        stroke={color} strokeWidth="4" strokeLinecap="round"
                         style={{ strokeDasharray: circumf }}
                         initial={{ strokeDashoffset: circumf }}
                         animate={{ strokeDashoffset: circumf - dashLen }}
@@ -27,13 +26,20 @@ function MetricRing({ label, value, status }) {
                 </svg>
                 <div style={{
                     position: 'absolute', inset: 0, display: 'flex',
+                    flexDirection: 'column',
                     alignItems: 'center', justifyContent: 'center',
-                    fontSize: 9, fontWeight: 700, fontFamily: 'monospace', color,
+                    fontSize: displayValue?.length > 10 ? 8 : 10,
+                    fontWeight: 900, fontFamily: 'monospace', color,
+                    textAlign: 'center', padding: '0 8px',
+                    textShadow: `0 0 10px ${color}40`,
+                    lineHeight: 1.1
                 }}>
-                    {displayVal}
+                    {displayValue.split(' ').map((word, i) => (
+                        <div key={i}>{word.toUpperCase()}</div>
+                    ))}
                 </div>
             </div>
-            <div className="text-[10px] font-mono text-center leading-tight" style={{ color: `${color}60`, maxWidth: 64 }}>{label}</div>
+            <div className="text-[9px] font-mono font-bold tracking-widest text-center leading-tight uppercase opacity-40 px-1" style={{ color }}>{label}</div>
         </div>
     );
 }
@@ -56,9 +62,13 @@ export default function ImmuneSystem({ data, isHealed }) {
         canvas.height = h * dpr;
         ctx.scale(dpr, dpr);
 
-        let isVisible = true;
+        let isVisible = false;
         const observer = new IntersectionObserver(([entry]) => {
+            const wasVisible = isVisible;
             isVisible = entry.isIntersecting;
+            if (isVisible && !wasVisible) {
+                draw(); // Restart loop when becoming visible
+            }
         }, { threshold: 0.1 });
         observer.observe(canvas);
 
@@ -117,6 +127,7 @@ export default function ImmuneSystem({ data, isHealed }) {
         let frame = 0;
 
         function draw() {
+            if (!isVisible) return;
             ctx.clearRect(0, 0, w, h);
 
             // Background immune wash — subtle color based on health
@@ -189,8 +200,7 @@ export default function ImmuneSystem({ data, isHealed }) {
             });
 
             frame++;
-            if (isVisible) animRef.current = requestAnimationFrame(draw);
-            else animRef.current = setTimeout(() => { if (isVisible) draw(); }, 1000);
+            animRef.current = requestAnimationFrame(draw);
         }
 
         draw();
@@ -227,29 +237,29 @@ export default function ImmuneSystem({ data, isHealed }) {
         >
             <div className="flex items-center justify-between mb-6 relative z-10">
                 <div className="flex items-center gap-4">
-                    <div className="w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_15px_white] animate-pulse" />
-                    <span className="text-[10px] font-technical text-cyan-500/40 tracking-[0.5em] uppercase font-bold">Biometric_Pathology_Core</span>
+                    <div className={`w-2.5 h-2.5 rounded-full shadow-[0_0_15px_white] animate-pulse ${effectiveScore >= 70 ? 'bg-cyan-400' : effectiveScore >= 40 ? 'bg-amber-400' : 'bg-red-400'}`} />
+                    <span className="text-[11px] font-technical text-cyan-400/60 tracking-[0.4em] uppercase font-bold">Biometric_Pathology_Core</span>
                 </div>
                 <div className="flex items-center gap-6">
                     <span className={`text-[10px] font-technical font-bold tracking-[0.3em] uppercase ${immuneColor}`}>{immuneLabel}_RESPONSE</span>
-                    <span className={`text-4xl font-bold font-technical tracking-tighter holographic-bloom ${immuneColor}`}>{effectiveScore}</span>
+                    <span className={`text-5xl font-black font-technical tracking-tighter holographic-bloom ${immuneColor}`}>{effectiveScore}</span>
                 </div>
             </div>
 
             {/* Health Core Pulse — biological feel */}
-            <div className="absolute top-10 right-4 w-32 h-32 pointer-events-none opacity-20">
+            <div className="absolute top-10 right-4 w-48 h-48 pointer-events-none opacity-20">
                 <motion.div
-                    animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.3, 0.15] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                    className={`w-full h-full rounded-full blur-3xl ${effectiveScore >= 70 ? 'bg-emerald-500' : effectiveScore >= 40 ? 'bg-amber-500' : 'bg-red-500'}`}
+                    animate={{ scale: [1, 1.15, 1], opacity: [0.1, 0.25, 0.1] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    className={`w-full h-full rounded-full blur-3xl ${effectiveScore >= 70 ? 'bg-cyan-500' : effectiveScore >= 40 ? 'bg-amber-500' : 'bg-red-500'}`}
                 />
             </div>
 
             {/* One-sentence verdict — the clinical summary */}
-            <div className="mb-6 px-6 py-5 rounded-2xl relative z-10" style={{ background: 'rgba(0,10,20,0.6)', border: '1px solid rgba(255,255,255,0.05)', borderLeft: `6px solid ${effectiveScore >= 70 ? 'rgba(52,211,153,0.8)' : effectiveScore >= 40 ? 'rgba(245,158,11,0.8)' : 'rgba(239,68,68,0.8)'}`, boxShadow: 'inset 0 0 20px rgba(0,0,0,0.5)' }}>
-                <p className="text-[14px] leading-relaxed font-technical tracking-tight" style={{ color: effectiveScore < 50 ? '#fca5a5' : '#e2e8f0' }}>
-                    <span className="text-white/20 font-bold mr-2">DIAGNOSIS//</span>
-                    {buildVerdict().replace('.', '').toUpperCase()}
+            <div className="mb-8 px-6 py-6 rounded-2xl relative z-10" style={{ background: 'rgba(0,12,24,0.7)', border: '1px solid rgba(0,229,255,0.1)', borderLeft: `6px solid ${effectiveScore >= 70 ? '#00fbff' : effectiveScore >= 40 ? '#fbbf24' : '#ef4444'}`, boxShadow: '0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,229,255,0.05)' }}>
+                <p className="text-[15px] leading-relaxed font-technical tracking-tight" style={{ color: effectiveScore < 50 ? '#fecaca' : '#e2e8f0' }}>
+                    <span className="text-cyan-400/40 font-black mr-3 tracking-widest">DIAGNOSIS //</span>
+                    {buildVerdict().toUpperCase()}
                 </p>
             </div>
 
@@ -263,7 +273,13 @@ export default function ImmuneSystem({ data, isHealed }) {
             {data.metrics?.length > 0 && (
                 <div className="flex justify-around gap-2">
                     {data.metrics.slice(0, 4).map((m, i) => (
-                        <MetricRing key={i} label={m.label} value={m.numericValue ?? i * 20 + 20} status={m.status} />
+                        <MetricRing
+                            key={i}
+                            label={m.label}
+                            value={m.score ?? m.numericValue ?? i * 20 + 20}
+                            displayValue={m.value}
+                            status={m.status}
+                        />
                     ))}
                 </div>
             )}

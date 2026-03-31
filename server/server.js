@@ -155,6 +155,30 @@ async function runScan(ws, repoUrl, options = {}) {
       if (cached.livingAutopsy) sendWS(ws, 'living_autopsy', cached.livingAutopsy);
       if (cached.obituary) sendWS(ws, 'codebase_obituary', cached.obituary);
 
+      let prognosis = cached.prognosis;
+      if (!prognosis) {
+        try {
+          const ps = new PrognosisSimulator();
+          prognosis = ps.simulate({
+            corpusScore: cached.corpusScore,
+            trackFindings: cached.trackFindings,
+            repoInfo: cached.repoInfo,
+            contributors: cached.contributors,
+            deadCode: cached.deadCode,
+            debtMap: cached.debtMap
+          });
+        } catch (e) { console.error('Cache prognosis fallback failed:', e.message); }
+      }
+      if (prognosis) sendWS(ws, 'prognosis_data', prognosis);
+
+      if (cached.mourning) sendWS(ws, 'mourning_detected', cached.mourning);
+      if (cached.biologicalShadow) sendWS(ws, 'biological_shadow', cached.biologicalShadow);
+      if (cached.timeBomb) sendWS(ws, 'time_bomb', cached.timeBomb);
+      if (cached.busFactor) sendWS(ws, 'bus_factor', cached.busFactor);
+      if (cached.emotionalTimeline) sendWS(ws, 'emotional_timeline', cached.emotionalTimeline);
+      if (cached.firstDaySim) sendWS(ws, 'first_day_sim', cached.firstDaySim);
+      if (cached.competitorBenchmark) sendWS(ws, 'competitor_benchmark', cached.competitorBenchmark);
+
       activeScans.set(scanId, cached);
       sendWS(ws, 'scan_complete', { scanId, discharge: cached.discharge });
       return;
@@ -307,6 +331,15 @@ async function runScan(ws, repoUrl, options = {}) {
     }
     sendWS(ws, 'dx_score', corpusScore);
     sendWS(ws, 'heartbeat', { bpm: 60, pattern: 'normal', reason: 'Vital signs computed' });
+
+    // V2: PRE-CALCULATE PROGNOSIS (Fast-path)
+    let prognosis = null;
+    try {
+      const ps = new PrognosisSimulator();
+      prognosis = ps.simulate({ corpusScore, trackFindings, repoInfo, contributors, deadCode, debtMap });
+      if (prognosis) sendWS(ws, 'prognosis_data', prognosis);
+    } catch (e) { console.error('Early prognosis failed:', e.message); }
+
     await delay(300);
 
     // ACT 4: THE GHOST
@@ -440,17 +473,7 @@ async function runScan(ws, repoUrl, options = {}) {
     sendWS(ws, 'diagnosis', diagnosis);
     await delay(400);
 
-    // V2: PROGNOSIS SIMULATION
-    let prognosis = null;
-    try {
-      const ps = new PrognosisSimulator();
-      prognosis = ps.simulate({
-        corpusScore, trackFindings, debtMap, deadCode, repoInfo,
-        contributors, pullRequests, issues, biologicalShadow,
-        clones, sleepStudy, trauma, archaeology
-      });
-      if (prognosis) sendWS(ws, 'prognosis_data', prognosis);
-    } catch (e) { console.error('Prognosis failed:', e.message); }
+
 
     // ACT 5: THE CONFESSIONAL
     sendWS(ws, 'act', { act: 5, name: 'The Confessional', message: 'Would you like to confess?' });

@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const PrognosisSimulator = ({ data, currentScore }) => {
+const PrognosisSimulator = ({ data, currentScore, onClose }) => {
     const [days, setDays] = useState(0);
     const [isActing, setIsActing] = useState(false);
     const logRef = useRef(null);
@@ -41,6 +41,14 @@ const PrognosisSimulator = ({ data, currentScore }) => {
 
     return (
         <div id="prognosis-anchor" className="glass-panel rounded-3xl p-8 overflow-hidden relative" style={{ background: 'linear-gradient(135deg, #020c04 0%, #000402 100%)', boxShadow: '0 0 60px rgba(0,251,255,0.03), inset 0 0 80px rgba(0,0,0,0.6)' }}>
+            {/* Close button */}
+            <button
+                onClick={onClose}
+                className="absolute top-6 right-6 px-3 py-1.5 rounded-full border border-white/5 text-[9px] font-bold text-white/30 hover:text-white/70 hover:border-white/20 transition-all uppercase tracking-widest bg-white/5"
+            >
+                BACK_TO_DIAGNOSTICS
+            </button>
+
             {/* Background Narrative Watermark */}
             <div className="absolute inset-x-0 top-0 pointer-events-none opacity-[0.02] font-black text-[120px] flex items-center justify-center select-none uppercase tracking-tighter overflow-hidden whitespace-nowrap leading-none pt-12">
                 {isActing ? 'RESOLUTION' : phase}

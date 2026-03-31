@@ -53,10 +53,13 @@ export default function CloneDetectorDNA({ data }) {
                 }
                 ctx.strokeStyle = 'rgba(0,229,255,0.22)';
                 ctx.lineWidth = 2;
-                ctx.shadowColor = '#00e5ff';
-                ctx.shadowBlur = 4;
                 ctx.stroke();
-                ctx.shadowBlur = 0;
+                // Simpler glow: draw a second, fainter line if high risk
+                if (activeRisk === 'high') {
+                    ctx.strokeStyle = 'rgba(0,229,255,0.05)';
+                    ctx.lineWidth = 4;
+                    ctx.stroke();
+                }
             }
 
             // Rungs — highlight active clone rungs with pulse
@@ -76,11 +79,13 @@ export default function CloneDetectorDNA({ data }) {
                     ctx.lineTo(x, y2);
                     ctx.strokeStyle = highlightColor;
                     ctx.lineWidth = 2.5;
-                    ctx.shadowColor = highlightColor;
-                    ctx.shadowBlur = 10;
                     ctx.globalAlpha = pulseAlpha;
                     ctx.stroke();
-                    ctx.shadowBlur = 0;
+
+                    // Simple glow fallback (no shadowBlur)
+                    ctx.strokeStyle = `${highlightColor}33`;
+                    ctx.lineWidth = 5;
+                    ctx.stroke();
                     ctx.globalAlpha = 1;
 
                     // Base letter at rung center
@@ -118,6 +123,7 @@ export default function CloneDetectorDNA({ data }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="glass-panel rounded-2xl p-5 overflow-hidden"
+            style={{ transform: 'translateZ(0)', willChange: 'transform' }}
         >
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-4">

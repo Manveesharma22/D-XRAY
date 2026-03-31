@@ -75,6 +75,14 @@ export default function AIDoctor({ diagnosis, corpusScore }) {
         boxShadow: '0 0 60px rgba(0,251,255,0.03), inset 0 0 80px rgba(0,0,0,0.6)',
       }}
     >
+      {/* Section heading */}
+      <div className="px-8 pt-8 pb-2 flex items-center gap-3">
+        <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#10b981]" />
+        <span className="text-[10px] font-mono text-emerald-500/40 tracking-[0.4em] uppercase font-bold">AI_Doc</span>
+        <div className="flex-1 h-px bg-emerald-500/10" />
+        <h3 className="text-2xl font-black text-white tracking-tighter uppercase font-technical">AI Doc</h3>
+      </div>
+
       {/* Terminal chrome */}
       <div className="bg-black/80 border-b border-emerald-500/10 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
