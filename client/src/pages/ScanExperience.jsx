@@ -1083,8 +1083,8 @@ export default function ScanExperience() {
                 </motion.div>
               )}
 
-              {/* Show Results button — both at bottom and sticky floating */}
-              {scanComplete && (
+              {/* Show Results button — enabled once scanId is born */}
+              {(scanComplete || scanData.scanId) && (
                 <>
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="text-center py-8">
                     <a

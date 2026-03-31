@@ -251,9 +251,17 @@ async function runScan(ws, repoUrl, options = {}) {
     const reviewAnalyzer = new CodeReviewAnalyzer();
     const envAnalyzer = new EnvironmentAnalyzer();
 
-    // Safe analyzer wrapper — returns default findings on error
-    const safe = (fn, label, defaults) => {
-      try { return fn(); } catch (e) { console.error(`${label} failed:`, e.message); return defaults; }
+    // Safe analyzer wrapper with execution timeout (12s)
+    const safe = async (fn, label, defaults) => {
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error(`${label} execution timeout`)), 12000)
+      );
+      try {
+        return await Promise.race([fn(), timeoutPromise]);
+      } catch (e) {
+        console.error(`[TRACK_FAILED] ${label}: ${e.message}`);
+        return defaults;
+      }
     };
 
     const [
