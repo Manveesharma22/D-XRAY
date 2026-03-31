@@ -58,14 +58,8 @@ export default function XRayVisualization({ phase, patient, tracks, deadCode }) 
       timeoutsRef.current = [];
       if (beamIntervalRef.current) clearInterval(beamIntervalRef.current);
 
-      // Reveal skeleton progressively
-      setVisibleParts([]);
-      SKELETON_PARTS.forEach((part) => {
-        const tid = setTimeout(() => {
-          setVisibleParts(prev => prev.includes(part.id) ? prev : [...prev, part.id]);
-        }, part.delay * 1000);
-        timeoutsRef.current.push(tid);
-      });
+      // Reveal skeleton immediately for diagnostic clarity
+      setVisibleParts(SKELETON_PARTS.map(p => p.id));
 
       // 3 sweeps
       setShowScanBeam(true);
