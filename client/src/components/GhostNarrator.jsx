@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getBestFemaleVoice, createUtterance } from '../utils/voiceEngine';
 
 export default function GhostNarrator({ diagnosis }) {
   const [currentLine, setCurrentLine] = useState(0);
@@ -43,17 +44,10 @@ export default function GhostNarrator({ diagnosis }) {
   const speakText = useCallback((text) => {
     if (!speechSupported || !voiceEnabled || !synthRef.current) return;
     synthRef.current.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    const voices = synthRef.current.getVoices();
-    const preferred = voices.find(v =>
-      v.name.toLowerCase().includes('samantha') ||
-      v.name.toLowerCase().includes('victoria') ||
-      v.name.toLowerCase().includes('zira') ||
-      v.name.toLowerCase().includes('female') ||
-      v.name.toLowerCase().includes('google us english')
-    ) || voices.find(v => v.lang.startsWith('en'));
-    if (preferred) utterance.voice = preferred;
-    utterance.rate = 0.88; utterance.pitch = 1.1; utterance.volume = 0.75;
+
+    const voice = getBestFemaleVoice(synthRef.current);
+    const utterance = createUtterance(text, voice);
+
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => setIsSpeaking(false);
     utterance.onerror = () => setIsSpeaking(false);

@@ -26,6 +26,7 @@ import SoundLayer from '../components/SoundLayer';
 import LastCommit from '../components/LastCommit';
 import PrognosisSimulator from '../components/PrognosisSimulator';
 import { simulatePrognosis } from '../utils/prognosisEngine';
+import { getBestFemaleVoice, createUtterance } from '../utils/voiceEngine';
 import { config } from '../api-config';
 
 const TRACK_NAMES = {
@@ -66,6 +67,16 @@ export default function DischargeSummary() {
         }
       }));
     }
+
+    // AI Voice Announcement on first open
+    if (!showMirror && 'speechSynthesis' in window) {
+      const synth = window.speechSynthesis;
+      synth.cancel();
+      const voice = getBestFemaleVoice(synth);
+      const utterance = createUtterance("We also scanned the person who submitted this repository.", voice);
+      synth.speak(utterance);
+    }
+
     setShowMirror(prev => !prev);
     setIsRotating(prev => !prev);
   };
