@@ -596,6 +596,7 @@ export default function ScanExperience() {
 
                 {/* === SKELETON (Animated) === */}
                 <motion.g
+                  initial={{ opacity: 0.7, scale: 0.99 }}
                   animate={{
                     opacity: [0.75, 1, 0.75],
                     scale: [0.99, 1, 0.99]
@@ -606,8 +607,9 @@ export default function ScanExperience() {
                     ease: "easeInOut"
                   }}
                   style={{
-                    transformOrigin: "center",
-                    transformBox: "fill-box"
+                    originX: 120,
+                    originY: 200,
+                    willChange: "transform, opacity"
                   }}
                 >
                   {/* Skull */}
