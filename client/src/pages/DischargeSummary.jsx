@@ -132,35 +132,27 @@ export default function DischargeSummary() {
     }
   }, [scanData?.corpusScore?.dxScore, !!scanData?.prognosis?.timeline]);
 
-  // The Mirror: Automatic reflection trigger
-  useEffect(() => {
-    if (scanData?.mirror && !mirrorSpoken) {
-      console.log('TheMirror Protocol: Subject detected. Initializing reflection.');
-      const timer = setTimeout(() => {
-        setIsRotating(true);
-        setShowMirror(true);
-        if ('speechSynthesis' in window) {
-          window.speechSynthesis.cancel();
-          const utterance = new SpeechSynthesisUtterance("We also scanned the person who submitted this repo.");
-          const voices = window.speechSynthesis.getVoices();
-          const preferred = voices.find(v => v.name.toLowerCase().includes('samantha') || v.name.toLowerCase().includes('female')) || voices[0];
-          if (preferred) utterance.voice = preferred;
-          utterance.rate = 0.85; utterance.pitch = 1.05;
-          window.speechSynthesis.speak(utterance);
-        }
-        setMirrorSpoken(true);
-      }, 2500);
-      return () => clearTimeout(timer);
-    }
-  }, [scanData?.mirror, mirrorSpoken]);
+  /* 
+     THE_MIRROR: Automatic trigger disabled for diagnostic clarity.
+     Subject reflection is now initiated via the 'THE_MIRROR' or 'DX' buttons in the header.
+  */
+  // useEffect(() => {
+  //   if (scanData?.mirror && !mirrorSpoken) {
+  //     console.log('TheMirror Protocol: Subject detected. Invitation pending.');
+  //     setMirrorSpoken(true);
+  //   }
+  // }, [scanData?.mirror, mirrorSpoken]);
 
-  // Mourning Mode: Automatic trigger for ghostly repos
-  useEffect(() => {
-    if (scanData?.mourning?.triggered && !showMourning && !mourningDismissed) {
-      console.log('MourningProtocol: Eternal Echo detected. Initializing mourning mode.');
-      setShowMourning(true);
-    }
-  }, [scanData?.mourning, showMourning, mourningDismissed]);
+  /* 
+     MOURNING_MODE: Automatic trigger disabled for diagnostic clarity.
+     The 'Eternal Echo' is now initiated via the 'MOURNING_MODE' button in the header.
+  */
+  // useEffect(() => {
+  //   if (scanData?.mourning?.triggered && !showMourning && !mourningDismissed) {
+  //     console.log('MourningProtocol: Eternal Echo detected. Invitation pending.');
+  //     setShowMourning(true);
+  //   }
+  // }, [scanData?.mourning, showMourning, mourningDismissed]);
 
   const handleConfess = (confession) => {
     const c = confession.toLowerCase();
@@ -291,7 +283,7 @@ export default function DischargeSummary() {
             onClick={toggleMirror}
             className={`px-3 py-1 rounded-full text-[9px] font-bold tracking-widest border transition-all flex items-center gap-2 ${showMirror ? 'border-cyan-500/50 text-cyan-400 bg-cyan-500/5' : 'border-white/10 text-white/30 hover:border-white/50'}`}
           >
-            <span className={`w-1.5 h-1.5 rounded-full ${showMirror ? 'bg-cyan-500 animate-pulse' : 'bg-white/20'}`} />
+            <span className={`w-1.5 h-1.5 rounded-full ${showMirror || scanData?.mirror ? 'bg-cyan-500 animate-pulse' : 'bg-white/20'}`} />
             THE_MIRROR
           </button>
 
