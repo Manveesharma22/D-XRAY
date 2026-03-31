@@ -45,6 +45,12 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
+// Serve static files from the React app if build exists
+const DIST_PATH = path.join(__dirname, '../client/dist');
+if (fs.existsSync(DIST_PATH)) {
+  app.use(express.static(DIST_PATH));
+}
+
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
@@ -680,15 +686,6 @@ function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// ─── Production static file serving ──────────────────────────────────────────
-const DIST_PATH = path.join(__dirname, '../client/dist');
-
-// Serve static assets from client/dist if they exist
-if (fs.existsSync(DIST_PATH)) {
-  console.log(`Serving static files from ${DIST_PATH}`);
-  app.use(express.static(DIST_PATH));
-}
-
 // REST endpoints
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString(), cachedScans: scanCache.size });
@@ -756,7 +753,7 @@ app.post('/api/memorial/:repoSlug/flower', express.json(), (req, res) => {
 // Single Page Application catch-all route
 // IMPORTANT: This must be after all API routes
 if (fs.existsSync(DIST_PATH)) {
-  app.use((req, res) => {
+  app.get('*', (req, res) => {
     res.sendFile(path.join(DIST_PATH, 'index.html'));
   });
 }
